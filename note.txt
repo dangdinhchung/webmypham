@@ -1,0 +1,22 @@
+/var/www/basethesis/public
+/var/www/basethesis/public/
+
++ Đăng nhập admin
+    http://doan.phupt.net/admin-auth/login
+
+
++ Đăng nhập admin : http://webdidong.phupt.net/admin-auth/login
+    + ID : phupt.humg.94@gmail.com
+    + Pas: 123456789
+
+0981135997
+xuan0301
+
+   echo $dt->diffForHumans($now); //12 phút trước
+    echo $dt2->diffForHumans($now); //1 giờ trước
+8.23ms
+
+Cảm ơn bạn đã tin tưởng chúng tôi. Nếu chưa thấy chúng tôi trả lời bạn hãy sms vào SĐT 0986420994
+Skype : https://bit.ly/2NjEbuh ( TrungPhu NA )
+Facebook : https://bit.ly/3hOnHZi ( TrungPhuNA)
+Youtobe : https://bit.ly/2CkPIHw

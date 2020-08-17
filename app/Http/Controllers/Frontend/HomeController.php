@@ -145,9 +145,23 @@ class HomeController extends FrontendController
 					])->get();
 			});
 
-
 			$html = view('frontend.pages.home.include._inc_product_by_category_hot', compact('categoriesHot'))->render();
 			return response()->json(['data' => $html]);
 		}
 	}
+
+	public function searchAjax(Request  $request) {
+        if ($request->ajax()) {
+            $products = Product::where('pro_active',1)
+                                ->where('pro_name', 'like', '%'.$request->search.'%')
+                                ->select('id','pro_name','pro_slug','pro_sale','pro_avatar','pro_number','pro_price','pro_review_total','pro_review_star')
+                                ->limit(5)
+                                ->orderByDesc('pro_price')
+                                ->get();
+            if(isset($products) && count($products) > 0) {
+               return view('frontend.pages.home.include._inc_product_by_search_ajax', compact('products'));
+            }
+        }
+        return '0';
+    }
 }

@@ -50,11 +50,24 @@
             <div class="search">
 
                 <form action="{{ $link_search ?? route('get.product.list',['k' => Request::get('k')]) }}" role="search" method="GET">
-                    <input type="text" name="k" value="{{ Request::get('k') }}" class="form-control" placeholder="Tìm kiếm sản phẩm ...">
+                    {{--<input type="text" name="k" value="{{ Request::get('k') }}" class="form-control" placeholder="Tìm kiếm sản phẩm ...">--}}
+                    <input type="text" aria-label="Search" id="search" name="q" class="w-100" placeholder="I'm shopping for..." autocomplete="off">
                     <button type="submit" class="btnSearch">
                         <i class="fa fa-search"></i>
                         <span>Tìm kiếm</span>
                     </button>
+
+                    <div class="typed-search-box d-none">
+                        <div class="search-preloader">
+                            <div class="loader"><div></div><div></div><div></div></div>
+                        </div>
+                        <div class="search-nothing d-none">
+
+                        </div>
+                        <div id="search-content">
+
+                        </div>
+                    </div>
                 </form>
             </div>
             <ul class="right">

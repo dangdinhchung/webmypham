@@ -47,6 +47,7 @@ Route::group(['prefix' => 'admin-auth','namespace' => 'Admin\Auth'], function() 
 Route::group(['namespace' => 'Frontend'], function() {
     Route::get('','HomeController@index')->name('get.home'); // trang chủ
 	Route::get('/home', 'HomeController@index'); // trang chủ
+    Route::post('/search-ajax','HomeController@searchAjax')->name('search.ajax');
 
     Route::get('ajax-load-product-recently','HomeController@getLoadProductRecently')->name('ajax_get.product_recently');
     Route::get('ajax-load-product-by-category','HomeController@getLoadProductByCategory')->name('ajax_get.product_by_category');

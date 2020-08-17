@@ -50,7 +50,6 @@ class LoginController extends Controller
     public function postLogin(RequestLogin $request)
     {
         $credentials = $request->only('email', 'password');
-        dd($request->all());
         if (Auth::attempt($credentials)) {
             $this->logLogin();
 			\Session::flash('toastr', [

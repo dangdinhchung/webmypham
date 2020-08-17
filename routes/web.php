@@ -47,7 +47,7 @@ Route::group(['prefix' => 'admin-auth','namespace' => 'Admin\Auth'], function() 
 Route::group(['namespace' => 'Frontend'], function() {
     Route::get('','HomeController@index')->name('get.home'); // trang chủ
 	Route::get('/home', 'HomeController@index'); // trang chủ
-    Route::post('/search-ajax','HomeController@searchAjax')->name('search.ajax');
+    Route::post('/search-ajax','HomeController@searchAjax')->name('search.ajax'); // earch ajax
 
     Route::get('ajax-load-product-recently','HomeController@getLoadProductRecently')->name('ajax_get.product_recently');
     Route::get('ajax-load-product-by-category','HomeController@getLoadProductByCategory')->name('ajax_get.product_by_category');
@@ -58,6 +58,9 @@ Route::group(['namespace' => 'Frontend'], function() {
 
     Route::get('san-pham/{slug}','ProductDetailController@getProductDetail')->name('get.product.detail'); // chi tiet sp 
     Route::get('san-pham/{slug}/danh-gia','ProductDetailController@getListRatingProduct')->name('get.product.rating_list'); // list dánh giá của sp đó
+
+    Route::post('/compare/addToCompare','ProductDetailController@addCompare')->name('compare.addToCompare'); // add compare product detail
+    Route::get('/compare','ProductDetailController@listCompare')->name('get.compare.list'); // get list compare
 
     Route::get('bai-viet','BlogController@index')->name('get.blog.home'); // bai viet
     Route::get('menu/{slug}','BlogMenuController@getArticleByMenu')->name('get.article.by_menu'); // bai viết theo menu

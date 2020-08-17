@@ -24,6 +24,13 @@
                                             <span class="product-price strong-600">{{ number_format($product->pro_price,0,',','.') }} đ</span>
                                         @endif
                                     </div>
+                                    <div class="stock-box float-right">
+                                        @if ($product->pro_number > 0)
+                                            <span class="badge badge-pill bg-green stocking">Còn hàng</span>
+                                        @else
+                                            <span class="badge badge-pill bg-green outstock">Hết hàng</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>

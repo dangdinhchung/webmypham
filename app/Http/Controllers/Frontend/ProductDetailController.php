@@ -205,4 +205,29 @@ class ProductDetailController extends FrontendController
 
 		return $groupAttribute;
 	}
+
+	public function listCompare() {
+        return view('frontend.pages.compare.index');
+    }
+
+	public function addCompare(Request $request){
+        if($request->session()->has('compare')){
+            $compare = $request->session()->get('compare', collect([]));
+            if(!$compare->contains($request->id)){
+                if(count($compare) == 3){
+                    $compare->forget(0);
+                    $compare->push($request->id);
+                }
+                else{
+                    $compare->push($request->id);
+                }
+            }
+        }
+        else{
+            $compare = collect([$request->id]);
+            $request->session()->put('compare', $compare);
+        }
+
+        return view('frontend.partials.compare');
+    }
 }

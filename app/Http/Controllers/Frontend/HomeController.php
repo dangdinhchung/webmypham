@@ -156,7 +156,7 @@ class HomeController extends FrontendController
                                 ->where('pro_name', 'like', '%'.$request->search.'%')
                                 ->select('id','pro_name','pro_slug','pro_sale','pro_avatar','pro_number','pro_price','pro_review_total','pro_review_star')
                                 ->limit(5)
-                                ->orderByDesc('pro_price')
+                                ->orderBy('pro_price','ASC')
                                 ->get();
             if(isset($products) && count($products) > 0) {
                return view('frontend.pages.home.include._inc_product_by_search_ajax', compact('products'));

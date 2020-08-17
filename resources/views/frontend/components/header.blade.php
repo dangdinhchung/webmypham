@@ -51,7 +51,7 @@
 
                 <form action="{{ $link_search ?? route('get.product.list',['k' => Request::get('k')]) }}" role="search" method="GET">
                     {{--<input type="text" name="k" value="{{ Request::get('k') }}" class="form-control" placeholder="Tìm kiếm sản phẩm ...">--}}
-                    <input type="text" aria-label="Search" id="search" name="q" class="w-100" placeholder="I'm shopping for..." autocomplete="off">
+                    <input type="text" aria-label="Search" id="search" name="k" value="{{ Request::get('k') }}" class="w-100 form-control" placeholder="I'm shopping for..." autocomplete="off">
                     <button type="submit" class="btnSearch">
                         <i class="fa fa-search"></i>
                         <span>Tìm kiếm</span>
@@ -62,22 +62,23 @@
                             <div class="loader"><div></div><div></div><div></div></div>
                         </div>
                         <div class="search-nothing d-none">
-
                         </div>
                         <div id="search-content">
-
                         </div>
                     </div>
                 </form>
             </div>
             <ul class="right">
                 <li>
+                    <a href="{{ route('get.compare.list') }}" title="compare">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        <span class="">  ({{ \Cart::count() }})</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('get.shopping.list') }}" title="Giỏ hàng">
                         <i class="fa fa-shopping-bag"></i>
-                        <span class="text">
-                            <span class="">Giỏ hàng ({{ \Cart::count() }})</span>
-                            <span></span>
-                        </span>
+                        <span class="">  ({{ \Cart::count() }})</span>
                     </a>
                 </li>
                 <li class="desktop">

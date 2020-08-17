@@ -5,6 +5,9 @@
         .number-empty, .number-empty:hover {
             cursor: not-allowed;
         }
+        .compare {
+            margin-left: 10px;
+        }
     </style>
 @stop
 @section('content')
@@ -64,6 +67,7 @@
                                 <p>
                                     <span>View :&nbsp</span>
                                     <span>{{ $product->pro_view }}</span>
+                                    <i class="fa fa-refresh compare" aria-hidden="true" onclick="addToCompare({{ $product->id }})"></i>
                                 </p>
                             </div>
                             <div class="btn-cart">
@@ -199,5 +203,15 @@
 		var URL_CAPTCHA = '{{ route('ajax_post.captcha.resume') }}'
     </script>
     <script src="{{ asset('js/product_detail.js') }}" type="text/javascript"></script>
+
+    <script>
+        function addToCompare(id){
+            $.post('{{ route('compare.addToCompare') }}', {_token:'{{ csrf_token() }}', id:id}, function(data){
+                // $('#compare').html(data);
+                // showFrontendAlert('success', 'Item has been added to compare list');
+                // $('#compare_items_sidenav').html(parseInt($('#compare_items_sidenav').html())+1);
+            });
+        }
+    </script>
 
 @stop

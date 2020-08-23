@@ -93,7 +93,7 @@
                                             </td>
                                             <td>
                                                 @php
-                                                    $time = explode(' ',$product->pro_expiration);
+                                                    $time = explode(' ',$product->pro_expiration_date);
                                                 @endphp
                                                 {{ $time[0] ?? "Chưa cập nhật" }}
                                             </td>

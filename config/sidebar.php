@@ -2,7 +2,7 @@
 return [
     [
         'name' => 'Ql sản phẩm',
-        'list-check' => ['attribute','category','keyword','product','comment','rating'],
+        'list-check' => ['attribute','category','keyword','product','comment','rating','coupon'],
         'icon' => 'fa fa-database',
 		'level'  => [1,2],
         'sub'  => [
@@ -45,7 +45,14 @@ return [
                 'name'  => 'Bình luân',
                 'namespace' => 'comment',
                 'route' => 'admin.comment.index',
-                'icon'  => 'fa fa-star',
+                'icon'  => 'fa fa-comments-o',
+				'level'  => [1,2],
+			],
+			[
+                'name'  => 'Mã giảm giá',
+                'namespace' => 'coupon',
+                'route' => 'admin.coupon.index',
+                'icon'  => 'fa fa-gift',
 				'level'  => [1,2],
             ],
         ]

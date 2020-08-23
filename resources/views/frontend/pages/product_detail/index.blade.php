@@ -101,7 +101,7 @@
                                         <p class="text1">Ngày hết hạn:</p>
                                         <h3 class="text2">
                                             @php
-                                                $time = explode(' ',$product->pro_expiration);
+                                                $time = explode(' ',$product->pro_expiration_date);
                                             @endphp
                                             {{ $time[0] ?? "Chưa cập nhật" }}
 {{--                                            {{ $product->created_at->addDay($product->pro_expiration_date)->format('d-m-Y') }}--}}

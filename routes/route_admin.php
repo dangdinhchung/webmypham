@@ -125,6 +125,8 @@
 
             Route::get('delete/{id}','AdminProductController@delete')->name('admin.product.delete')->middleware('check_admin')->middleware('permission:product_delete|full');
             Route::get('delete-image/{id}','AdminProductController@deleteImage')->name('admin.product.delete_image')->middleware('permission:product_delete_image|full');
+
+            Route::post('coupon/get_products_by_category', 'AdminProductController@getProductByCategory')->name('products.get_products_by_subsubcategory');
         });
 
         Route::group(['prefix' => 'rating'], function(){
@@ -151,6 +153,16 @@
         Route::group(['prefix' => 'comment'], function(){
             Route::get('','AdminCommentController@index')->name('admin.comment.index')->middleware('permission:comment_index|full');
             Route::get('delete/{id}','AdminCommentController@delete')->name('admin.comment.delete')->middleware('permission:comment_delete|full');
+        });
+
+        Route::group(['prefix' => 'coupon'], function(){
+            Route::get('','AdminCouponController@index')->name('admin.coupon.index')->middleware('permission:coupon_index|full');
+            Route::get('delete/{id}','AdminCouponController@delete')->name('admin.coupon.delete')->middleware('permission:coupon_delete|full');
+
+            Route::get('active/{id}','AdminCouponController@active')->name('admin.coupon.active')->middleware('permission:coupon_active|full');
+            Route::get('update/{id}','AdminCouponController@edit')->name('admin.coupon.update')->middleware('permission:coupon_update|full');
+            Route::get('create','AdminCouponController@create')->name('admin.coupon.create')->middleware('permission:coupon_create|full');
+
         });
 
         Route::group(['prefix' => 'article'], function(){

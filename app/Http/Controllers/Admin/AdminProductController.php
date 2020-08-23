@@ -292,4 +292,9 @@ class AdminProductController extends Controller
 		return $groupAttribute;
 	}
 
+	public function getProductByCategory(Request $request) {
+        $products = Product::where('pro_category_id', $request->category_id)->select('id','pro_name','pro_category_id')->get();
+        return $products;
+    }
+
 }

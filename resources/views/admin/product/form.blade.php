@@ -41,7 +41,7 @@
 {{--                            <input type="number" name="pro_expiration_date" value="{{  $product->pro_expiration_date ?? old('pro_expiration_date',0) }}"--}}
 {{--                                   class="form-control"  placeholder="5">--}}
 
-                            <input type="text" class="form-control" name="pro_expiration" value="{{  $product->pro_expiration ?? old('pro_expiration') }}">
+                            <input type="text" class="form-control" name="pro_expiration_date" value="{{  $product->pro_expiration_date ?? old('pro_expiration_date') }}">
                         </div>
                     </div>
 {{--                    @if (isset($product))--}}

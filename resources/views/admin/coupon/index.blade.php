@@ -28,12 +28,12 @@
                             <tbody>
                             <tr>
                                 <th style="width: 10px">STT</th>
+                                <th>Nội dung</th>
                                 <th>Mã giảm giá</th>
                                 <th>Loại mã</th>
                                 <th>Số tiền / %</th>
                                 <th>Ngày bắt đầu</th>
                                 <th>Ngày kết thúc</th>
-                                <th>Ngày tạo</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -41,12 +41,12 @@
                                 @foreach($coupons as $key => $coupon)
                                     <tr>
                                         <td>{{ (($coupons->currentPage() - 1) * $coupons->perPage()) + ( $key + 1)  }}</td>
+                                        <td>{{ $coupon->cp_description ?? "[N\A]" }}</td>
                                         <td>{{ $coupon->cp_code ?? "[N\A]" }}</td>
                                         <td>{{ $coupon->cp_discount_type ?? "[N\A]" }}</td>
-                                        <td>{{ $coupon->cp_discount_type == 'amount' ? $coupon->cp_discount . "VNĐ" : $coupon->cp_discount . ' %'  }}</td>
+                                        <td>{{ $coupon->cp_discount_type == 'amount' ? $coupon->cp_discount . " VNĐ" : $coupon->cp_discount . ' %'  }}</td>
                                         <td>{{ date("Y-m-d", $coupon->cp_start_date) ?? "[N\A]" }}</td>
                                         <td>{{ date("Y-m-d", $coupon->cp_end_date) ?? "[N\A]" }}</td>
-                                        <td>{{ $coupon->created_at }}</td>
                                         <td>
                                             @if ($coupon->cp_active == 1)
                                                 <a href="{{ route('admin.coupon.active', $coupon->id) }}" class="label label-info">Active</a>

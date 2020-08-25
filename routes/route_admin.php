@@ -161,8 +161,10 @@
 
             Route::get('active/{id}','AdminCouponController@active')->name('admin.coupon.active')->middleware('permission:coupon_active|full');
             Route::get('update/{id}','AdminCouponController@edit')->name('admin.coupon.update')->middleware('permission:coupon_update|full');
+            Route::post('update/{id}','AdminCouponController@update')->middleware('permission:coupon_update|full');
             Route::get('create','AdminCouponController@create')->name('admin.coupon.create')->middleware('permission:coupon_create|full');
-
+            Route::post('create','AdminCouponController@store')->name('admin.coupon.store');
+            Route::get('delete/{id}','AdminCouponController@delete')->name('admin.coupon.delete')->middleware('permission:coupon_delete|full');
         });
 
         Route::group(['prefix' => 'article'], function(){

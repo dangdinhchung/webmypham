@@ -37,20 +37,35 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach (Session::get('compare') as $key => $item)
                             <tr>
-                                <td> <a href="http://localhost:8000/san-pham/nuoc-hoa-mini-versace-pour-homme-eau-de-toilette-50" title="Nước hoa mini Versace Pour Homme - Eau De Toilette" class="avatar image contain"> <img alt="" src="/uploads/2020/04/25/2020-04-25__50.jpg" class="lazyload"> </a> </td>
                                 <td>
-                                    <div style="" class="name-product"> <a href="http://localhost:8000/san-pham/nuoc-hoa-mini-versace-pour-homme-eau-de-toilette-50"><strong>Nước hoa mini Versace Pour Homme - Eau De Toilette</strong></a> </div>
+                                    <a href="{{ route('get.product.detail', \App\Models\Product::find($item)->pro_slug . '-'. \App\Models\Product::find($item)->id ) }}" class="avatar image contain">
+                                        <img alt="" src="{{ pare_url_file( \App\Models\Product::find($item)->pro_avatar ) }}" class="lazyload" title="{{ \App\Models\Product::find($item)->pro_name }}">
+                                    </a>
                                 </td>
                                 <td>
-                                    <p><b>11.760 đ</b></p>
-                                    <p> <span style="text-decoration: line-through;">12.000 đ</span> <span class="sale">- 2 %</span> </p>
+                                    <div style="" class="name-product"> <a href="{{ route('get.product.detail', \App\Models\Product::find($item)->pro_slug . '-'. \App\Models\Product::find($item)->id ) }}"><strong>{{ \App\Models\Product::find($item)->pro_name }}</strong></a> </div>
+                                </td>
+                                @php
+                                  $price = ((100 - \App\Models\Product::find($item)->pro_sale) * \App\Models\Product::find($item)->pro_price)  /  100 ;
+                                @endphp
+                                <td>
+                                    @if (\App\Models\Product::find($item)->pro_sale)
+                                        <p><b>{{ number_format(\App\Models\Product::find($item)->pro_price,0,',','.') }} đ</b></p>
+                                        <p> <span style="text-decoration: line-through;">{{ number_format($price,0,',','.') }} đ</span> <span class="sale"> -{{ \App\Models\Product::find($item)->pro_sale }}%</span> </p>
+                                    @else
+                                        <p><b>{{ number_format(\App\Models\Product::find($item)->pro_price,0,',','.') }} đ</b></p>
+                                    @endif
                                 </td>
                                 <td>
-                                    <p> <span style="text-decoration: line-through;">12.000 đ</span> <span class="sale">- 2 %</span> </p>
+                                    <p>{{ \App\Models\Product::find($item)->pro_number }}</p>
                                 </td>
-                                <td> <span class="js-total-item">11.760 đ</span> </td>
+                                <td>
+                                    <span class="js-total-item">{{ \App\Models\Product::find($item)->pro_description }}</span>
+                                </td>
                             </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

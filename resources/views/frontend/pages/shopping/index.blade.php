@@ -2,6 +2,32 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/cart.min.css') }}">
     <style type="text/css">
+        .cart .left .list__content .qty_number .btn-action-delete {
+            background: none;
+            border: none;
+        }
+        .ic-coupon {
+            color: #888;
+            font-size: initial;
+        }
+        .form-coupon {
+            width: 30% !important;
+        }
+        .ds-flex {
+            display: flex;
+        }
+        .input-group-addon {
+            margin-left: 10px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #555;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: table-cell;
+        }
         @media (max-width: 767px) {
             .name-product {
                 width: 300px;white-space: normal;
@@ -18,7 +44,6 @@
                 <div class="list__content">
                     <div class="table-responsive">
                         <table class="table table-striped">
-
                         <thead>
                         <tr>
                             <th style="width: 100px;"></th>
@@ -59,7 +84,7 @@
                                                 <span class="js-increase">+</span>
                                                 <span class="js-reduction">-</span>
                                             </p>
-                                            <a href="{{  route('get.shopping.delete', $key) }}" class="js-delete-item btn-action-delete"><i class="la la-trash"></i></a>
+                                            <a href="{{  route('get.shopping.delete', $key) }}" class="js-delete-item btn-action-delete"><i class="la la-trash ic-coupon"></i></a>
                                         </div>
                                     </td>
                                     <td>
@@ -70,6 +95,16 @@
                         </tbody>
                     </table>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="inputGroupSuccess3"><i class="fa fa-exchange" aria-hidden="true"></i> Mã giảm giá </label>
+                        <div class="input-group ds-flex">
+                            <input type="text" placeholder="Nhập mã giảm giá" class="form-control form-coupon" id="coupon-value" aria-describedby="inputGroupSuccess3Status">
+                            <span class="input-group-addon"  id="coupon-button" href="{{ route('checkout.apply_coupon_code') }}" style="cursor: pointer;" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Đang kiểm tra">Kiểm tra</span>
+                        </div>
+                        <span class="status-coupon" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                        <div class="coupon-msg" style="text-align: left;padding-left: 10px;"></div>
+                    </div>
+
                     <p style="float: right;margin-top: 20px;">Tổng tiền : <b id="sub-total">{{ \Cart::subtotal(0) }} đ</b></p>
                 </div>
             </div>
@@ -122,4 +157,47 @@
 @stop
 @section('script')
     <script src="{{ asset('js/cart.js') }}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $('#coupon-button').click(function() {
+            var coupon = $('#coupon-value').val();
+            let Url = $(this).attr('href');
+            console.log(Url,111111);
+            if(coupon==''){
+                $('.coupon-msg').html('Bạn chưa nhập mã giảm giá').addClass('text-danger').show();
+            }else{
+                $('#coupon-button').button('loading');
+                setTimeout(function() {
+                    $.ajax({
+                        url: Url,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            cp_code: coupon,
+                            _token: "{{ csrf_token() }}",
+                        },
+                    })
+                        .done(function(result) {
+                            $('#coupon-value').val('');
+                            $('.coupon-msg').removeClass('text-danger');
+                            $('.coupon-msg').removeClass('text-success');
+                            $('.coupon-msg').hide();
+                            if(result.error ==1){
+                                $('.coupon-msg').html(result.msg).addClass('text-danger').show();
+                            }else{
+                                $('#removeCoupon').show();
+                                $('.coupon-msg').html(result.msg).addClass('text-success').show();
+                                $('.showTotal').remove();
+                                $('#showTotal').prepend(result.html);
+                            }
+                        })
+                        .fail(function() {
+                            console.log("error");
+                        });
+                    $('#coupon-button').button('reset');
+                }, 2000);
+            }
+        });
+    </script>
 @stop

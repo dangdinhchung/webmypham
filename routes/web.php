@@ -93,6 +93,8 @@ Route::group(['namespace' => 'Frontend'], function() {
     Route::get('chinh-sach-doi-tra','PageStaticController@getReturnPolicy')->name('get.static.return_policy');
     Route::get('cham-soc-khach-hang','PageStaticController@getCustomerCare')->name('get.static.customer_care');
 
+    Route::post('checkout/apply_coupon_cod', 'CouponController@apply_coupon_code')->name('checkout.apply_coupon_code'); // apply coupon
+
 });
 
 Route::group(['prefix' => 'test','namespace' => 'Test'], function(){

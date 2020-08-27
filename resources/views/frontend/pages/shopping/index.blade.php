@@ -28,6 +28,12 @@
             border-radius: 4px;
             display: table-cell;
         }
+        .list__content {
+            border: none !important;
+        }
+        .table>tbody>tr>th, .table>tbody>tr>td {
+            border-top: none !important;
+        }
         @media (max-width: 767px) {
             .name-product {
                 width: 300px;white-space: normal;
@@ -104,8 +110,14 @@
                         <span class="status-coupon" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
                         <div class="coupon-msg" style="text-align: left;padding-left: 10px;"></div>
                     </div>
-
-                    <p style="float: right;margin-top: 20px;">Tổng tiền : <b id="sub-total">{{ \Cart::subtotal(0) }} đ</b></p>
+                    <table class="table" id="showTotal">
+                        <tbody>
+                            <tr class="showTotal">
+                                <th>Tổng tiền hàng</th>
+                                <td style="text-align: right" id="subtotal">{{ \Cart::subtotal(0) }} VNĐ</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -163,7 +175,6 @@
         $('#coupon-button').click(function() {
             var coupon = $('#coupon-value').val();
             let Url = $(this).attr('href');
-            console.log(Url,111111);
             if(coupon==''){
                 $('.coupon-msg').html('Bạn chưa nhập mã giảm giá').addClass('text-danger').show();
             }else{
@@ -179,7 +190,7 @@
                         },
                     })
                         .done(function(result) {
-                            $('#coupon-value').val('');
+                            $('#coupon-value').val(coupon);
                             $('.coupon-msg').removeClass('text-danger');
                             $('.coupon-msg').removeClass('text-success');
                             $('.coupon-msg').hide();

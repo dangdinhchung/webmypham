@@ -35,12 +35,6 @@ class AdminRequestCoupon extends FormRequest
             ];
             $rules = array_merge($rules, $merge_rules);
         }
-        if($this->cp_discount_type === 'amount') {
-            $merge_rules = [
-                'cp_discount'         => 'numeric|max:100|min:0'
-            ];
-            $rules = array_merge($rules, $merge_rules);
-        }
         return $rules;
     }
 }

@@ -1,13 +1,12 @@
 <form role="form" action="" method="POST">
     @csrf
     <div class="col-sm-8">
-        <div class="form-group">
-            <label for="name">Mô tả <span class="text-danger"></span></label>
-            <input type="text" class="form-control" name="cp_description"  placeholder="Mô tả ..." value="{{ $coupon->cp_description ?? old('cp_description') }}">
-        </div>
         <div class="form-group {{ $errors->first('cp_code') ? 'has-error' : '' }}">
             <label for="name">Mã giảm giá <span class="text-danger">(*)</span></label>
-            <input type="text" class="form-control" name="cp_code" value="{{ $coupon->cp_code ?? old('cp_code') }}"  placeholder="Coupon ...">
+            <input type="text" class="form-control" name="cp_code" value="{{ $coupon->cp_code ?? old('cp_code') }}"  placeholder="ABXE, HUQ60 ...">
+            <span class="help-block">
+                <i class="fa fa-info-circle"></i>&nbsp;Mã coupon là duy nhất. Viết liền, không dấu
+            </span>
             @if ($errors->first('cp_code'))
                 <span class="text-danger">{{ $errors->first('cp_code') }}</span>
             @endif
@@ -24,10 +23,17 @@
             @endif
         </div>
         <div class="form-group {{ $errors->first('cp_discount') ? 'has-error' : '' }}">
-            <label for="name">Discount</label>
+            <label for="name">Giảm</label>
             <input type="number" class="form-control" name="cp_discount" value="{{ $coupon->cp_discount ?? old('cp_discount',0) }}">
             @if ($errors->first('cp_discount'))
                 <span class="text-danger">{{ $errors->first('cp_discount') }}</span>
+            @endif
+        </div>
+        <div class="form-group {{ $errors->first('cp_number_uses') ? 'has-error' : '' }}">
+            <label for="name">Số lần sử dụng</label>
+            <input type="number" class="form-control" name="cp_number_uses" value="{{ $coupon->cp_number_uses ?? old('cp_number_uses',1) }}">
+            @if ($errors->first('cp_number_uses'))
+                <span class="text-danger">{{ $errors->first('cp_number_uses') }}</span>
             @endif
         </div>
         <div class="form-group {{ $errors->first('cp_start_date') ? 'has-error' : '' }}" id="time1">
@@ -43,6 +49,10 @@
             @if ($errors->first('cp_end_date'))
                 <span class="text-danger">{{ $errors->first('cp_end_date') }}</span>
             @endif
+        </div>
+        <div class="form-group">
+            <label for="name">Mô tả <span class="text-danger"></span></label>
+            <input type="text" class="form-control" name="cp_description"  placeholder="Mô tả ..." value="{{ $coupon->cp_description ?? old('cp_description') }}">
         </div>
     </div>
     {{-- <div class="col-sm-4 product-choose">

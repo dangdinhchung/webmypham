@@ -40,10 +40,10 @@ class DrivePayCommand extends Command
     {
         $this->info("init command test");
         $transaction = [
-            "tst_name"        => "Trung Phú Na",
-            "tst_phone"       => "0986420994",
-            "tst_address"     => "Xóm 3 - Xã - Quỳnh Ngọc - Huyện Quỳnh Lưu - Tỉnh Nghệ An",
-            "tst_email"       => "phupt.humg.94@gmail.com",
+            "tst_name"        => "Đặng Đình Chung",
+            "tst_phone"       => "0349978666",
+            "tst_address"     => "Thanh nguyên, Thanh liêm, Hà nam",
+            "tst_email"       => "dangdinhchung98@gmail.com",
             "tst_note"        => "Giao hàng tận nơi ạ",
             "tst_user_id"     => 2,
             "tst_total_money" => "2192130"

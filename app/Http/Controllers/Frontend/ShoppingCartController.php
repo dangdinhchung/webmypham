@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use App\Services\ShoppingCartService\PayManager;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -19,9 +20,17 @@ class ShoppingCartController extends Controller
     public function index()
     {
         $shopping = \Cart::content();
+        $hasCoupon = !empty(session('coupon')) ? true : false;
+        $coupon = !empty(session('coupon')) ? session('coupon') : '';
+        $codeCoupon = Coupon::where(['cp_code' => $coupon])->first();
+        $discountType = $codeCoupon['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
         $viewData = [
             'title_page' => 'Danh sách giỏ hàng',
-            'shopping'   => $shopping
+            'shopping'   => $shopping,
+            'hasCoupon'   => $hasCoupon,
+            'coupon'   => $coupon,
+            'codeCoupon'   => $codeCoupon,
+            'discountType'   => $discountType
         ];
         return view('frontend.pages.shopping.index', $viewData);
     }
@@ -100,7 +109,10 @@ class ShoppingCartController extends Controller
         }
 
         $data['tst_user_id'] = \Auth::user()->id;$data['tst_user_id'] = \Auth::user()->id;
-        $data['tst_total_money'] = str_replace(',', '', \Cart::subtotal(0));
+//        $data['tst_total_money'] = str_replace(',', '', \Cart::subtotal(0));
+        //update cart after update coupon
+        $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
+        $data['tst_total_money'] = str_replace(',', '', $totalCard);
         $data['created_at']      = Carbon::now();
 
 		// check nếu thanh toán ví thì kiểm tra số tiền
@@ -121,11 +133,10 @@ class ShoppingCartController extends Controller
         $data['options']['orders'] = $shopping;
 
         $options['drive'] = $request->pay;
-
-//        dd($options);
-
         try{
             \Cart::destroy();
+            $request->session()->forget('cartUpdateTotal');
+            $request->session()->forget('coupon');
             new PayManager($data, $shopping, $options);
         }catch (\Exception $exception){
             Log::error("[Errors pay shopping cart]" .$exception->getMessage());

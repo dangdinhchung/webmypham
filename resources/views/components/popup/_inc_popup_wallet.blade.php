@@ -10,7 +10,10 @@
 			<div class="content-content">
 				<div class="form-group">
 					<label for="phone" style="font-weight: 400">Số tiền cần nạp<span class="cRed">(*)</span></label>
-					<input type="text" name="money" id="money_online"  value="{{ str_replace(',','',\Cart::subtotal(0)) }}" data-type="currency" placeholder="200,000" class="form-control" />
+					@php
+					  	$totalCartUpdate = !empty(session('coupon')) ? session('cartUpdateTotal') : \Cart::subtotal(0);
+					@endphp
+					<input type="text" name="money" id="money_online"  value="{{ str_replace(',','',$totalCartUpdate) }}" data-type="currency" placeholder="200,000" class="form-control" />
 					<span class="text-danger"></span>
 				</div>
 				<div class="type-atm type active">

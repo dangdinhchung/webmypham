@@ -17,6 +17,17 @@ class CouponController extends Controller
             $html   = '';
             $code   = $request->get('cp_code');
             $action = $request->get('action');
+            //check action remove
+            if ($action === 'remove') {
+                $request->session()->forget('coupon');
+                $html = '';
+                $html .= "<tr class='showTotal'>";
+                $html .= '<th>Tổng tiền hàng</th>';
+                $html .= "<td style='text-align: right' id='subtotal'>" . \Cart::subtotal(0) . ' VNĐ</td>';
+                $html .= '</tr>';
+
+                return json_encode(['html' => $html]);
+            }
             $check = json_decode(self::check($code, $idUser),true);
             if ($check['error'] == 1) {
                 $error = 1;
@@ -29,33 +40,38 @@ class CouponController extends Controller
                 } elseif($check['msg'] == 'error_user_expired') {
                     $msg = "Mã giảm giá đã hết hạn!";
                 } elseif($check['msg'] == 'error_code_cant_use') {
-                    $msg = "Mã vượt quá số lần sử dụng!";
+                    $msg = 'Mã vượt quá số lần sử dụng!';
                 } else {
                     $msg = "Lỗi không xác định!";
                 }
             } else{
                 $content = $check['content'];
                 $error = 0;
-                $discountType = $content['cp_discount_type'] == 'percent' ? ' %' : ' VNĐ';
-                if ($content['cp_discount_type'] == 'percent') {
-                    //$moneyDiscount = ((100 - $content['cp_discount']) * \Cart::subtotal(0)) / 100;
-                    $a = str_replace(',', '', \Cart::subtotal());
-                    dd($a);
-                } else {
-                    $moneyDiscount = number_format($content['cp_discount']);
-                }
-                $msg   = "Mã giảm giá có giá trị giảm " . $content['cp_discount'] . $discountType . " cho đơn hàng này.";
-                $request->session()->put('coupon', $code);
+                $discountType = $content['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
+                $subtotal = str_replace(',','',\Cart::subtotal(0));
+                $moneyDiscount = $content['cp_discount_type'] === 'percent' ? number_format(floor($subtotal * $content['cp_discount'] / 100)) : number_format($content['cp_discount']);
+                $totalDiscount = $content['cp_discount_type'] === 'percent' ? floor($subtotal * $content['cp_discount'] / 100) : $content['cp_discount'];
+                $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
+                $msg   = 'Mã giảm giá có giá trị giảm ' . number_format( $content['cp_discount']) . $discountType . ' cho đơn hàng này.';
+
+                $request->session()->put('cartUpdateTotal', $cartUpdateTotal);
+                $request->session()->put('coupon', $code);  //not used
+                //$request->session()->forget('coupon'); //not used
 
                 $html .= "<tr class='showTotal'>";
-                $html .= "<th>Tổng tiền hàng</th>";
-                $html .= "<td style='text-align: right' id='subtotal'>" . \Cart::subtotal(0) . " VNĐ</td>";
+                $html .= '<th>Tổng tiền hàng</th>';
+                $html .= "<td style='text-align: right' id='subtotal'>" . \Cart::subtotal(0) . ' VNĐ</td>';
+                $html .= '</tr>';
+
+                $html .= "<tr class='showTotal'>";
+                $html .= '<th> Giảm tối đa ' . number_format($content['cp_discount']) . $discountType . ' (<b>Code:</b> ' . $code . ") </th>
+                <td style='text-align: right' id='" . $discountType . "'>" . "- " . $moneyDiscount . ' VNĐ' . '</td>
+                </tr>';
+
+                $html .= "<tr class='showTotal'>";
+                $html .= '<th>Tổng tiền cần thanh toán </th>';
+                $html .= "<td style='text-align: right' id='subtotal'>" . $cartUpdateTotal. " VNĐ</td>";
                 $html .= "</tr>";
-
-                $html .= "<tr class='showTotal'>";
-                $html .= "<th> Giảm tối đa " . number_format($content['cp_discount']) . $discountType . " (<b>Code:</b> " . $code . ") </th>
-                <td style='text-align: right' id='" . $discountType . "'>" . "- " . $moneyDiscount . $discountType . "</td>
-                </tr>";
             }
         }
 

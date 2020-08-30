@@ -102,13 +102,16 @@
                     </table>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="inputGroupSuccess3"><i class="fa fa-exchange" aria-hidden="true"></i> Mã giảm giá </label>
+                        @php
+                            $style = ($hasCoupon)?"display:inline;":"display: none;";
+                        @endphp
+                        <label class="control-label" for="inputGroupSuccess3"><i class="fa fa-exchange" aria-hidden="true"></i> Mã giảm giá <span style="{{ $style }} cursor: pointer;" class="text-danger" href="{{ route('checkout.apply_coupon_code') }}" id="removeCoupon">(xóa mã đang dùng <i class="fa fa fa-times"></i>)</span></label>
                         <div class="input-group ds-flex">
-                            <input type="text" placeholder="Nhập mã giảm giá" class="form-control form-coupon" id="coupon-value" aria-describedby="inputGroupSuccess3Status">
+                            <input type="text" placeholder="Nhập mã giảm giá" class="form-control form-coupon" value="{{ $hasCoupon ? session('coupon') : '' }}" id="coupon-value" aria-describedby="inputGroupSuccess3Status">
                             <span class="input-group-addon"  id="coupon-button" href="{{ route('checkout.apply_coupon_code') }}" style="cursor: pointer;" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Đang kiểm tra">Kiểm tra</span>
                         </div>
                         <span class="status-coupon" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-                        <div class="coupon-msg" style="text-align: left;padding-left: 10px;"></div>
+                        <div class="coupon-msg" style="text-align: left;padding-left: 10px;">{{ $hasCoupon ? 'Mã giảm giá có giá trị giảm ' . number_format($codeCoupon['cp_discount']) . $discountType . ' cho đơn hàng này.' : ""  }}</div>
                     </div>
                     <table class="table" id="showTotal">
                         <tbody>
@@ -116,6 +119,18 @@
                                 <th>Tổng tiền hàng</th>
                                 <td style="text-align: right" id="subtotal">{{ \Cart::subtotal(0) }} VNĐ</td>
                             </tr>
+                            @if ($hasCoupon)
+                                @php
+                                     $subtotal = str_replace(',','',\Cart::subtotal(0));
+                                     $totalDiscount = $codeCoupon['cp_discount_type'] === 'percent' ? floor($subtotal * $codeCoupon['cp_discount'] / 100) : $codeCoupon['cp_discount'];
+                                     $moneyDiscount = $codeCoupon['cp_discount_type'] === 'percent' ? number_format(floor($subtotal * $codeCoupon['cp_discount'] / 100)) : number_format($codeCoupon['cp_discount']);
+                                     $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
+                                @endphp
+                                <tr class="showTotal"><th> Giảm tối đa {{ number_format($codeCoupon['cp_discount']) }} {{ $discountType }} (<b>Code:</b> {{ $coupon }}) </th>
+                                    <td style="text-align: right" id=" %">- 470,250 VNĐ</td>
+                                </tr>
+                                <tr class="showTotal"><th>Tổng tiền cần thanh toán </th><td style="text-align: right" id="subtotal">{{ $cartUpdateTotal }} VNĐ</td></tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -153,7 +168,10 @@
                             </button>
                         </div>
                         @php
-                            $totalMoney = str_replace(',','',\Cart::subtotal(0));
+                            /*$totalMoney = str_replace(',','',\Cart::subtotal(0));*/
+                            /*update total cart after add coupon*/
+                            $totalUpdateCard = session('cartUpdateTotal');
+                            $totalMoney = str_replace(',','',$totalUpdateCard);
                         @endphp
                         <div class="btn-buy" style="margin-top: 10px">
                             <button class="buy1 btn btn-pink {{ \Auth::id() ? '' : 'js-show-login' }} {{ $totalMoney > get_data_user('web','balance') ? 'js-popup-wallet' : '' }}" style="width: 100%;border-radius: 5px" type="submit" name="pay" value="online">
@@ -209,6 +227,31 @@
                     $('#coupon-button').button('reset');
                 }, 2000);
             }
+        });
+
+        $('#removeCoupon').click(function () {
+            let Url = $(this).attr('href');
+            $.ajax({
+                url: Url,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: "remove",
+                    _token: "{{ csrf_token() }}",
+                },
+            })
+                .done(function(result) {
+                    $('#removeCoupon').hide();
+                    $('#coupon-value').val('');
+                    $('.coupon-msg').removeClass('text-danger');
+                    $('.coupon-msg').removeClass('text-success');
+                    $('.coupon-msg').hide();
+                    $('.showTotal').remove();
+                    $('#showTotal').prepend(result.html);
+                })
+                .fail(function() {
+                    console.log("error");
+                });
         });
     </script>
 @stop

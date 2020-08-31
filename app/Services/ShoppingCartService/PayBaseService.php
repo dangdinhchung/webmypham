@@ -24,6 +24,7 @@ class PayBaseService
             "tst_note"        => Arr::get($data,'tst_note'),
             "tst_user_id"     => Arr::get($data,'tst_user_id'),
             "tst_total_money" => Arr::get($data,'tst_total_money'),
+//            "cpu_coupon_id"   => Arr::get($data,'cpu_coupon_id'),
             "created_at"      => Carbon::now()
         ];
     }

@@ -14,6 +14,9 @@
     table {
         text-align: center;
     }
+    .list__content {
+        margin-top: 10px;
+    }
 
 </style>
 @stop
@@ -22,6 +25,7 @@
         <div class="left left-compare">
             <div class="list">
                 <div class="title">SO SÁNH SẢN PHẨM</div>
+                <a href="{{ route('reset.compare') }}" class="label label-success">Reset Compare List </a>
                 @if(Session::has('compare'))
                     @if(count(Session::get('compare')) > 0)
                          <div class="list__content">

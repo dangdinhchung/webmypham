@@ -61,6 +61,7 @@ Route::group(['namespace' => 'Frontend'], function() {
 
     Route::post('/compare/addToCompare','ProductDetailController@addCompare')->name('compare.addToCompare'); // add compare product detail
     Route::get('/compare','ProductDetailController@listCompare')->name('get.compare.list'); // get list compare
+    Route::get('/reset-compare','ProductDetailController@resetCompare')->name('reset.compare'); // reset list compare
 
     Route::get('bai-viet','BlogController@index')->name('get.blog.home'); // bai viet
     Route::get('menu/{slug}','BlogMenuController@getArticleByMenu')->name('get.article.by_menu'); // bai viết theo menu

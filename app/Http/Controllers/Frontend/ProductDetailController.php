@@ -228,6 +228,11 @@ class ProductDetailController extends FrontendController
             $request->session()->put('compare', $compare);
         }
 
-        return view('frontend.partials.compare');
+        return view('frontend.pages.compare.header_compare');
+    }
+
+    public function resetCompare(Request $request) {
+        $request->session()->forget('compare');
+        return back();
     }
 }

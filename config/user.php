@@ -40,4 +40,9 @@ return [
         'route' => 'get.user.log_login',
         'icon'  => 'fa fa-bug'
     ],
+    [
+        'name'  => 'Trở thành người bán',
+        'route' => 'seller.index',
+        'icon'  => 'fa fa-users'
+    ],
 ];

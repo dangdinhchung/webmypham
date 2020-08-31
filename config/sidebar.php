@@ -79,6 +79,28 @@ return [
             ],
         ]
     ],
+    [
+        'name' => 'Quản lý shop',
+        'list-check' => ['shop','commission'],
+        'icon' => 'fa fa-shopping-basket',
+        'level'  => [1,2],
+        'sub'  => [
+            [
+                'name'  => 'Danh sách shop',
+                'namespace' => 'shop',
+                'route' => 'admin.shop.index',
+                'icon'  => 'fa fa-bars',
+                'level'  => [1,2],
+            ],
+           /* [
+                'name'  => 'Hoa hồng',
+                'namespace' => 'commission',
+                'route' => 'admin.commission.index',
+                'icon'  => 'fa fa-money',
+                'level'  => [1,2],
+            ],*/
+        ]
+    ],
 	[
 		'name' => 'Đối tác && Thành viên',
 		'list-check' => ['user','ncc'],

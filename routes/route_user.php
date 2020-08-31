@@ -29,6 +29,9 @@
 
         Route::get('log-login','LogLoginUserController@index')->name('get.user.log_login'); // lịch sử đăng nhập
 
+        Route::get('seller','SellerController@index')->name('seller.index'); // seller
+        Route::post('seller','SellerController@store')->name('seller.store'); // create seller
+
         Route::get('tracking/view/{id}','UserTransactionController@getTrackingTransaction')->name('get.user.tracking_order'); // theo dõi trạng thái đơn hang
 
         Route::get('favourite','UserFavouriteController@index')->name('get.user.favourite'); // sp yêu thích

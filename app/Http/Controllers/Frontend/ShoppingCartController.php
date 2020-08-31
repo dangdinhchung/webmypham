@@ -108,7 +108,8 @@ class ShoppingCartController extends Controller
             return redirect()->back();
         }
 
-        $data['tst_user_id'] = \Auth::user()->id;$data['tst_user_id'] = \Auth::user()->id;
+        $data['tst_user_id'] = \Auth::user()->id;
+//        $data['cpu_coupon_id'] =  session('coupon');
 //        $data['tst_total_money'] = str_replace(',', '', \Cart::subtotal(0));
         //update cart after update coupon
         $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
@@ -136,7 +137,7 @@ class ShoppingCartController extends Controller
         try{
             \Cart::destroy();
             $request->session()->forget('cartUpdateTotal');
-            $request->session()->forget('coupon');
+            /*$request->session()->forget('coupon');*/
             new PayManager($data, $shopping, $options);
         }catch (\Exception $exception){
             Log::error("[Errors pay shopping cart]" .$exception->getMessage());
@@ -146,7 +147,7 @@ class ShoppingCartController extends Controller
             'type'    => 'success',
             'message' => 'Đơn hàng của bạn đã được lưu'
         ]);
-
+        $request->session()->forget('coupon');
         return redirect()->to('/');
     }
 

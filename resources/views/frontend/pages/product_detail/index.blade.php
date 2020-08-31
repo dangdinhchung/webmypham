@@ -207,7 +207,7 @@
     <script>
         function addToCompare(id){
             $.post('{{ route('compare.addToCompare') }}', {_token:'{{ csrf_token() }}', id:id}, function(data){
-                // $('#compare').html(data);
+                 $('#compare').html(data);
                 // showFrontendAlert('success', 'Item has been added to compare list');
                 // $('#compare_items_sidenav').html(parseInt($('#compare_items_sidenav').html())+1);
             });

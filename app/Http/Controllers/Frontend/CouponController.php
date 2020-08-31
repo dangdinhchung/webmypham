@@ -81,10 +81,17 @@ class CouponController extends Controller
     public function check ($code, $idUser) {
         $now = strtotime( Carbon::now()->toDateString());
         $codeCoupon = Coupon::where(['cp_code' => $code])->first();
-        $userOnlyCoupon = CouponUsage::where(['cpu_user_id' => $idUser,'cpu_coupon_id' => $code])->first();
+        if($codeCoupon) {
+            $idCoupon = Coupon::select('id')->where('cp_code', $code)->first()->id;
+            $userOnlyCoupon = CouponUsage::where(['cpu_user_id' => $idUser,'cpu_coupon_id' => $idCoupon])->first();
+        }
         $checkCountUsed = DB::table('coupons')->select('coupons.id','coupon_usages.cpu_coupon_id')
                            ->join('coupon_usages','coupons.id','=','coupon_usages.cpu_coupon_id')
                            ->count();
+        if(!$codeCoupon) {
+            return json_encode(['error' => 1, 'msg' => "error_code_not_exist"]);
+        }
+
         if($userOnlyCoupon) {
             return json_encode(['error' => 1, 'msg' => "error_user_used"]);
         }
@@ -99,10 +106,6 @@ class CouponController extends Controller
 
         if($now > $codeCoupon['cp_end_date'] && $codeCoupon) {
             return json_encode(['error' => 1, 'msg' => "error_user_expired"]);
-        }
-
-        if(!$codeCoupon) {
-            return json_encode(['error' => 1, 'msg' => "error_code_not_exist"]);
         }
         return json_encode(['error' => 0, 'content' => $codeCoupon]);
     }

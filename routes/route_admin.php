@@ -181,6 +181,10 @@
 
         });
 
+        Route::group(['prefix' => 'shop'], function(){
+            Route::get('','AdminShopController@index')->name('admin.shop.index')->middleware('permission:shop_index|full');
+        });
+
         Route::group(['prefix' => 'slide'], function(){
             Route::get('','AdminSlideController@index')->name('admin.slide.index')->middleware('permission:full');
             Route::get('create','AdminSlideController@create')->name('admin.slide.create')->middleware('permission:full');

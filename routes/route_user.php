@@ -30,7 +30,15 @@
         Route::get('log-login','LogLoginUserController@index')->name('get.user.log_login'); // lịch sử đăng nhập
 
         Route::get('seller','SellerController@index')->name('seller.index'); // seller
+        Route::get('view-seller','SellerController@detail')->name('seller.detail.index'); // seller
+        Route::post('view-seller','SellerController@update'); // seller
         Route::post('seller','SellerController@store')->name('seller.store'); // create seller
+        Route::get('seller-product','SellerController@product')->name('seller.product.index'); // seller product
+        Route::get('seller-create-product','SellerController@create')->name('seller.product.create'); // seller product
+        Route::post('seller-create-product','SellerController@storeSeller')->name('seller.product.store'); // store seller product
+        Route::get('seller-create-product/delete/{id}','SellerController@delete')->name('seller.product.delete'); // store seller product
+        Route::get('seller-edit-product/{id}','SellerController@edit')->name('seller.product.update'); // store seller product
+        Route::post('seller-edit-product/{id}','SellerController@updateShop'); // store seller product
 
         Route::get('tracking/view/{id}','UserTransactionController@getTrackingTransaction')->name('get.user.tracking_order'); // theo dõi trạng thái đơn hang
 

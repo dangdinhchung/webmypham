@@ -25,13 +25,36 @@
                                 <th style="width: 10px">Stt</th>
                                 <th style="width: 10px">ID</th>
                                 <th>Name</th>
-                                <th>Avatar</th>
+                                <th>Address</th>
                                 <th>Status</th>
-                                <th>Hot</th>
-                                <th>Time</th>
                                 <th>Action</th>
                             </tr>
-
+                            @if (isset($shops))
+                                @foreach($shops as $key => $shop)
+                                    <tr>
+                                        <td>{{ ($key + 1) }}</td>
+                                        <td>{{ $shop->id }}</td>
+                                        <td>{{ $shop->sp_name }}</td>
+                                        <td>{{ $shop->sp_address }}</td>
+                                        <td>
+                                            @if ($shop->sp_verification_status == 0)
+                                                <a href="{{ route('admin.shop.active', $shop->id) }}" class="label label-info">
+                                                    Requested
+                                                </a>
+                                            @else
+                                                <a href="{{ route('admin.shop.active', $shop->id) }}" class="label label-default">
+                                                    Verified
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td>{{  $shop->created_at }}</td>
+                                      {{--  <td>
+                                            <a href="{{ route('admin.slide.update', $shop->id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a href="{{  route('admin.slide.delete', $shop->id) }}" class="btn btn-xs btn-danger js-delete-confirm"><i class="fa fa-trash"></i> Delete</a>
+                                        </td>--}}
+                                    </tr>
+                                @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>

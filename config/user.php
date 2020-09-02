@@ -41,8 +41,18 @@ return [
         'icon'  => 'fa fa-bug'
     ],
     [
-        'name'  => 'Trở thành người bán',
+        'name'  => 'Tạo shop',
         'route' => 'seller.index',
         'icon'  => 'fa fa-users'
+    ],
+    [
+        'name'  => 'Xem thông tin shop',
+        'route' => 'seller.detail.index',
+        'icon'  => 'fa fa-cog'
+    ],
+    [
+        'name'  => 'Sản phẩm',
+        'route' => 'seller.product.index',
+        'icon'  => 'fa fa-product-hunt'
     ],
 ];

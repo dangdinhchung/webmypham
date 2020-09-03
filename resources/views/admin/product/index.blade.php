@@ -92,12 +92,6 @@
                                                 
                                             </td>
                                             <td>
-                                                @php
-                                                    $time = explode(' ',$product->pro_expiration_date);
-                                                @endphp
-                                                {{ $time[0] ?? "Chưa cập nhật" }}
-                                            </td>
-                                            <td>
                                                 @if ($product->pro_hot == 1)
                                                     <a href="{{ route('admin.product.hot', $product->id) }}" class="label label-info">Hot</a>
                                                 @else 

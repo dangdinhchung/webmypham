@@ -28,13 +28,15 @@ class PayTransferService extends PayBaseService implements PayServiceInterface
     {
         $dataTransaction = $this->getDataTransaction($this->data);
         $this->idTransaction = Transaction::insertGetId($dataTransaction);
-        $idCoupon = Coupon::select('id')->where('cp_code', session('coupon'))->first()->id;
-        DB::table('coupon_usages')->insertGetId(
-            array(
-                'cpu_user_id' =>  $dataTransaction['tst_user_id'],
-                'cpu_coupon_id' =>  $idCoupon
-            )
-        );
+        if(session('coupon')) {
+            $idCoupon = Coupon::select('id')->where('cp_code', session('coupon'))->first()->id;
+            DB::table('coupon_usages')->insertGetId(
+                array(
+                    'cpu_user_id' =>  $dataTransaction['tst_user_id'],
+                    'cpu_coupon_id' =>  $idCoupon
+                )
+            );
+        }
         $orders = $this->data['options']['orders'] ?? [];
         if ($this->idTransaction)
             $this->syncOrder($orders, $this->idTransaction);

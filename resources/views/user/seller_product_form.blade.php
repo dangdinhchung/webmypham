@@ -24,10 +24,6 @@
             <div class="form-group"> <label for="exampleInputEmail1">Số lượng</label>
                 <input type="number" name="pro_number_import" value="{{  $product->pro_number_import ?? old('pro_number_import',0) }}" class="form-control" placeholder="5"> </div>
         </div>
-        <div class="col-sm-4 col-seller">
-            <div class="form-group" id="time"> <label for="exampleInputEmail1">Ngày sử dụng ( tính từ ngày nhập )</label>
-                <input type="text" class="form-control hasDatepicker" name="pro_expiration_date" value="" id="dp1598976124641"> </div>
-        </div>
     </div>
     <div class="form-group ">
         <label class="control-label">Danh mục <b class="col-red">(*)</b></label>

@@ -14,7 +14,7 @@
                     @endif
                 </div>
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Giá sản phẩm</label>
                              <input type="text" name="pro_price" value="{{  $product->pro_price ?? old('pro_price',0) }}" class="form-control" data-type="currency" placeholder="15.000.000">
@@ -23,25 +23,16 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Giảm giá</label>
+                            <label for="exampleInputEmail1">Giảm giá (%)</label>
                              <input type="number" name="pro_sale" value="{{  $product->pro_sale ?? old('pro_sale',0) }}" class="form-control" data-type="currency" placeholder="5">
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Số lượng</label>
                             <input type="number" name="pro_number_import" value="{{  $product->pro_number_import ?? old('pro_number_import',0) }}" class="form-control"  placeholder="5">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group" id="time">
-                            <label for="exampleInputEmail1">Ngày sử dụng ( tính từ ngày nhập )</label>
-{{--                            <input type="number" name="pro_expiration_date" value="{{  $product->pro_expiration_date ?? old('pro_expiration_date',0) }}"--}}
-{{--                                   class="form-control"  placeholder="5">--}}
-
-                            <input type="text" class="form-control" name="pro_expiration_date" value="{{  $product->pro_expiration_date ?? old('pro_expiration_date') }}">
                         </div>
                     </div>
 {{--                    @if (isset($product))--}}
@@ -166,8 +157,18 @@
     </div>
 </form>
 
-
+<script src="{{  asset('admin/bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('admin/ckeditor/ckeditor.js') }}"></script>
 @section('script')
+    <script type="text/javascript">
+        var options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+        };
 
+        CKEDITOR.replace( 'content' ,options);
+    </script>
 @stop
 

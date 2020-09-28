@@ -74,7 +74,7 @@ class AdminProductController extends Controller
 
 		if ($id) {
 			$this->syncAttribute($request->attribute, $id);
-			$this->syncKeyword($request->keywords, $id);
+//			$this->syncKeyword($request->keywords, $id);
 			if ($request->file) {
 				$this->syncAlbumImageAndProduct($request->file, $id);
 			}
@@ -88,33 +88,35 @@ class AdminProductController extends Controller
 		$categories     = Category::all();
 		$product        = Product::findOrFail($id);
 		$attributes     = $this->syncAttributeGroup();
-		$keywords       = Keyword::all();
+		//$keywords       = Keyword::all();
 
 		$attributeOld = \DB::table('products_attributes')
 			->where('pa_product_id', $id)
 			->pluck('pa_attribute_id')
 			->toArray();
 
-		$keywordOld = \DB::table('products_keywords')
-			->where('pk_product_id', $id)
-			->pluck('pk_keyword_id')
-			->toArray();
+//		$keywordOld = \DB::table('products_keywords')
+//			->where('pk_product_id', $id)
+//			->pluck('pk_keyword_id')
+//			->toArray();
 
 		if (!$attributeOld) $attributeOld = [];
-		if (!$keywordOld) $keywordOld = [];
+//		if (!$keywordOld) $keywordOld = [];
 
-		$images = \DB::table('product_images')
-			->where("pi_product_id", $id)
-			->get();
+//		$images = \DB::table('product_images')
+//			->where("pi_product_id", $id)
+//			->get();
+
+		//dd($images);
 
 		$viewData = [
 			'categories'     => $categories,
 			'product'        => $product,
 			'attributes'     => $attributes,
 			'attributeOld'   => $attributeOld,
-			'keywords'       => $keywords,
-			'keywordOld'     => $keywordOld,
-			'images'         => $images ?? []
+//			'keywords'       => $keywords,
+//			'keywordOld'     => $keywordOld,
+			/*'images'         => $images ?? []*/
 		];
 
 		return view('admin.product.update', $viewData);
@@ -129,7 +131,7 @@ class AdminProductController extends Controller
 	{
 		$product                   = Product::find($id);
 		$productOld = $product;
-		$data                      = $request->except('_token', 'pro_avatar', 'attribute', 'keywords', 'file', 'pro_sale','add_number');
+		$data                      = $request->except('_token', 'pro_avatar', 'attribute', 'file', 'pro_sale','add_number');
 		$data['pro_slug']          = Str::slug($request->pro_name);
 		$data['updated_at']        = Carbon::now();
 		if ($request->pro_sale) {
@@ -147,14 +149,14 @@ class AdminProductController extends Controller
 		$update = $product->update($data);
 
 		if ($update) {
-			$invoiceEntered =  InvoiceEntered::where('ie_product_id', $product->id)->first();
-			if ($old_number != $product->pro_number_import) {
-				//  Đồng bộ lại đơn nhập
-				if ($invoiceEntered) {
-					$invoiceEntered->ie_number = ($invoiceEntered->ie_number - $old_number + $product->pro_number_import);
-					$invoiceEntered->save();
-				}
-			}
+//			$invoiceEntered =  InvoiceEntered::where('ie_product_id', $product->id)->first();
+//			if ($old_number != $product->pro_number_import) {
+//				//  Đồng bộ lại đơn nhập
+//				if ($invoiceEntered) {
+//					$invoiceEntered->ie_number = ($invoiceEntered->ie_number - $old_number + $product->pro_number_import);
+//					$invoiceEntered->save();
+//				}
+//			}
 
 			//  Xử lý thêm mới số lượng
 			if ($addNumber = $request->add_number) {
@@ -167,7 +169,7 @@ class AdminProductController extends Controller
 			}
 
 			$this->syncAttribute($request->attribute, $id);
-			$this->syncKeyword($request->keywords, $id);
+			//$this->syncKeyword($request->keywords, $id);
 
 			if ($request->file) {
 				$this->syncAlbumImageAndProduct($request->file, $id);
@@ -231,21 +233,21 @@ class AdminProductController extends Controller
 		return redirect()->back();
 	}
 
-	private function syncKeyword($keywords, $idProduct)
-	{
-		if (!empty($keywords)) {
-			$datas = [];
-			foreach ($keywords as $key => $keyword) {
-				$datas[] = [
-					'pk_product_id' => $idProduct,
-					'pk_keyword_id' => $keyword
-				];
-			}
-
-			\DB::table('products_keywords')->where('pk_product_id', $idProduct)->delete();
-			\DB::table('products_keywords')->insert($datas);
-		}
-	}
+//	private function syncKeyword($keywords, $idProduct)
+//	{
+//		if (!empty($keywords)) {
+//			$datas = [];
+//			foreach ($keywords as $key => $keyword) {
+//				$datas[] = [
+//					'pk_product_id' => $idProduct,
+//					'pk_keyword_id' => $keyword
+//				];
+//			}
+//
+//			\DB::table('products_keywords')->where('pk_product_id', $idProduct)->delete();
+//			\DB::table('products_keywords')->insert($datas);
+//		}
+//	}
 
 	public function delete($id)
 	{

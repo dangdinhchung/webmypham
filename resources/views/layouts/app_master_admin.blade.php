@@ -115,6 +115,12 @@
                             </a>
                         </li>
 
+                        <li class="">
+                            <a href="{{ route('admin.flash.index') }}">
+                                <i class="fa fa-bolt"></i> <span>Flash Sale</span>
+                            </a>
+                        </li>
+
                         @foreach(config('sidebar') as $item)
                             @if (isset($item['label']))
                                 <li class="header">{{ $item['name'] }}</li>

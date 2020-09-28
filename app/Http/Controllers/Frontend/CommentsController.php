@@ -35,6 +35,8 @@ class CommentsController extends Controller
 			$images = $request->images;
             $data      = [
                 'cmt_user_id'    => \Auth::user()->id,
+                'cmt_name'    => \Auth::user()->name,
+                'cmt_email'    => \Auth::user()->email,
                 'cmt_content'    => $request->comment,
                 'cmt_product_id' => $productID,
                 'cmt_parent_id'  => $request->commentId ?? 0,

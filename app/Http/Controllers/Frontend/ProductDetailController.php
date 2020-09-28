@@ -23,7 +23,7 @@ class ProductDetailController extends FrontendController
 		if ($id) {
 			//1. Lấy thông tin sp
 			$product = Cache::remember('PRODUCT_DETAIL_'. $id, 60 * 24 * 24, function () use ($id) {
-				return Product::with('category:id,c_name,c_slug', 'keywords')->findOrFail($id);
+				return Product::with('category:id,c_name,c_slug')->findOrFail($id);
 			});
 
 			//2. Xử lý view

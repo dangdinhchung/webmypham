@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\InvoiceEntered;
 use App\Models\Keyword;
 use App\Models\Product;
+use App\Models\Seller;
 use App\Models\Shop;
 use App\User;
 use Carbon\Carbon;
@@ -35,6 +36,11 @@ class SellerController extends Controller
         $user = \Auth::user();
         $user->user_type = "seller";
         $user->save();
+
+        //insert seller
+        $seller = new Seller();
+        $seller->user_id = $user->id;
+        $seller->save();
 
         //insert shop
         if(Shop::where('user_id', $user->id)->first() == null){
@@ -110,7 +116,7 @@ class SellerController extends Controller
         $data                      = $request->except('_token', 'pro_avatar', 'attribute', 'keywords', 'file', 'pro_sale');
         $data['pro_slug']          = Str::slug($request->pro_name);
         $data['pro_number'] = $request->pro_number_import;
-        $data['pro_user_id'] = Auth::user()->id;
+        $data['pro_user_id'] = \Auth::user()->id;
         $data['created_at']        = Carbon::now();
         if ($request->pro_sale) {
             $data['pro_sale'] = $request->pro_sale;

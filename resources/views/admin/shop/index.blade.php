@@ -25,29 +25,35 @@
                                 <th style="width: 10px">Stt</th>
                                 <th style="width: 10px">ID</th>
                                 <th>Name</th>
-                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Tổng sản phẩm</th>
+                                <th>Thuế</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            @if (isset($shops))
-                                @foreach($shops as $key => $shop)
+                            @if (isset($sellers))
+                                @foreach($sellers as $key => $seller)
                                     <tr>
                                         <td>{{ ($key + 1) }}</td>
-                                        <td>{{ $shop->id }}</td>
-                                        <td>{{ $shop->sp_name }}</td>
-                                        <td>{{ $shop->sp_address }}</td>
+                                        <td>{{ $seller->id }}</td>
+                                        <td>{{ $seller->user->name }}</td>
+                                        <td>{{ $seller->user->email }}</td>
+                                        <td>{{ \App\Models\Product::where('pro_user_id', $seller->user->id)->count() }}</td>
                                         <td>
-                                            @if ($shop->sp_verification_status == 0)
-                                                <a href="{{ route('admin.shop.active', $shop->id) }}" class="label label-info">
+                                           {{  $seller->se_admin_to_pay }}
+                                        </td>
+                                        <td>
+                                            @if ($seller->se_verification_status == 0)
+                                                <a href="{{ route('admin.shop.active', $seller->id) }}" class="label label-info">
                                                     Requested
                                                 </a>
                                             @else
-                                                <a href="{{ route('admin.shop.active', $shop->id) }}" class="label label-default">
+                                                <a href="{{ route('admin.shop.active', $seller->id) }}" class="label label-default">
                                                     Verified
                                                 </a>
                                             @endif
                                         </td>
-                                        <td>{{  $shop->created_at }}</td>
+                                        <td>{{  $seller->created_at }}</td>
                                       {{--  <td>
                                             <a href="{{ route('admin.slide.update', $shop->id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i> Edit</a>
                                             <a href="{{  route('admin.slide.delete', $shop->id) }}" class="btn btn-xs btn-danger js-delete-confirm"><i class="fa fa-trash"></i> Delete</a>

@@ -1,9 +1,11 @@
 @extends('layouts.app_master_admin')
 @section('content')
-    <link rel="stylesheet" href="{{  asset('admin/bower_components/select2/dist/css/select2.min.css') }}">
     <style type="text/css">
-
+        .select2-selection__choice {
+            color: black !important;
+        }
     </style>
+    <link rel="stylesheet" href="{{  asset('admin/bower_components/select2/dist/css/select2.min.css') }}">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>Thêm mới sự kiện Flash Sale</h1>
@@ -78,7 +80,6 @@
         $(document).ready(function(){
             $('#products').on('change', function(){
                 var product_ids = $('#products').val();
-                console.log(product_ids);
                 if(product_ids.length > 0){
                     $.post('{{ route('flash_sales.product_discount') }}', {_token:'{{ csrf_token() }}', product_ids:product_ids}, function(data){
                         $('#discount_table').html(data);

@@ -46,6 +46,31 @@
         @endif
     </div>
     <div class="container" id="before-slide">
+        {{--show flash sale--}}
+
+        <div class="product-one">
+            <div class="top"> <a href="#" title="" class="main-title main-title-2">Flash sale</a> </div>
+            <div class="bot">
+                <div class="left">
+                    <div class="image">
+                        <a href="https://www.facebook.com/TrungPhuNA" title="" class="Event 1 image" target="_blank">
+                            <img style="height: 310px;" class="lazyload lazy loaded" alt="Event 1" src="/uploads/2020/06/08/2020-06-08__anh1.jpg" data-src="/uploads/2020/06/08/2020-06-08__anh1.jpg" data-was-processed="true">
+                        </a>
+                    </div>
+                </div>
+                <div class="right js-product-one owl-carousel owl-theme owl-custom">
+                    @foreach($productsPay as $product)
+                        <div class="item">
+                            @include('frontend.components.product_item',[ 'product' => $product])
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div id="flash_sale"> <a href="https://www.facebook.com/TrungPhuNA" title="" class="image" target="_blank"> <img alt="" style="height:250px;" src="https://dienmaythienhoa.vn/uploads/images/4.%20Infomation/1.%20Flash%20Sale/900-1.jpg" class="lazyload" width="100%"> </a> </div>
+
+
         <div class="product-one">
             <div class="top">
                 <a href="#" title="" class="main-title main-title-2">Sản phẩm bán chạy</a>

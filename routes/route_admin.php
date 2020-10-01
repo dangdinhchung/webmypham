@@ -84,6 +84,7 @@
         Route::group(['prefix' => 'flash-sale'], function(){
             Route::get('','AdminFlashSaleController@index')->name('admin.flash.index')->middleware('permission:full');
             Route::get('create','AdminFlashSaleController@create')->name('admin.flash.create')->middleware('permission:full');
+            Route::post('create','AdminFlashSaleController@store')->name('admin.flash.store')->middleware('permission:full');
             Route::post('flash_deals/product_discount', 'AdminFlashSaleController@product_discount')->name('flash_sales.product_discount');
         });
 

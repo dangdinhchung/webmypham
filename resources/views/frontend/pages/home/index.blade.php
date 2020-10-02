@@ -7,6 +7,90 @@
         #menu-main {
             display: block !important;
         }
+
+        /* Vendor */
+        /* COUNTDOWN TIMER */
+        .flash-title {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .top {
+            margin-right: 2%;
+        }
+        .countdown .countdown-item {
+            display: inline-block;
+        }
+
+        .countdown .countdown-digit,
+        .countdown .countdown-label {
+            font-size: 2rem;
+            font-weight: 300;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        .countdown .countdown-label {
+            font-size: 1.2rem;
+            padding: 0 5px;
+        }
+
+        .countdown-sm .countdown-digit,
+        .countdown-sm .countdown-label {
+            font-size: 1.4rem;
+        }
+
+        .countdown-sm .countdown-label {
+            font-size: 0.875rem;
+            padding: 0 5px;
+        }
+
+        [data-countdown-label="hide"] .countdown-label:not(.countdown-days) {
+            display: none;
+        }
+
+        [data-countdown-label="show"] .countdown-separator {
+            display: none;
+        }
+
+        .countdown--style-1 .countdown-item {
+            margin-right: 10px;
+        }
+
+        .countdown--style-1 .countdown-item:last-child {
+            margin-right: 0;
+        }
+
+        .countdown--style-1 .countdown-digit {
+            display: block;
+            width: 27px;
+            height: 27px;
+            background: #f3f3f3;
+            color: #333;
+            font-size: 15px;
+            font-weight: 400;
+            text-align: center;
+            line-height: 27px;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        .countdown--style-1 .countdown-label {
+            display: block;
+            margin-top: 5px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: "Open Sans", sans-serif;
+            text-transform: uppercase;
+        }
+
+        .countdown--style-1-v1 .countdown-digit {
+            background: #E62E04;
+            color: #fff;
+        }
+        .text-flash {
+            color: red;
+            font-weight: bolder;
+        }
+
 		<?php $style = file_get_contents('css/home_insights.min.css');echo $style;?>
     </style>
 @stop
@@ -46,31 +130,39 @@
         @endif
     </div>
     <div class="container" id="before-slide">
-        {{--show flash sale--}}
-
-        <div class="product-one">
-            <div class="top"> <a href="#" title="" class="main-title main-title-2">Flash sale</a> </div>
-            <div class="bot">
-                <div class="left">
-                    <div class="image">
-                        <a href="https://www.facebook.com/TrungPhuNA" title="" class="Event 1 image" target="_blank">
-                            <img style="height: 310px;" class="lazyload lazy loaded" alt="Event 1" src="/uploads/2020/06/08/2020-06-08__anh1.jpg" data-src="/uploads/2020/06/08/2020-06-08__anh1.jpg" data-was-processed="true">
-                        </a>
+        {{--show flash sale start--}}
+        @if($flashSale != null && strtotime(date('d-m-Y')) >= $flashSale->fs_start_date && strtotime(date('d-m-Y')) <= $flashSale->fs_end_date)
+            <div class="content-flash">
+                <div class="product-one">
+                    <div class="flash-title">
+                        <div class="top"> <a href="#" title="" class="main-title main-title-2 text-flash">Flash sale</a> </div>
+                        <div class="countdown countdown--style-1 countdown--style-1-v1" data-countdown-date="11/06/2020" data-countdown-label="show">
+                        </div>
+                    </div>
+                    <div class="bot">
+                        <div class="left">
+                            <div class="image">
+                                <a href="https://www.facebook.com/TrungPhuNA" title="" class="Event 1 image" target="_blank">
+                                    <img style="height: 310px;" class="lazyload lazy loaded" alt="Event 1" src="{{ asset('images/flash-sale/flash-sale-small.jpg') }}" data-src="/uploads/2020/06/08/2020-06-08__anh1.jpg" data-was-processed="true">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="right js-product-one owl-carousel owl-theme owl-custom">
+                            @foreach ($flashSale->flash_sale_products as $key => $flash_sale_product)
+                                @php
+                                    $product = \App\Models\Product::find($flash_sale_product->fsp_product_id);
+                                @endphp
+                                <div class="item">
+                                    @include('frontend.components.product_item',[ 'product' => $product])
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-                <div class="right js-product-one owl-carousel owl-theme owl-custom">
-                    @foreach($productsPay as $product)
-                        <div class="item">
-                            @include('frontend.components.product_item',[ 'product' => $product])
-                        </div>
-                    @endforeach
-                </div>
+                <div id="flash_sale"> <a href="https://www.facebook.com/TrungPhuNA" title="" class="image" target="_blank"> <img alt="" style="height:250px;" src="{{ asset('images/flash-sale/flash-sale-big.jpg') }}" class="lazyload" width="100%"> </a> </div>
             </div>
-        </div>
-
-        <div id="flash_sale"> <a href="https://www.facebook.com/TrungPhuNA" title="" class="image" target="_blank"> <img alt="" style="height:250px;" src="https://dienmaythienhoa.vn/uploads/images/4.%20Infomation/1.%20Flash%20Sale/900-1.jpg" class="lazyload" width="100%"> </a> </div>
-
-
+        @endif
+        {{--show flash sale end--}}
         <div class="product-one">
             <div class="top">
                 <a href="#" title="" class="main-title main-title-2">Sản phẩm bán chạy</a>
@@ -169,7 +261,29 @@
 @stop
 
 @section('script')
+    <script src="{{  asset('js/jquery.countdown.min.js') }}"></script>
     <script>
+        //show flash sale time start
+        if ($('.countdown').length > 0) {
+            $('.countdown').each(function() {
+                var $this = $(this);
+                var date = $this.data('countdown-date');
+
+                $this.countdown(date).on('update.countdown', function(event) {
+                    var $this = $(this).html(event.strftime('' +
+                       /* '<div class="countdown-item"><span class="countdown-digit">%-D</span><span class="countdown-label countdown-days">day%!d</span></div>' +
+                        '<div class="countdown-item"><span class="countdown-digit">%H</span><span class="countdown-separator">:</span><span class="countdown-label">hr</span></div>' +
+                        '<div class="countdown-item"><span class="countdown-digit">%M</span><span class="countdown-separator">:</span><span class="countdown-label">min</span></div>' +
+                        '<div class="countdown-item"><span class="countdown-digit">%S</span><span class="countdown-label">sec</span></div>'*/
+                        '<div class="countdown-item"><span class="countdown-digit">%-D</span></div>' +
+                        '<div class="countdown-item"><span class="countdown-digit">%H</span></div>' +
+                        '<div class="countdown-item"><span class="countdown-digit">%M</span></div>' +
+                        '<div class="countdown-item"><span class="countdown-digit">%S</span></div>'
+                    ));
+                });
+            });
+        }
+        //show flash sale time end
 		var routeRenderProductRecently  = '{{ route('ajax_get.product_recently') }}';
 		var routeRenderProductByCategory  = '{{ route('ajax_get.product_by_category') }}';
 		var CSS = "{{ asset('css/home.min.css') }}";

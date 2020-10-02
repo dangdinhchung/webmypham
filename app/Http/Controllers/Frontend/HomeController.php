@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\FlashSale;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Slide;
@@ -14,6 +15,10 @@ use Illuminate\Support\Facades\Log;
 
 class HomeController extends FrontendController
 {
+    /**
+     * @author chungdd
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function index()
 	{
 		// Sản phẩm mới ||  Cache 30 ngày
@@ -81,6 +86,9 @@ class HomeController extends FrontendController
 				->get();
 		});
 
+		//get event flash sale
+        $flashSale = FlashSale::where('fs_status',1)->first();
+
 
 		$viewData = [
 			'productsNew' => $productsNew,
@@ -91,13 +99,15 @@ class HomeController extends FrontendController
 			'slides'      => $slides,
 			'event3'      => $event3,
 			'title_page'  => "Trang chủ | Đồ án tốt nghiệp",
-			'articlesHot' => $articlesHot
+			'articlesHot' => $articlesHot,
+			'flashSale'   => $flashSale
 		];
 
 		return view('frontend.pages.home.index', $viewData);
 	}
 
 	/**
+     * @author chungdd
 	 * @param Request $request
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Throwable
@@ -120,6 +130,7 @@ class HomeController extends FrontendController
 	}
 
 	/**
+     * @author chungdd
 	 * @param Request $request
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Throwable
@@ -150,6 +161,11 @@ class HomeController extends FrontendController
 		}
 	}
 
+    /**
+     * @author chungdd
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
 	public function searchAjax(Request  $request) {
         if ($request->ajax()) {
             $products = Product::where('pro_active',1)

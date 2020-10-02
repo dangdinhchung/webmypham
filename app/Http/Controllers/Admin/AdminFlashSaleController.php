@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\FlashSale;
 use App\Models\FlashSaleProduct;
 use Illuminate\Http\Request;
+use App\Http\Requests\AdminRequestFlashSale;
 
 class AdminFlashSaleController extends Controller
 {
@@ -30,7 +31,7 @@ class AdminFlashSaleController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request) {
+    public function store(AdminRequestFlashSale $request) {
         $flash_sale = new FlashSale();
         $flash_sale->fs_title = $request->fs_title;
         $flash_sale->fs_start_date = strtotime($request->fs_start_date);

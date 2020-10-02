@@ -35,7 +35,7 @@
                     <label for="" class="control-label">{{ $product->pro_price }}</label>
                 </td>
                 <td>
-                    <input type="number" name="discount_{{ $id }}" value="{{ $product->discount }}" min="0" step="1" class="form-control" required>
+                    <input type="number" name="discount_{{ $id }}" value="{{ $product->discount }}" min="0" step="1" class="form-control">
                 </td>
                 <td style="text-align: center">
                     <select class="demo-select2" name="discount_type_{{ $id }}">

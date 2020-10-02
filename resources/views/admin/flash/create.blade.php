@@ -21,7 +21,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <div class="box-body">
-                    <form role="form" action="" method="POST">
+                    <form role="form" action="" method="POST" id="form-flash-sale">
                         @csrf
                         <div class="col-sm-8">
                             <div class="form-group {{ $errors->first('fs_title') ? 'has-error' : '' }}">
@@ -48,11 +48,12 @@
 
                             <div class="form-group mb-3">
                                 <label for="exampleInputEmail1">Sản phẩm</label>
-                                    <select name="products[]" id="products" class="form-control demo-select2" multiple required data-placeholder="Choose Products">
+                                    <select name="products[]" id="products" class="form-control demo-select2" multiple data-placeholder="Choose Products">
                                         @foreach(\App\Models\Product::all() as $product)
                                             <option value="{{$product->id}}">{{__($product->pro_name)}}</option>
                                         @endforeach
                                     </select>
+                                    <i class="txt-note-sale" style="color: red;font-size: 12px;">Lưu ý: Bạn cần phải chọn ít nhất 4 sản phẩm cho sự kiện flash sale !</i>
                             </div>
                             <br>
                             <div class="form-group" id="discount_table">
@@ -62,7 +63,7 @@
                             <div class="box-footer text-center"  style="margin-top: 20px;">
                                 <a href="{{ route('admin.flash.index') }}" class="btn btn-danger">
                                     Quay lại <i class="fa fa-undo"></i></a>
-                                <button type="submit" class="btn btn-success">Lưu dữ liệu <i class="fa fa-save"></i></button>
+                                <button type="submit" class="btn btn-success btn-flash">Lưu dữ liệu <i class="fa fa-save"></i></button>
                             </div>
                         </div>
                     </form>
@@ -89,6 +90,21 @@
                 else{
                     $('#discount_table').html(null);
                 }
+            });
+
+            //click btn flash
+            
+             $('.btn-flash').on('click', function(event ){
+                event.preventDefault();
+                let fs_title = $("input[name*='fs_title']").val();
+                let fs_start_date = $("input[name*='fs_start_date']").val();
+                let fs_end_date = $("input[name*='fs_end_date']").val();
+                if(fs_title == "") {
+                    alert(11111111);
+                } else {
+                    $( "#form-flash-sale" ).submit();
+                }
+
             });
         });
 

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{  asset('admin/bower_components/select2/dist/css/select2.min.css') }}">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Thêm mới sự kiện Flash Sale</h1>
+        <h1>Sửa sự kiện Flash Sale</h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="{{  route('admin.flash.index') }}"> Flash sale</a></li>
@@ -21,31 +21,22 @@
         <div class="box">
             <div class="box-header with-border">
                 <div class="box-body">
-                    <form role="form" action="" method="POST" id="form-flash-sale">
+                    <form role="form" action="" method="POST" id="form-flash-sale-edit">
                         @csrf
                         <div class="col-sm-8">
                             <div class="form-group {{ $errors->first('fs_title') ? 'has-error' : '' }}">
                                 <label for="name">Tiêu đề<span class="text-danger">(*)</span></label>
                                 <input type="text" class="form-control fs_title" name="fs_title" value="{{ $flashSale->fs_title ?? old('fs_title') }}"  placeholder="Sự kiện tháng 9...">
-                              {{--   @if ($errors->first('fs_title'))
-                                    <span class="text-danger">{{ $errors->first('fs_title') }}</span>
-                                @endif --}}
                                 <span class="text-danger fs_title"></span>
                             </div>
                             <div class="form-group {{ $errors->first('fs_start_date') ? 'has-error' : '' }}" id="time1">
                                 <label for="exampleInputEmail1">Ngày bắt đầu<span class="text-danger">(*)</span></label>
                                 <input type="date" class="form-control fs_start_date" name="fs_start_date" value="{{  isset($flashSale) ? date("Y-m-d",$flashSale->fs_start_date) : old('fs_start_date') }}">
-                               {{--  @if ($errors->first('fs_start_date'))
-                                    <span class="text-danger">{{ $errors->first('fs_start_date') }}</span>
-                                @endif --}}
                                  <span class="text-danger fs_start_date"></span>
                             </div>
                             <div class="form-group {{ $errors->first('fs_end_date') ? 'has-error' : '' }}" id="time2">
                                 <label for="exampleInputEmail1">Ngày kết thúc<span class="text-danger">(*)</span></label>
                                 <input type="date" class="form-control fs_end_date" name="fs_end_date" value="{{  isset($flashSale) ? date("Y-m-d",$flashSale->fs_end_date) : old('fs_end_date') }}">
-                               {{--  @if ($errors->first('fs_end_date'))
-                                    <span class="text-danger">{{ $errors->first('fs_end_date') }}</span>
-                                @endif --}}
                                  <span class="text-danger fs_end_date"></span>
                             </div>
 
@@ -53,7 +44,10 @@
                                 <label for="exampleInputEmail1">Sản phẩm <span class="text-danger">(*)</span></label>
                                     <select name="products[]" id="products" class="form-control demo-select2" multiple required="" data-placeholder="Choose Products">
                                         @foreach(\App\Models\Product::all() as $product)
-                                            <option value="{{$product->id}}">{{__($product->pro_name)}}</option>
+                                         @php
+                                                $flash_sale_product = \App\Models\FlashSaleProduct::where('fsp_flash_deal_id', $flashSale->id)->where('fsp_product_id', $product->id)->first();
+                                        @endphp
+                                            <option value="{{$product->id}}" <?php if($flash_sale_product != null) echo "selected";?> >{{__($product->pro_name)}}</option>
                                         @endforeach
                                     </select>
                                     <i class="txt-note-sale" style="color: red;font-size: 12px;">Lưu ý: Bạn cần phải chọn ít nhất 4 sản phẩm cho sự kiện flash sale !</i>
@@ -82,11 +76,15 @@
     <script type="text/javascript">
         $(".demo-select2").select2();
         $(document).ready(function(){
-            $('#products').on('change', function(){
+             get_flash_deal_discount();
+              $('#products').on('change', function(){
+                get_flash_deal_discount();
+            });
+
+            function get_flash_deal_discount(){
                 var product_ids = $('#products').val();
-                $('.fs_product_discounts').text('');
                 if(product_ids.length > 0){
-                    $.post('{{ route('flash_sales.product_discount') }}', {_token:'{{ csrf_token() }}', product_ids:product_ids}, function(data){
+                    $.post('{{ route('flash_sales.product_discount_edit') }}', {_token:'{{ csrf_token() }}', product_ids:product_ids, flash_sale_id:{{ $flashSale->id }}}, function(data){
                         $('#discount_table').html(data);
                         $('.demo-select2').select2();
                     });
@@ -94,7 +92,7 @@
                 else{
                     $('#discount_table').html(null);
                 }
-            });
+            }
 
             //click btn flash
             
@@ -133,7 +131,7 @@
                  } else if(product_ids.length < 4) {
                     $('.select2-selection--multiple').css('border','1px solid red');
                 } else {
-                    $( "#form-flash-sale" ).submit();
+                    $( "#form-flash-sale-edit" ).submit();
                 }
 
             });

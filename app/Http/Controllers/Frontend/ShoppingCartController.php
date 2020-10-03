@@ -10,6 +10,8 @@ use App\Models\Product;
 use Carbon\Carbon;
 use App\Models\Transaction;
 use App\Models\Order;
+use App\Models\FlashSale;
+use App\Models\FlashSaleProduct;
 use App\Mail\TransactionSuccess;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -41,6 +43,7 @@ class ShoppingCartController extends Controller
     public function add($id)
     {
         $product = Product::find($id);
+        $price = $product->pro_price;
 
         //1. Kiểm tra tồn tại sản phẩm
         if (!$product) return redirect()->to('/');
@@ -71,15 +74,28 @@ class ShoppingCartController extends Controller
 			}
 		}
 
+        //kiểm tra xem sản phẩm có trong flash sale không ?
+         $flash_deal = FlashSale::where('fs_status', 1)->first();
+         if ($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->fs_start_date && strtotime(date('d-m-Y')) <= $flash_deal->fs_end_date && FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id', $product->id)->first() != null) {
+            $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id', $product->id)->first();
+            $price -= ($price*$flash_deal_product->fsp_discount)/100;
+            $sale = $flash_deal_product->fsp_discount;
+        }
+        else{
+            $price -= ($price*$product->pro_sale)/100;
+            $sale = $product->pro_sale;
+        }
+
+
         // 3. Thêm sản phẩm vào giỏ hàng
         \Cart::add([
             'id'      => $product->id,
             'name'    => $product->pro_name,
             'qty'     => 1,
-            'price'   => number_price($product->pro_price, $product->pro_sale),
+            'price'   =>  $price,
             'weight'  => '1',
             'options' => [
-                'sale'      => $product->pro_sale,
+                'sale'      => $sale,
                 'price_old' => $product->pro_price,
                 'image'     => $product->pro_avatar
             ]

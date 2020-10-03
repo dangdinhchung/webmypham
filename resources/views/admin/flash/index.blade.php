@@ -24,14 +24,37 @@
                             <tr>
                                 <th style="width: 10px">STT</th>
                                 <th style="width: 10px">ID</th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Category</th>
-                                <th>Time</th>
+                                <th>Tiêu đề</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
+                                <th>Trạng thái</th>
+                                <th>Thời gian tạo</th>
                                 <th>Action</th>
                             </tr>
-
                             </tbody>
+                            @if (isset($flashSales))
+                                @foreach($flashSales as $key => $flashSale)
+                                    <tr>
+                                        <td>{{ (($flashSales->currentPage() - 1) * $flashSales->perPage()) + ( $key + 1)  }}</td>
+                                        <td>{{ $flashSale->id }}</td>
+                                        <td>{{ $flashSale->fs_title }}</td>
+                                        <td>{{ date('d-m-Y',$flashSale->fs_start_date) }}</td>
+                                        <td>{{ date('d-m-Y',$flashSale->fs_end_date) }}</td>
+                                        <td>
+                                            @if ($flashSale->fs_status == 1)
+                                                <a href="{{ route('admin.flash.active', $flashSale->id) }}" class="label label-info">Hiện</a>
+                                            @else
+                                                <a href="{{ route('admin.flash.active', $flashSale->id) }}" class="label label-default">Ẩn</a>
+                                            @endif
+                                        </td>
+                                        <td>{{  $flashSale->created_at }}</td>
+                                        <td style="width: 120px">
+                                            <a href="{{ route('admin.flash.update', $flashSale->id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a href="{{  route('admin.flash.delete', $flashSale->id) }}" class="btn btn-xs btn-danger js-delete-confirm"><i class="fa fa-trash"></i> Delete</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </table>
                     </div>
                 </div>

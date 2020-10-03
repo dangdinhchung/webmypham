@@ -86,6 +86,12 @@
             Route::get('create','AdminFlashSaleController@create')->name('admin.flash.create')->middleware('permission:full');
             Route::post('create','AdminFlashSaleController@store')->name('admin.flash.store')->middleware('permission:full');
             Route::post('flash_deals/product_discount', 'AdminFlashSaleController@product_discount')->name('flash_sales.product_discount');
+            Route::post('flash_deals/product_discount_edit', 'AdminFlashSaleController@product_discount_edit')->name('flash_sales.product_discount_edit');
+
+            Route::get('update/{id}','AdminFlashSaleController@edit')->name('admin.flash.update')->middleware('permission:full');
+            Route::post('update/{id}','AdminFlashSaleController@update')->middleware('permission:full');
+            Route::get('delete/{id}','AdminFlashSaleController@delete')->name('admin.flash.delete')->middleware('permission:full');
+            Route::get('active/{id}','AdminFlashSaleController@active')->name('admin.flash.active')->middleware('permission:category_active|full');
         });
 
         Route::group(['prefix' => 'attribute'], function(){

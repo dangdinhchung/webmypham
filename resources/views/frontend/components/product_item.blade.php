@@ -25,7 +25,7 @@
             </span>
 {{--            <span class="text">{{ $product->pro_review_total }} đánh giá</span>--}}
         </p>
-        @if ($product->pro_sale)
+       {{--  @if ($product->pro_sale)
             <p>
                 <span class="percent">-{{ $product->pro_sale }}%</span>
                 @php 
@@ -36,7 +36,14 @@
             </p>
         @else 
             <p class="price">{{  number_format($product->pro_price,0,',','.') }} đ</p>
-        @endif
+        @endif --}}
+
+        {{-- check if flash sale -> update price and proce sale --}}
+        <p>
+            <span class="percent">-{{ home_discounted_base_sale($product->id) }}%</span>
+            <span class="price">{{ home_discounted_base_price($product->id) }} đ</span>
+            <span class="price-sale">{{ number_format($product->pro_price,0,',','.') }} đđ</span>
+        </p>
         
     </div>
 @endif

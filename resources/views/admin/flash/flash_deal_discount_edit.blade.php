@@ -19,7 +19,8 @@
         <tbody>
         @foreach ($product_ids as $key => $id)
             @php
-                $product = \App\Models\Product::findOrFail($id);
+               $product = \App\Models\Product::findOrFail($id);
+                $flash_deal_product = \App\Models\FlashSaleProduct::where('fsp_flash_deal_id', $flash_sale_id)->where('fsp_product_id', $product->id)->first();
             @endphp
             <tr>
                 <td>
@@ -32,13 +33,18 @@
                 </td>
                 <td>
                     <label for="" class="control-label">{{ number_format($product->pro_price,0,',','.') }} Đ</label>
-                </td>
-                <td>
-                    <input type="number" name="discount_{{ $id }}" value="{{ $product->pro_sale }}" min="0" step="1" class="form-control">
-                </td>
+                </td>   
+                @if ($flash_deal_product != null)
+                     <td>
+                        <input type="number" name="discount_{{ $id }}" value="{{ $flash_deal_product->fsp_discount }}" min="0" step="1" class="form-control">
+                    </td>
+                @else
+                    <td>
+                        <input type="number" name="discount_{{ $id }}" value="{{ $product->pro_sale }}" min="0" step="1" class="form-control">
+                    </td>
+                @endif
                 <td style="text-align: center">
                     <select class="demo-select2" name="discount_type_{{ $id }}">
-                        {{-- <option value="amount" style="width: 10% !important;">$</option> --}}
                         <option value="percent">%</option>
                     </select>
                 </td>

@@ -47,7 +47,7 @@
                         <div class="info">
 
                             <div class="prices">
-                                @if ($product->pro_sale)
+                               {{--  @if ($product->pro_sale)
                                     <p>Giá niêm yết:
                                         <span class="value">{{ number_format($product->pro_price,0,',','.') }} đ</span>
                                     </p>
@@ -63,7 +63,15 @@
                                     <p>
                                         Giá bán: <span class="value price-new">{{  number_format($product->pro_price,0,',','.') }} đ</span>
                                     </p>
-                                @endif
+                                @endif --}}
+                                <p>Giá niêm yết:
+                                    <span class="value">{{ number_format($product->pro_price,0,',','.') }} đ</span>
+                                </p>
+                                <p>
+                                    Giá bán: <span
+                                        class="value price-new">{{  home_discounted_base_price($product->id) }} đ</span>
+                                    <span class="sale">-{{  home_discounted_base_sale($product->id) }}%</span>
+                                </p>
                                 <p>
                                     <span>View :&nbsp</span>
                                     <span>{{ $product->pro_view }}</span>

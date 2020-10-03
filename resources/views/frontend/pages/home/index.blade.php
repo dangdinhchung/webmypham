@@ -136,7 +136,7 @@
                 <div class="product-one">
                     <div class="flash-title">
                         <div class="top"> <a href="#" title="" class="main-title main-title-2 text-flash">Flash sale</a> </div>
-                        <div class="countdown countdown--style-1 countdown--style-1-v1" data-countdown-date="11/06/2020" data-countdown-label="show">
+                        <div class="countdown countdown--style-1 countdown--style-1-v1" data-countdown-date="{{ date('m/d/Y', $flashSale->fs_end_date) }}" data-countdown-label="show">
                         </div>
                     </div>
                     <div class="bot">

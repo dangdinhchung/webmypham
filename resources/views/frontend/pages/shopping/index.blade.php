@@ -115,9 +115,17 @@
                     </div>
                     <table class="table" id="showTotal">
                         <tbody>
+                            <tr>
+                                <th>Phí vận chuyển</th>
+                                <td style="text-align: right" id="ship">20,000 VNĐ</td>
+                            </tr>
+                            @php
+                                $total =    str_replace(',','',\Cart::subtotal(0));
+                                $totalMoney = (int)$total + 20000;
+                            @endphp
                             <tr class="showTotal">
                                 <th>Tổng tiền hàng</th>
-                                <td style="text-align: right" id="subtotal">{{ \Cart::subtotal(0) }} VNĐ</td>
+                                <td style="text-align: right" id="subtotal">{{ number_format($totalMoney,0,',',',') }} VNĐ</td>
                             </tr>
                             @if ($hasCoupon)
                                 @php

@@ -17,7 +17,7 @@ class AdminCouponController extends Controller
      */
     public function index()
     {
-        $coupons = Coupon::select('id', 'cp_code', 'cp_discount', 'cp_discount_type', 'cp_start_date', 'cp_end_date',
+        $coupons = Coupon::select('id', 'cp_code', 'cp_discount', 'cp_start_date', 'cp_end_date',
             'cp_description', 'cp_number_uses', 'cp_active')->paginate(10);
         return view('admin.coupon.index', compact('coupons'));
     }
@@ -44,7 +44,7 @@ class AdminCouponController extends Controller
         if ($request->cp_description) {
             $data['cp_description'] = $request->cp_description;
         }
-        $data['cp_discount_type'] = $request->cp_discount_type ? $request->cp_discount_type : 'percent';
+        $data['cp_discount_type'] = 'percent';
         $data['cp_start_date'] = $request->cp_start_date ? strtotime($request->cp_start_date) : Carbon::now()->timestamp;
         $data['cp_end_date'] = $request->cp_end_date ? strtotime($request->cp_end_date) : Carbon::now()->timestamp;
         $id = Coupon::insertGetId($data);

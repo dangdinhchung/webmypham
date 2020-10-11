@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class TrackOrderController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function index()
     {
         $viewData = [

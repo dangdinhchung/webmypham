@@ -10,7 +10,7 @@ class AclPermissionController extends Controller
 {
 	public function index()
 	{
-		$permissions = Permission::orderBy('group_permission','asc')->get();
+		$permissions = Permission::all();
 
 		$viewData = [
 			'permissions' => $permissions
@@ -21,8 +21,7 @@ class AclPermissionController extends Controller
 
 	public function create()
 	{
-		$group = $this->getGroupPermission();
-		return view('admin.permission.create', compact('group'));
+		return view('admin.permission.create');
 	}
 
 	public function store(Request $request)
@@ -30,8 +29,7 @@ class AclPermissionController extends Controller
 		$permission                   = new Permission();
 		$permission->name             = $request->name;
 		$permission->description      = $request->description;
-		$permission->group_permission = $request->group_permission;
-		$permission->guard_name       = $request->guard_name;
+		$permission->display_name       = $request->display_name;
 		$permission->save();
 
 		return redirect()->back();
@@ -39,9 +37,8 @@ class AclPermissionController extends Controller
 
 	public function edit($id)
 	{
-		$group      = $this->getGroupPermission();
 		$permission = Permission::findOrFail($id);
-		return view('admin.permission.update', compact('group', 'permission'));
+		return view('admin.permission.update', compact( 'permission'));
 	}
 
 	public function update(Request $request, $id)
@@ -49,8 +46,7 @@ class AclPermissionController extends Controller
 		$permission                   = Permission::findOrFail($id);
 		$permission->name             = $request->name;
 		$permission->description      = $request->description;
-		$permission->group_permission = $request->group_permission;
-		$permission->guard_name       = $request->guard_name;
+		$permission->display_name       = $request->display_name;
 		$permission->save();
 		return redirect()->back();
 	}
@@ -61,9 +57,9 @@ class AclPermissionController extends Controller
 		return redirect()->back();
 	}
 
-	private function getGroupPermission()
-	{
-		$group_permission = config('permission.group_permission') ?? [];
-		return $group_permission;
-	}
+//	private function getGroupPermission()
+//	{
+//		$group_permission = config('permission.group_permission') ?? [];
+//		return $group_permission;
+//	}
 }

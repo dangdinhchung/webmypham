@@ -9,14 +9,23 @@ use App\Models\Contact;
 
 class ContactController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function index()
     {
         return view('frontend.pages.contact.index');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function store(Request $request)
     {
-        $data               = $request->except('_token');
+        $data = $request->except('_token');
         $data['created_at'] = Carbon::now();
 
         Contact::insert($data);

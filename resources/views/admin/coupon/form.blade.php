@@ -11,7 +11,7 @@
                 <span class="text-danger">{{ $errors->first('cp_code') }}</span>
             @endif
         </div>
-        <div class="form-group discount-type">
+        {{--<div class="form-group discount-type">
             <label for="name">Loại mã giảm giá</label>
             </br>
             <input class="form-check-input" name="cp_discount_type" type="radio" value="percent" {{ isset($coupon) ? ($coupon->cp_discount_type == 'percent' ? 'checked' : '') : 'checked' }}  id="percent">
@@ -21,7 +21,7 @@
             @if ($errors->first('cp_discount_type'))
                 <span class="text-danger">{{ $errors->first('cp_discount_type') }}</span>
             @endif
-        </div>
+        </div>--}}
         <div class="form-group {{ $errors->first('cp_discount') ? 'has-error' : '' }}">
             <label for="name">Giảm</label>
             <input type="number" class="form-control" name="cp_discount" value="{{ $coupon->cp_discount ?? old('cp_discount',0) }}">

@@ -128,7 +128,7 @@
                     $('.fs_end_date').text('Dữ liệu không được bỏ trống');
                     $('.fs_end_date').css('border-color','red');
                 } else if(convertEndDate < convertStartDate) {
-                    $('.fs_end_date').text('Ngày kết thúc >= ngày hiện tại');
+                    $('.fs_end_date').text('Ngày kết thúc >= ngày bắt đầu');
                     $('.fs_end_date').css('border-color','red');
                  } else if(product_ids.length < 4) {
                     $('.select2-selection--multiple').css('border','1px solid red');

@@ -13,12 +13,18 @@ use Illuminate\Support\Str;
 
 class CommentsController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return bool|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Throwable
+     * @author chungdd
+     */
     public function store(Request $request)
     {
         if ($request->ajax()) {
             $productID = $request->productId;
-			$data = $request->all();
-			Log::info($data);
+            $data = $request->all();
+            Log::info($data);
             // Check product
             $product = Product::find($productID);
             if (!$product) {
@@ -32,48 +38,53 @@ class CommentsController extends Controller
             //     ]);
             // }
 
-			$images = $request->images;
-            $data      = [
+            $images = $request->images;
+            $data = [
                 'cmt_user_id'    => \Auth::user()->id,
-                'cmt_name'    => \Auth::user()->name,
-                'cmt_email'    => \Auth::user()->email,
+                'cmt_name'       => \Auth::user()->name,
+                'cmt_email'      => \Auth::user()->email,
                 'cmt_content'    => $request->comment,
                 'cmt_product_id' => $productID,
                 'cmt_parent_id'  => $request->commentId ?? 0,
                 'created_at'     => Carbon::now()
             ];
-			$dataImage = [];
-			Log::info($images);
-			if ($images)
-			{
-				foreach ($images as $key => $fileImage) {
-					$ext    = $fileImage->getClientOriginalExtension();
-					$extend = [
-						'png', 'jpg', 'jpeg', 'PNG', 'JPG'
-					];
+            $dataImage = [];
+            Log::info($images);
+            if ($images) {
+                foreach ($images as $key => $fileImage) {
+                    $ext = $fileImage->getClientOriginalExtension();
+                    $extend = [
+                        'png',
+                        'jpg',
+                        'jpeg',
+                        'PNG',
+                        'JPG'
+                    ];
 
-					if (!in_array($ext, $extend)) return false;
+                    if (!in_array($ext, $extend)) {
+                        return false;
+                    }
 
-					$filename = date('Y-m-d__') . Str::slug($fileImage->getClientOriginalName()) . '.' . $ext;
-					$path     = public_path() . '/uploads/' . date('Y/m/d/');
-					if (!\File::exists($path)) {
-						mkdir($path, 0777, true);
-					}
+                    $filename = date('Y-m-d__') . Str::slug($fileImage->getClientOriginalName()) . '.' . $ext;
+                    $path = public_path() . '/uploads/' . date('Y/m/d/');
+                    if (!\File::exists($path)) {
+                        mkdir($path, 0777, true);
+                    }
 
-					$fileImage->move($path, $filename);
-					$dataImage[] = $filename;
-				}
-			}
+                    $fileImage->move($path, $filename);
+                    $dataImage[] = $filename;
+                }
+            }
 
-			$data['cmt_images'] = json_encode($dataImage);
+            $data['cmt_images'] = json_encode($dataImage);
             $commentId = Comments::insertGetId($data);
             if ($commentId) {
                 $comment = Comments::with('user:id,name')->find($commentId);
                 \DB::table('users')->where('id', \Auth::user()->id)
-                        ->increment('count_comment');
-				Cache::forget('COMMENT_PRODUCT_'. $productID);
+                    ->increment('count_comment');
+                Cache::forget('COMMENT_PRODUCT_' . $productID);
 
-                $html    = view('frontend.pages.product_detail.include._inc_comment_item', compact('comment'))->render();
+                $html = view('frontend.pages.product_detail.include._inc_comment_item', compact('comment'))->render();
                 return response([
                     'code' => '200',
                     'html' => $html

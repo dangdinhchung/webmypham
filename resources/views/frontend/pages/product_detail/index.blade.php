@@ -5,8 +5,36 @@
         .number-empty, .number-empty:hover {
             cursor: not-allowed;
         }
+
         .compare {
             margin-left: 10px;
+        }
+
+        /*hover coupon*/
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 187px;
+            height: 30px;
+            background-color: white;
+            color: #929292;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            margin-top: 26px;
+            margin-left: -56px;
+            z-index: 1;
+            border: 1px solid;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
         }
     </style>
 @stop
@@ -19,11 +47,12 @@
                 </li>
                 <li>
                     <a itemprop="url" href="{{ route('get.product.list') }}" title="Sản phẩm"><span
-                            itemprop="title">Sản phẩm</span></a>
+                                itemprop="title">Sản phẩm</span></a>
                 </li>
 
                 <li>
-                    <a itemprop="url" href="" title="Đồng hồ Diamond D"><span itemprop="title">{{ $product->pro_name }}</span></a>
+                    <a itemprop="url" href="" title="Đồng hồ Diamond D"><span
+                                itemprop="title">{{ $product->pro_name }}</span></a>
                 </li>
 
             </ul>
@@ -31,56 +60,75 @@
         <div class="card">
             <div class="card-body info-detail">
                 <div class="left">
-{{--                    @include('frontend.pages.product_detail.include._inc_album')--}}
+                    {{--                    @include('frontend.pages.product_detail.include._inc_album')--}}
                     <a href="{{ route('get.product.detail',$product->pro_slug . '-'.$product->id ) }}" title=""
                        class="">
-                        <img alt="" style="max-width: 100%;width: 100%;height: auto" src="{{ pare_url_file($product->pro_avatar) }}"
+                        <img alt="" style="max-width: 100%;width: 100%;height: auto"
+                             src="{{ pare_url_file($product->pro_avatar) }}"
                              class="lazyload">
                     </a>
                 </div>
                 <div class="right" id="product-detail" data-id="{{ $product->id }}">
                     <h1>{{  $product->pro_name }}</h1>
                     @if ( $product->pro_number <= 0 )
-                        <p class="text-danger" style="font-size: 14px;margin-bottom: 5px;background: #dedede;padding: 5px;">Sản phẩm đã hết hàng</p>
+                        <p class="text-danger"
+                           style="font-size: 14px;margin-bottom: 5px;background: #dedede;padding: 5px;">Sản phẩm đã hết
+                            hàng</p>
                     @endif
                     <div class="right__content">
                         <div class="info">
 
                             <div class="prices">
-                               {{--  @if ($product->pro_sale)
-                                    <p>Giá niêm yết:
-                                        <span class="value">{{ number_format($product->pro_price,0,',','.') }} đ</span>
-                                    </p>
-                                    @php
-                                        $price = ((100 - $product->pro_sale) * $product->pro_price)  /  100 ;
-                                    @endphp
-                                    <p>
-                                        Giá bán: <span
-                                            class="value price-new">{{  number_format($price,0,',','.') }} đ</span>
-                                        <span class="sale">-{{  $product->pro_sale }}%</span>
-                                    </p>
-                                @else
-                                    <p>
-                                        Giá bán: <span class="value price-new">{{  number_format($product->pro_price,0,',','.') }} đ</span>
-                                    </p>
-                                @endif --}}
+                                {{--  @if ($product->pro_sale)
+                                     <p>Giá niêm yết:
+                                         <span class="value">{{ number_format($product->pro_price,0,',','.') }} đ</span>
+                                     </p>
+                                     @php
+                                         $price = ((100 - $product->pro_sale) * $product->pro_price)  /  100 ;
+                                     @endphp
+                                     <p>
+                                         Giá bán: <span
+                                             class="value price-new">{{  number_format($price,0,',','.') }} đ</span>
+                                         <span class="sale">-{{  $product->pro_sale }}%</span>
+                                     </p>
+                                 @else
+                                     <p>
+                                         Giá bán: <span class="value price-new">{{  number_format($product->pro_price,0,',','.') }} đ</span>
+                                     </p>
+                                 @endif --}}
                                 <p>Giá niêm yết:
                                     <span class="value">{{ number_format($product->pro_price,0,',','.') }} đ</span>
                                 </p>
                                 <p>
                                     Giá bán: <span
-                                        class="value price-new">{{  home_discounted_base_price($product->id) }} đ</span>
+                                            class="value price-new">{{  home_discounted_base_price($product->id) }} đ</span>
                                     <span class="sale">-{{  home_discounted_base_sale($product->id) }}%</span>
                                 </p>
+                                @if(isset($couponList))
+                                    <div class="coupon-list">
+                                        <p>
+                                            Mã giảm giá của shop:
+                                        <div>
+                                            @foreach($couponList as $key => $coupon)
+                                                <div class="label label-default tooltip"> {{$coupon->cp_code}}
+                                                    <span class="tooltiptext">Giảm {{$coupon->cp_discount}}% cho đơn hàng 100.000 vnđ</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        </p>
+                                    </div>
+                                @endif
                                 <p>
                                     <span>View :&nbsp</span>
                                     <span>{{ $product->pro_view }}</span>
-                                    <i class="fa fa-refresh compare" aria-hidden="true" onclick="addToCompare({{ $product->id }})"></i>
+                                    <i class="fa fa-refresh compare" aria-hidden="true"
+                                       onclick="addToCompare({{ $product->id }})"></i>
                                 </p>
                             </div>
                             <div class="btn-cart">
                                 <a href="{{ route('get.shopping.add', $product->id) }}" title=""
-                                   onclick="add_cart_detail('17617',0);" class="muangay {{ $product->pro_number <= 0 ? 'number-empty' : '' }}">
+                                   onclick="add_cart_detail('17617',0);"
+                                   class="muangay {{ $product->pro_number <= 0 ? 'number-empty' : '' }}">
                                     <span>Mua ngay</span>
                                     <span>Hotline: 1800.6005</span>
                                 </a>
@@ -106,18 +154,18 @@
                                         </h3>
                                     </div>
                                     @foreach($attribute as $key => $attr)
-                                    <div class="item">
-                                        @foreach($attr as  $k => $at)
-                                            @if (in_array($k, $attributeOld))
-                                                <p class="text1">{{ $key }}:</p>
-                                                <h3 class="text2">{{ $at['atb_name'] }}</h3>
-                                            @endif
-                                        @endforeach
-                                    </div>
+                                        <div class="item">
+                                            @foreach($attr as  $k => $at)
+                                                @if (in_array($k, $attributeOld))
+                                                    <p class="text1">{{ $key }}:</p>
+                                                    <h3 class="text2">{{ $at['atb_name'] }}</h3>
+                                                @endif
+                                            @endforeach
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
-{{--                            @include('frontend.pages.product_detail.include._inc_keyword')--}}
+                            {{--                            @include('frontend.pages.product_detail.include._inc_keyword')--}}
                         </div>
                         @if (isset($event1))
                             <div class="ads">
@@ -149,15 +197,18 @@
                     <form action="" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="productId" value="{{ $product->id }}">
                         <div class="form-group">
-                            <textarea placeholder="Mời bạn để lại bình luận ..." name="comment" class="form-control" id="" cols="30" rows="5"></textarea>
+                            <textarea placeholder="Mời bạn để lại bình luận ..." name="comment" class="form-control"
+                                      id="" cols="30" rows="5"></textarea>
                         </div>
                         <div class="footer">
                             <p>
-                                <a href="" title="Gửi ảnh"  class="js-update-image"><i class="la la-camera"></i> Gửi ảnh</a>
-                                <input type="file" class="js-input-image" id="document" name="images[]" multiple style="opacity: 0;display: none" >
+                                <a href="" title="Gửi ảnh" class="js-update-image"><i class="la la-camera"></i> Gửi ảnh</a>
+                                <input type="file" class="js-input-image" id="document" name="images[]" multiple
+                                       style="opacity: 0;display: none">
                                 <a href="">Quy định đăng bình luận</a>
                             </p>
-                            <button class=" {{ \Auth::id() ? 'js-save-comment' : 'js-show-login' }}">Gửi bình luận</button>
+                            <button class=" {{ \Auth::id() ? 'js-save-comment' : 'js-show-login' }}">Gửi bình luận
+                            </button>
                         </div>
                         <div class="gallery"></div>
                     </form>
@@ -184,8 +235,8 @@
             </div>
             <div class="right">
                 @if (isset($event3))
-                <a href="#" title="Giam giá" target="_blank"><img alt="Hoan tien" style="width: 100%"
-                                                                  src="{{ pare_url_file($event3->e_banner) }}"></a>
+                    <a href="#" title="Giam giá" target="_blank"><img alt="Hoan tien" style="width: 100%"
+                                                                      src="{{ pare_url_file($event3->e_banner) }}"></a>
                 @endif
             </div>
         </div>
@@ -196,20 +247,35 @@
 @stop
 @section('script')
     <script>
-		var ROUTE_COMMENT = '{{ route('ajax_post.comment') }}';
-		var CSS = "{{ asset('css/product_detail.min.css') }}";
-		var URL_CAPTCHA = '{{ route('ajax_post.captcha.resume') }}'
+        var ROUTE_COMMENT = '{{ route('ajax_post.comment') }}';
+        var CSS = "{{ asset('css/product_detail.min.css') }}";
+        var URL_CAPTCHA = '{{ route('ajax_post.captcha.resume') }}'
     </script>
     <script src="{{ asset('js/product_detail.js') }}" type="text/javascript"></script>
 
     <script>
-        function addToCompare(id){
-            $.post('{{ route('compare.addToCompare') }}', {_token:'{{ csrf_token() }}', id:id}, function(data){
-                 $('#compare').html(data);
+        function addToCompare(id) {
+            $.post('{{ route('compare.addToCompare') }}', {_token: '{{ csrf_token() }}', id: id}, function (data) {
+                $('#compare').html(data);
                 // showFrontendAlert('success', 'Item has been added to compare list');
                 // $('#compare_items_sidenav').html(parseInt($('#compare_items_sidenav').html())+1);
             });
         }
+
+        //copy coupon
+        // copy content to clipboard
+        // function copyToClipboard(element) {
+        //     var $temp = $("<input>");
+        //     $("body").append($temp);
+        //     $temp.val($(element).text()).select();
+        //     document.execCommand("copy");
+        //     $temp.remove();
+        // }
+        //
+        // // copy coupone code to clipboard
+        // $(".tooltip").on("click", function() {
+        //     copyToClipboard(".tooltip");
+        // });
     </script>
 
 @stop

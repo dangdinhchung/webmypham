@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Comments;
+use App\Models\Coupon;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -15,6 +16,13 @@ use Illuminate\Support\Facades\Log;
 
 class ProductDetailController extends FrontendController
 {
+    /**
+     * @param Request $request
+     * @param $slug
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
+     * @throws \Throwable
+     * @author chungdd
+     */
 	public function getProductDetail(Request $request, $slug)
 	{
 		$arraySlug = explode('-', $slug);
@@ -88,6 +96,9 @@ class ProductDetailController extends FrontendController
 					->first();
 			});
 
+			//lay ma giam gia
+            $dateNow = strtotime(date('Y-m-d'));
+            $couponList = Coupon::where('cp_start_date','<=' , $dateNow)->where('cp_end_date', '>=' , $dateNow)->get();
 			$viewData = [
 				'isPopupCaptcha'   => 0,
 //				'isPopupCaptcha'   => \Auth::user()->count_comment ?? 0,
@@ -101,6 +112,7 @@ class ProductDetailController extends FrontendController
 				'comments'         => $comments,
 				'attributeOld'     => $attributeOld,
 				'title_page'       => $product->pro_name,
+				'couponList'       => $couponList,
 				'productsSuggests' => $this->getProductSuggests($product->pro_category_id)
 			];
 			return view('frontend.pages.product_detail.index', $viewData);
@@ -109,9 +121,13 @@ class ProductDetailController extends FrontendController
 		return redirect()->to('/');
 	}
 
-	/**
-	 * List đánh giá sản phẩm
-	 * */
+    /**
+     * @param Request $request
+     * @param $slug
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
+     * @throws \Throwable
+     * @author chungdd
+     */
 	public function getListRatingProduct(Request $request, $slug)
 	{
 		$arraySlug = explode('-', $slug);
@@ -162,6 +178,10 @@ class ProductDetailController extends FrontendController
 		return redirect()->to('/');
 	}
 
+    /**
+     * @return array
+     * @author chungdd
+     */
 	private function mapRatingDefault()
 	{
 		$ratingDefault = [];
@@ -177,6 +197,11 @@ class ProductDetailController extends FrontendController
 		return $ratingDefault;
 	}
 
+    /**
+     * @param $categoriID
+     * @return mixed
+     * @author chungdd
+     */
 	private function getProductSuggests($categoriID)
 	{
 		$products = Cache::remember('PRODUCT_RELATE_'.$categoriID, 60 * 24 * 10, function () use ($categoriID) {
@@ -193,6 +218,10 @@ class ProductDetailController extends FrontendController
 		return $products;
 	}
 
+    /**
+     * @return array
+     * @author chungdd
+     */
 	public function syncAttributeGroup()
 	{
 		$attributes     = Attribute::get();
@@ -206,10 +235,19 @@ class ProductDetailController extends FrontendController
 		return $groupAttribute;
 	}
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
 	public function listCompare() {
         return view('frontend.pages.compare.index');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
 	public function addCompare(Request $request){
         if($request->session()->has('compare')){
             $compare = $request->session()->get('compare', collect([]));
@@ -231,6 +269,11 @@ class ProductDetailController extends FrontendController
         return view('frontend.pages.compare.header_compare');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function resetCompare(Request $request) {
         $request->session()->forget('compare');
         return back();

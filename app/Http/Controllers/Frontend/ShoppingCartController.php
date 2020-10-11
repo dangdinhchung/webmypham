@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Mail;
 
 class ShoppingCartController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function index()
     {
         $shopping = \Cart::content();
@@ -27,26 +31,30 @@ class ShoppingCartController extends Controller
         $codeCoupon = Coupon::where(['cp_code' => $coupon])->first();
         $discountType = $codeCoupon['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
         $viewData = [
-            'title_page' => 'Danh sách giỏ hàng',
-            'shopping'   => $shopping,
-            'hasCoupon'   => $hasCoupon,
-            'coupon'   => $coupon,
+            'title_page'   => 'Danh sách giỏ hàng',
+            'shopping'     => $shopping,
+            'hasCoupon'    => $hasCoupon,
+            'coupon'       => $coupon,
             'codeCoupon'   => $codeCoupon,
-            'discountType'   => $discountType
+            'discountType' => $discountType
         ];
         return view('frontend.pages.shopping.index', $viewData);
     }
 
     /**
-     * Thêm giỏ hàng
-     * */
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function add($id)
     {
         $product = Product::find($id);
         $price = $product->pro_price;
 
         //1. Kiểm tra tồn tại sản phẩm
-        if (!$product) return redirect()->to('/');
+        if (!$product) {
+            return redirect()->to('/');
+        }
 
         // 2. Kiểm tra số lượng sản phẩm
         if ($product->pro_number < 1) {
@@ -58,31 +66,33 @@ class ShoppingCartController extends Controller
 
             return redirect()->back();
         }
-		$cart = \Cart::content();
-		$idCartProduct = $cart->search(function ($cartItem) use ($product){
-			if ($cartItem->id == $product->id) return $cartItem->id;
-		});
-		if ($idCartProduct) {
-			$productByCart = \Cart::get($idCartProduct);
-			if ($product->pro_number < ($productByCart->qty + 1))
-			{
-				\Session::flash('toastr', [
-					'type'    => 'error',
-					'message' => 'Số lượng sản phẩm không đủ'
-				]);
-				return  redirect()->back();
-			}
-		}
+        $cart = \Cart::content();
+        $idCartProduct = $cart->search(function ($cartItem) use ($product) {
+            if ($cartItem->id == $product->id) {
+                return $cartItem->id;
+            }
+        });
+        if ($idCartProduct) {
+            $productByCart = \Cart::get($idCartProduct);
+            if ($product->pro_number < ($productByCart->qty + 1)) {
+                \Session::flash('toastr', [
+                    'type'    => 'error',
+                    'message' => 'Số lượng sản phẩm không đủ'
+                ]);
+                return redirect()->back();
+            }
+        }
 
         //kiểm tra xem sản phẩm có trong flash sale không ?
-         $flash_deal = FlashSale::where('fs_status', 1)->first();
-         if ($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->fs_start_date && strtotime(date('d-m-Y')) <= $flash_deal->fs_end_date && FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id', $product->id)->first() != null) {
-            $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id', $product->id)->first();
-            $price -= ($price*$flash_deal_product->fsp_discount)/100;
+        $flash_deal = FlashSale::where('fs_status', 1)->first();
+        if ($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->fs_start_date && strtotime(date('d-m-Y')) <= $flash_deal->fs_end_date && FlashSaleProduct::where('fsp_flash_deal_id',
+                $flash_deal->id)->where('fsp_product_id', $product->id)->first() != null) {
+            $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id',
+                $product->id)->first();
+            $price -= ($price * $flash_deal_product->fsp_discount) / 100;
             $sale = $flash_deal_product->fsp_discount;
-        }
-        else{
-            $price -= ($price*$product->pro_sale)/100;
+        } else {
+            $price -= ($price * $product->pro_sale) / 100;
             $sale = $product->pro_sale;
         }
 
@@ -92,7 +102,7 @@ class ShoppingCartController extends Controller
             'id'      => $product->id,
             'name'    => $product->pro_name,
             'qty'     => 1,
-            'price'   =>  $price,
+            'price'   => $price,
             'weight'  => '1',
             'options' => [
                 'sale'      => $sale,
@@ -112,7 +122,7 @@ class ShoppingCartController extends Controller
 
     public function postPay(Request $request)
     {
-		Cache::forget('HOME.PRODUCT_PAY');
+        Cache::forget('HOME.PRODUCT_PAY');
         $data = $request->except("_token");
         if (!\Auth::user()->id) {
             //4. Thông báo
@@ -130,33 +140,31 @@ class ShoppingCartController extends Controller
         //update cart after update coupon
         $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
         $data['tst_total_money'] = str_replace(',', '', $totalCard);
-        $data['created_at']      = Carbon::now();
+        $data['created_at'] = Carbon::now();
 
-		// check nếu thanh toán ví thì kiểm tra số tiền
-		if ($request->pay == 'online')
-		{
-			if (get_data_user('web','balance') < $data['tst_total_money'])
-			{
-				\Session::flash('toastr', [
-					'type'    => 'error',
-					'message' => 'Số tiền của bạn không đủ để thanh toán. Hãy nạp thêm tiền để thanh toán từ ví của bạn'
-				]);
-				return  redirect()->back();
-			}
-		}
+        // check nếu thanh toán ví thì kiểm tra số tiền
+        if ($request->pay == 'online') {
+            if (get_data_user('web', 'balance') < $data['tst_total_money']) {
+                \Session::flash('toastr', [
+                    'type'    => 'error',
+                    'message' => 'Số tiền của bạn không đủ để thanh toán. Hãy nạp thêm tiền để thanh toán từ ví của bạn'
+                ]);
+                return redirect()->back();
+            }
+        }
 
         // Lấy thông tin đơn hàng
         $shopping = \Cart::content();
         $data['options']['orders'] = $shopping;
 
         $options['drive'] = $request->pay;
-        try{
+        try {
             \Cart::destroy();
             $request->session()->forget('cartUpdateTotal');
             /*$request->session()->forget('coupon');*/
             new PayManager($data, $shopping, $options);
-        }catch (\Exception $exception){
-            Log::error("[Errors pay shopping cart]" .$exception->getMessage());
+        } catch (\Exception $exception) {
+            Log::error("[Errors pay shopping cart]" . $exception->getMessage());
         }
 
         \Session::flash('toastr', [
@@ -172,12 +180,15 @@ class ShoppingCartController extends Controller
         if ($request->ajax()) {
 
             //1.Lấy tham số
-            $qty       = $request->qty ?? 1;
+            $qty = $request->qty ?? 1;
             $idProduct = $request->idProduct;
-            $product   = Product::find($idProduct);
+            $product = Product::find($idProduct);
+            $price = $product->pro_price;
 
             //2. Kiểm tra tồn tại sản phẩm
-            if (!$product) return response(['messages' => 'Không tồn tại sản sản phẩm cần update']);
+            if (!$product) {
+                return response(['messages' => 'Không tồn tại sản sản phẩm cần update']);
+            }
 
             //3. Kiểm tra số lượng sản phẩm còn ko
             if ($product->pro_number < $qty) {
@@ -190,10 +201,25 @@ class ShoppingCartController extends Controller
             //4. Update
             \Cart::update($id, $qty);
 
+            //kiểm tra xem sản phẩm có trong flash sale không ?
+
+            $flash_deal = FlashSale::where('fs_status', 1)->first();
+            if ($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->fs_start_date && strtotime(date('d-m-Y')) <= $flash_deal->fs_end_date && FlashSaleProduct::where('fsp_flash_deal_id',
+                    $flash_deal->id)->where('fsp_product_id', $product->id)->first() != null) {
+                $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id',
+                    $product->id)->first();
+                $price -= ($price * $flash_deal_product->fsp_discount) / 100;
+                $sale = $flash_deal_product->fsp_discount;
+            } else {
+                $price -= ($price * $product->pro_sale) / 100;
+                $sale = $product->pro_sale;
+            }
+
+
             return response([
                 'messages'   => 'Cập nhật thành công',
                 'totalMoney' => \Cart::subtotal(0),
-                'totalItem'  => number_format(number_price($product->pro_price, $product->pro_sale) * $qty, 0, ',', '.')
+                'totalItem'  => number_format($price * $qty, 0, ',', '.')
             ]);
         }
     }
@@ -203,8 +229,7 @@ class ShoppingCartController extends Controller
      * */
     public function delete(Request $request, $rowId)
     {
-        if ($request->ajax())
-        {
+        if ($request->ajax()) {
             \Cart::remove($rowId);
             return response([
                 'totalMoney' => \Cart::subtotal(0),

@@ -24,26 +24,17 @@
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                                 <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="slug" onkeyup="to_slug();" name="name" placeholder="Super Admin">
+                                    <input type="text" class="form-control" id="slug" onkeyup="to_slug();" name="name" placeholder="product-list">
+                                    <i class="txt-note-sale" style="color: red;font-size: 12px;">VD: product-list : Xem danh sách sản phẩm</i>
                                     @if ($errors->has('name'))
                                         <span class="text-danger">{{ $errors->first('name') }}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">Guard Name</label>
+                                <label for="inputPassword3" class="col-sm-2 control-label">Display Name</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="guard_name"  placeholder="admins" value="admins">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">Group </label>
-                                <div class="col-sm-10">
-                                    <select name="group_permission" class="form-control" id="">
-                                        @foreach($group as $key => $gr)
-                                            <option value="{{ $key }}">{{ $gr }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" class="form-control" name="display_name"  placeholder="Tên hiển thị" >
                                 </div>
                             </div>
                             <div class="form-group">
@@ -95,7 +86,7 @@
             str = str.replace(/^-+/g, '');
 
             // xóa phần dư - ở cuối
-            str = str.replace(/-+$/g, '');
+            // str = str.replace(/-+$/g, '');
 
             // return
             document.getElementById('slug').value = str;

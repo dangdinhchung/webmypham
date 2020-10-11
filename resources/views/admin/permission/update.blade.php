@@ -31,22 +31,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">Guard Name</label>
+                                <label for="inputPassword3" class="col-sm-2 control-label">Display Name</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="guard_name"  placeholder="admins" value="admins">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">Group </label>
-                                <div class="col-sm-10">
-                                    <select name="group_permission" class="form-control" id="">
-                                        @foreach($group as $key => $gr)
-                                            <option value="{{ $key }}"
-                                                    {{ $permission->group_permission == $key ? "selected='selected'" : "" }}>
-                                                {{ $gr }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" class="form-control" name="display_name" placeholder="Tên hiển thị" value="{{ $permission->display_name }}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -60,7 +47,7 @@
                         <!-- /.box-body -->
                         <div class="box-footer text-center">
                             <a href="{{ route('admin.permission.list') }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> Cancel</a>
-                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Thêm mới</button>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>Cập nhật</button>
                         </div>
                         <!-- /.box-footer -->
                     </form>
@@ -98,7 +85,7 @@
             str = str.replace(/^-+/g, '');
 
             // xóa phần dư - ở cuối
-            str = str.replace(/-+$/g, '');
+            // str = str.replace(/-+$/g, '');
 
             // return
             document.getElementById('slug').value = str;

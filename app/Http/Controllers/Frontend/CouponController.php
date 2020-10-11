@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return false|string
+     * @author chungdd
+     */
     public function apply_coupon_code(Request $request) {
         $idUser = \Auth::user()->id;
         if($request->ajax()) {
@@ -41,6 +46,8 @@ class CouponController extends Controller
                     $msg = "Mã giảm giá đã hết hạn!";
                 } elseif($check['msg'] == 'error_code_cant_use') {
                     $msg = 'Mã vượt quá số lần sử dụng!';
+                } elseif($check['msg'] == 'error_user_not_total_price_order') {
+                    $msg = 'Đơn hàng tối thiếu phải lớn hơn 100.000 VNĐ!';
                 } else {
                     $msg = "Lỗi không xác định!";
                 }
@@ -78,9 +85,16 @@ class CouponController extends Controller
         return json_encode(['error' => $error, 'msg' => $msg, 'html' => $html]);
     }
 
+    /**
+     * @param $code
+     * @param $idUser
+     * @return false|string
+     * @author chungdd
+     */
     public function check ($code, $idUser) {
         $now = strtotime( Carbon::now()->toDateString());
         $codeCoupon = Coupon::where(['cp_code' => $code])->first();
+        $totalMoney = \Cart::subtotal(0);
         if($codeCoupon) {
             $idCoupon = Coupon::select('id')->where('cp_code', $code)->first()->id;
             $userOnlyCoupon = CouponUsage::where(['cpu_user_id' => $idUser,'cpu_coupon_id' => $idCoupon])->first();
@@ -102,6 +116,10 @@ class CouponController extends Controller
 
         if($now < $codeCoupon['cp_start_date'] && $codeCoupon) {
             return json_encode(['error' => 1, 'msg' => "error_user_not_start"]);
+        }
+
+        if($totalMoney < "100,000") {
+            return json_encode(['error' => 1, 'msg' => "error_user_not_total_price_order"]);
         }
 
         if($now > $codeCoupon['cp_end_date'] && $codeCoupon) {

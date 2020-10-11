@@ -127,17 +127,17 @@
 
 
         Route::group(['prefix' => 'product'], function(){
-            Route::get('','AdminProductController@index')->name('admin.product.index');
-            Route::get('create','AdminProductController@create')->name('admin.product.create');
-            Route::post('create','AdminProductController@store');
+            Route::get('','AdminProductController@index')->name('admin.product.index')->middleware('check_permission_acl:product-list');
+            Route::get('create','AdminProductController@create')->name('admin.product.create')->middleware('check_permission_acl:product-add');
+            Route::post('create','AdminProductController@store')->middleware('check_permission_acl:product-add');
 
             Route::get('hot/{id}','AdminProductController@hot')->name('admin.product.hot');
             Route::get('active/{id}','AdminProductController@active')->name('admin.product.active');
-            Route::get('update/{id}','AdminProductController@edit')->name('admin.product.update');
-            Route::post('update/{id}','AdminProductController@update');
+            Route::get('update/{id}','AdminProductController@edit')->name('admin.product.update')->middleware('check_permission_acl:product-edit');
+            Route::post('update/{id}','AdminProductController@update')->middleware('check_permission_acl:product-edit');
 
-            Route::get('delete/{id}','AdminProductController@delete')->name('admin.product.delete')->middleware('check_admin');
-            Route::get('delete-image/{id}','AdminProductController@deleteImage')->name('admin.product.delete_image');
+            Route::get('delete/{id}','AdminProductController@delete')->name('admin.product.delete')->middleware('check_permission_acl:product-delete');
+            Route::get('delete-image/{id}','AdminProductController@deleteImage')->name('admin.product.delete_image')->middleware('check_permission_acl:product-delete');
 
             Route::post('coupon/get_products_by_category', 'AdminProductController@getProductByCategory')->name('products.get_products_by_subsubcategory');
         });
@@ -200,16 +200,16 @@
         });
 
         Route::group(['prefix' => 'slide'], function(){
-            Route::get('','AdminSlideController@index')->name('admin.slide.index');
-            Route::get('create','AdminSlideController@create')->name('admin.slide.create');
-            Route::post('create','AdminSlideController@store');
+            Route::get('','AdminSlideController@index')->name('admin.slide.index')->middleware('check_permission_acl:slide-list');
+            Route::get('create','AdminSlideController@create')->name('admin.slide.create')->middleware('check_permission_acl:slide-add');
+            Route::post('create','AdminSlideController@store')->middleware('check_permission_acl:slide-add');
 
-            Route::get('update/{id}','AdminSlideController@edit')->name('admin.slide.update');
-            Route::post('update/{id}','AdminSlideController@update');
+            Route::get('update/{id}','AdminSlideController@edit')->name('admin.slide.update')->middleware('check_permission_acl:slide-add');
+            Route::post('update/{id}','AdminSlideController@update')->middleware('check_permission_acl:slide-add');
 
             Route::get('active/{id}','AdminSlideController@active')->name('admin.slide.active');
             Route::get('hot/{id}','AdminSlideController@hot')->name('admin.slide.hot');
-            Route::get('delete/{id}','AdminSlideController@delete')->name('admin.slide.delete');
+            Route::get('delete/{id}','AdminSlideController@delete')->name('admin.slide.delete')->middleware('check_permission_acl:slide-delete');
         });
 
         Route::group(['prefix' => 'event'], function(){

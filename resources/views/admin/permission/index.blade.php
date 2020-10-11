@@ -32,7 +32,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Guard_name</th>
+                                    <th>Display name</th>
                                     <th>Description</th>
                                     <th>Create</th>
                                     <th>Action</th>
@@ -42,7 +42,7 @@
                                         <tr>
                                             <td>{{ $permission->id }}</td>
                                             <td>{{ $permission->name }}</td>
-                                            <td>{{ $permission->guard_name }}</td>
+                                            <td>{{ $permission->display_name }}</td>
                                             <td>{{ $permission->description }}</td>
                                             <td>{{ $permission->created_at }}</td>
                                             <td>

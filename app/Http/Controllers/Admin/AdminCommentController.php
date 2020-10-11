@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class AdminCommentController extends Controller
 {
+    /**
+     * @author chungdd
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $comments = Comments::with('user:id,name')->paginate(10);
@@ -19,6 +23,11 @@ class AdminCommentController extends Controller
         return view('admin.comment.index', $viewData);
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete($id)
     {
         Comments::find($id)->delete($id);

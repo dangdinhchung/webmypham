@@ -43,7 +43,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-sm-8">
+                       {{-- <div class="col-sm-8">
                             <div class="form-group ">
                                 <label for="name">Chức vụ <span class="text-danger">(*)</span></label>
                                 <select class="form-control" name="level">
@@ -51,7 +51,7 @@
                                     <option value="2" {{ $admin->level == 2 ? "selected='selected'" : "" }}>Nhân viên</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>--}}
                         <div class="col-sm-8">
                             <div class="form-group {{ $errors->first('password') ? 'has-error' : '' }}">
                                 <label for="name">Password <span class="text-danger">(*)</span></label>
@@ -62,18 +62,19 @@
                             </div>
                         </div>
                         <div class="col-sm-8">
+                            <label for="name">Chức vụ <span class="text-danger">(*)</span></label>
                             <div class="box-body">
                                 @if (isset($roles))
                                     @foreach($roles as $role)
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="">
-                                                    <div class="icheckbox_flat-green {{ in_array($role->id, $roles_old) ? "checked" : "" }}" aria-checked="false" aria-disabled="false">
-                                                        <input type="checkbox" name="roles[]" {{ in_array($role->id, $roles_old) ? "checked" : "" }} value="{{ $role->id }}"
+                                                    <div class="icheckbox_flat-green {{ $listRoleOfAdmin->contains($role->id) ? "checked" : "" }}" aria-checked="false" aria-disabled="false">
+                                                        <input type="checkbox" name="roles[]" {{ $listRoleOfAdmin->contains($role->id) ? "checked" : "" }} value="{{ $role->id }}"
                                                                class="flat-red" style="position: absolute; opacity: 0;">
                                                         <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
                                                     </div>
-                                                    <span>{{ $role->name }}</span>
+                                                    <span>{{ $role->display_name }}</span>
                                                 </label>
                                             </div>
                                         </div>

@@ -33,9 +33,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-2 control-label">Guard</label>
+                                <label for="inputPassword3" class="col-sm-2 control-label">Display name</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="guard_name"  placeholder="admins" value="admins">
+                                    <input type="text" class="form-control" name="display_name"  placeholder="Tên hiển thị">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -58,7 +58,7 @@
                                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" class="flat-red" style="position: absolute; opacity: 0;">
                                                         <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
                                                     </div>
-                                                    <span>{{ $permission->name }}</span>
+                                                    <span>{{ $permission->display_name }}</span>
                                                 </label>
                                             </div>
                                         </div>

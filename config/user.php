@@ -40,7 +40,7 @@ return [
         'route' => 'get.user.log_login',
         'icon'  => 'fa fa-bug'
     ],
-    [
+   /* [
         'name'  => 'Tạo shop',
         'route' => 'seller.index',
         'icon'  => 'fa fa-users'
@@ -54,5 +54,5 @@ return [
         'name'  => 'Sản phẩm',
         'route' => 'seller.product.index',
         'icon'  => 'fa fa-product-hunt'
-    ],
+    ],*/
 ];

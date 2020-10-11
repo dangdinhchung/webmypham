@@ -10,6 +10,10 @@ use App\Models\Category;
 
 class AdminCategoryController extends AdminController
 {
+    /**
+     * @author chungdd
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function index()
     {
         $categories = Category::paginate(10);
@@ -21,12 +25,21 @@ class AdminCategoryController extends AdminController
         return view('admin.category.index', $viewData);
     }
 
+    /**
+     * @author chungdd
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $categories = $this->getCategoriesSort();
         return view('admin.category.create',compact('categories'));
     }
 
+    /**
+     * @author chungdd
+     * @param AdminRequestCategory $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(AdminRequestCategory $request)
     {
         $data               = $request->except('_token','c_avatar');
@@ -42,6 +55,11 @@ class AdminCategoryController extends AdminController
         return redirect()->back();
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $category = Category::find($id);
@@ -49,6 +67,12 @@ class AdminCategoryController extends AdminController
         return view('admin.category.update', compact('category','categories'));
     }
 
+    /**
+     * @author chungdd
+     * @param AdminRequestCategory $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(AdminRequestCategory $request, $id)
     {
         $category           = Category::find($id);
@@ -66,6 +90,11 @@ class AdminCategoryController extends AdminController
         return redirect()->back();
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function active($id)
     {
         $category = Category::find($id);
@@ -75,6 +104,11 @@ class AdminCategoryController extends AdminController
         return redirect()->back();
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function hot($id)
     {
         $category = Category::find($id);
@@ -84,6 +118,11 @@ class AdminCategoryController extends AdminController
         return redirect()->back();
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete($id)
     {
         $category = Category::find($id);
@@ -92,6 +131,10 @@ class AdminCategoryController extends AdminController
         return redirect()->back();
     }
 
+    /**
+     * @author chungdd
+     * @return array
+     */
     protected function getCategoriesSort()
     {
         $categories = Category::where('c_status', Category::STATUS_ACTIVE)

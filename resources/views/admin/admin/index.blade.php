@@ -49,7 +49,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <span class="label-info label">{{  $admin->roles()->pluck('name')->implode(' ') ?? "" }}</span>
+                                                <span class="label-info label">{{  $admin->roles()->pluck('display_name')->implode(' ') ?? "" }}</span>
                                             </td>
                                             <td>{{  $admin->created_at }}</td>
                                             <td>

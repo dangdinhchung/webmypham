@@ -8,6 +8,10 @@ use App\Models\Contact;
 
 class AdminContactController extends Controller
 {
+    /**
+     * @author chungdd
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $contacts = Contact::paginate(10);
@@ -17,6 +21,11 @@ class AdminContactController extends Controller
         return view('admin.contact.index', $viewData);
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete($id)
     {
         Contact::find($id)->delete();

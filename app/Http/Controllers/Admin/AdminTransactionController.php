@@ -13,33 +13,39 @@ use Illuminate\Support\Facades\Cache;
 
 class AdminTransactionController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function index(Request $request)
     {
         $transactions = Transaction::whereRaw(1);
 
-        if ($request->id) $transactions->where('id',$request->id);
+        if ($request->id) {
+            $transactions->where('id', $request->id);
+        }
         if ($email = $request->email) {
-            $transactions->where('tst_email','like','%'.$email.'%');
+            $transactions->where('tst_email', 'like', '%' . $email . '%');
         }
 
         if ($type = $request->type) {
-            if ($type == 1)
-            {
-                $transactions->where('tst_user_id','<>',0);
-            }else {
-                $transactions->where('tst_user_id',0);
+            if ($type == 1) {
+                $transactions->where('tst_user_id', '<>', 0);
+            } else {
+                $transactions->where('tst_user_id', 0);
             }
         }
 
         if ($status = $request->status) {
-            $transactions->where('tst_status',$status);
+            $transactions->where('tst_status', $status);
         }
 
         $transactions = $transactions->orderByDesc('id')
-                            ->paginate(10);
+            ->paginate(10);
         if ($request->export) {
             // Gọi thới export excel 
-            return \Excel::download(new TransactionExport($transactions), date('Y-m-d').'-don-hang.xlsx');
+            return \Excel::download(new TransactionExport($transactions), date('Y-m-d') . '-don-hang.xlsx');
         }
 
         $viewData = [
@@ -50,6 +56,13 @@ class AdminTransactionController extends Controller
         return view('admin.transaction.index', $viewData);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Throwable
+     * @author chungdd
+     */
     public function getTransactionDetail(Request $request, $id)
     {
 
@@ -58,13 +71,19 @@ class AdminTransactionController extends Controller
                 ->get();
 
             $html = view("components.orders", compact('orders'))->render();
-            
+
             return response([
                 'html' => $html
-            ]);    
-        }    
+            ]);
+        }
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @author chungdd
+     */
     public function deleteOrderItem(Request $request, $id)
     {
         if ($request->ajax()) {
@@ -82,8 +101,11 @@ class AdminTransactionController extends Controller
         }
     }
 
-
-
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function delete($id)
     {
         $transaction = Transaction::find($id);
@@ -96,6 +118,13 @@ class AdminTransactionController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @param Request $request
+     * @param $action
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function getAction(Request $request, $action, $id)
     {
         $transaction = Transaction::find($id);
@@ -106,51 +135,57 @@ class AdminTransactionController extends Controller
                     break;
                 case 'success':
                     $transaction->tst_status = 3;
-					$this->syncDecrementProduct($id);
+                    $this->syncDecrementProduct($id);
                     break;
                 case 'cancel':
                     $transaction->tst_status = -1;
                     # code...
                     break;
             }
-			$transaction->tst_admin_id = get_data_user('admins');
+            $transaction->tst_admin_id = get_data_user('admins');
             $transaction->save();
         }
 
-        if ($request->ajax())
-		{
-			return response()->json(['code' => 200]);
-		}
+        if ($request->ajax()) {
+            return response()->json(['code' => 200]);
+        }
 
         return redirect()->back();
     }
 
-	protected function syncDecrementProduct($transactionID)
-	{
-		$orders = Order::where('od_transaction_id', $transactionID)
-			->get();
-		if ($orders)
-		{
-			foreach ($orders as $order)
-			{
-				Cache::forget('PRODUCT_DETAIL_'. $order->od_product_id);
-				\DB::table('products')
-					->where('id', $order->od_product_id)
-					->decrement("pro_number",$order->od_qty);
-				$this->synImportGoods($order->od_product_id, $order->od_qty);
-			}
-		}
-	}
+    /**
+     * @param $transactionID
+     * @author chungdd
+     */
+    protected function syncDecrementProduct($transactionID)
+    {
+        $orders = Order::where('od_transaction_id', $transactionID)
+            ->get();
+        if ($orders) {
+            foreach ($orders as $order) {
+                Cache::forget('PRODUCT_DETAIL_' . $order->od_product_id);
+                \DB::table('products')
+                    ->where('id', $order->od_product_id)
+                    ->decrement("pro_number", $order->od_qty);
+                $this->synImportGoods($order->od_product_id, $order->od_qty);
+            }
+        }
+    }
 
-	protected function synImportGoods($productID, $qty)
-	{
-		$product = Product::find($productID);
-		if ($product) {
-			$invoiceEntered =  InvoiceEntered::where('ie_product_id', $product->id)->first();
-			if ($invoiceEntered) {
-				$invoiceEntered->ie_number_sold += $qty;
-				$invoiceEntered->save();
-			}
-		}
-	}
+    /**
+     * @param $productID
+     * @param $qty
+     * @author chungdd
+     */
+    protected function synImportGoods($productID, $qty)
+    {
+        $product = Product::find($productID);
+        if ($product) {
+            $invoiceEntered = InvoiceEntered::where('ie_product_id', $product->id)->first();
+            if ($invoiceEntered) {
+                $invoiceEntered->ie_number_sold += $qty;
+                $invoiceEntered->save();
+            }
+        }
+    }
 }

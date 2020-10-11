@@ -79,28 +79,6 @@ return [
             ],
         ]
     ],
-    [
-        'name' => 'Quản lý shop',
-        'list-check' => ['shop','commission'],
-        'icon' => 'fa fa-shopping-basket',
-        'level'  => [1,2],
-        'sub'  => [
-            [
-                'name'  => 'Danh sách shop',
-                'namespace' => 'shop',
-                'route' => 'admin.shop.index',
-                'icon'  => 'fa fa-bars',
-                'level'  => [1,2],
-            ],
-           /* [
-                'name'  => 'Hoa hồng',
-                'namespace' => 'commission',
-                'route' => 'admin.commission.index',
-                'icon'  => 'fa fa-money',
-                'level'  => [1,2],
-            ],*/
-        ]
-    ],
 	[
 		'name' => 'Đối tác && Thành viên',
 		'list-check' => ['user','ncc'],
@@ -114,13 +92,13 @@ return [
 				'icon'  => 'fa fa-user',
 				'level'  => [1,2],
 			],
-			[
+			/*[
 				'name'  => 'Nhà cung cấp',
 				'route' => 'admin.ncc.index',
 				'namespace' => 'user',
 				'icon'  => 'fa fa-users',
 				'level'  => [1,2],
-			]
+			]*/
 		]
 	],
     [
@@ -136,28 +114,6 @@ return [
                 'icon'  => 'fa-opencart',
 				'level'  => [1,2],
             ]
-        ]
-    ],
-	[
-        'name' => 'Kho',
-        'list-check' => ['inventory','import','export','invoice_entered'],
-        'icon' => 'fa-folder-open-o',
-		'level'  => [1,2],
-        'sub'  => [
-            [
-                'name'  => 'Nhập kho',
-                'namespace' => 'import',
-                'route' => 'admin.invoice_entered.index',
-                'icon'  => 'fa-plus-square',
-				'level'  => [1,2],
-            ],
-			[
-				'name'  => 'Xuất kho',
-				'namespace' => 'export',
-				'route' => 'admin.inventory.out_of_stock',
-				'icon'  => 'fa-plus-square',
-				'level'  => [1,2],
-			],
         ]
     ],
 //    [

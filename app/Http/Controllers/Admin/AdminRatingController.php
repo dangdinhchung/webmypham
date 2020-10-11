@@ -8,6 +8,10 @@ use App\Models\Rating;
 use App\Models\Product;
 class AdminRatingController extends Controller
 {
+    /**
+     * @author chungdd
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $ratings = Rating::with('product:id,pro_name,pro_slug','user:id,name')
@@ -17,6 +21,11 @@ class AdminRatingController extends Controller
         return view('admin.rating.index',compact('ratings'));
     }
 
+    /**
+     * @author chungdd
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function delete($id)
     {
         $rating = Rating::find(($id));

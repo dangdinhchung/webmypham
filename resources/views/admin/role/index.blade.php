@@ -31,9 +31,9 @@
                             <tbody>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Guard_name</th>
-                                    <th style="width: 50%">Permissions</th>
+                                    <th>Tên</th>
+                                    <th>Tên hiển thị</th>
+                                    <th style="width: 50%">Mô tả</th>
                                     <th>Create</th>
                                     <th>Action</th>
                                 </tr>
@@ -42,16 +42,16 @@
                                         <tr>
                                             <td>{{ $role->id }}</td>
                                             <td>{{ $role->name }}</td>
-                                            <td>{{ $role->guard_name }}</td>
-                                            <td>
+                                            <td>{{ $role->display_name }}</td>
+                                            <td>{{ $role->description }}</td>
+                                            {{--<td>
                                                 @php
                                                     $permissions = $role->permissions()->pluck('name') ?? []
                                                 @endphp
                                                 @foreach($permissions as $permission)
                                                     <span class="label label-success">{{ $permission }}</span>
                                                 @endforeach
-{{--                                                {{ str_replace(array('[', ']','"'),'', $role->permissions()->pluck('name')) }}--}}
-                                            </td>
+                                            </td>--}}
                                             <td>{{ $role->created_at }}</td>
                                             <td>
                                                 <a href="{{ route('admin.role.update', $role->id) }}" class="btn btn-xs btn-info"><i class="fa fa-pencil-square"></i> Edit</a>

@@ -133,6 +133,7 @@
                 } else {
                     $( "#form-flash-sale-edit" ).submit();
                 }
+                //ngày kết thúc >= ngày hiện tại
 
             });
         });

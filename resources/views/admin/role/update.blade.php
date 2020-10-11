@@ -34,17 +34,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="inputPassword3" class="col-sm-2 control-label">Guard</label>
+                                    <label for="inputPassword3" class="col-sm-2 control-label">Display name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="guard_name" value="{{ $role->guard_name }}"
-                                               placeholder="admins">
+                                        <input type="text" class="form-control" name="display_name" value="{{ $role->display_name }}"
+                                               placeholder="Tên hiển thị">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
                                     <div class="col-sm-9">
                                     <textarea class="form-control" id="" cols="30" name="description"
-                                              placeholder="Mô tả về chức năng của role ..." rows="5"></textarea>
+                                              placeholder="Mô tả về chức năng của role ..." rows="5">{{ $role->description }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -56,8 +56,8 @@
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label class="">
-                                                    <div class="icheckbox_flat-green {{ in_array($permission->id, $permissions_active) ? "checked" : "" }}" aria-checked="false" aria-disabled="false">
-                                                        <input type="checkbox" name="permissions[]" {{ in_array($permission->id, $permissions_active) ? "checked=checked" : "" }} value="{{ $permission->id }}" class="flat-red" style="position: absolute; opacity: 0;">
+                                                    <div class="icheckbox_flat-green {{ $getAllPermissionOfRole->contains($permission->id) ? "checked" : "" }}" aria-checked="false" aria-disabled="false">
+                                                        <input type="checkbox" name="permissions[]" {{ $getAllPermissionOfRole->contains($permission->id) ? "checked=checked" : "" }} value="{{ $permission->id }}" class="flat-red" style="position: absolute; opacity: 0;">
                                                         <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
                                                     </div>
                                                     <span>{{ $permission->name }}</span>
@@ -73,7 +73,7 @@
                         <div class="clearfix"></div>
                         <div class="box-footer text-center">
                             <a href="{{ route('admin.role.list') }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> Cancel</a>
-                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Thêm mới</button>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Cập nhật</button>
                         </div>
                         <div class="col-sm-12">
 

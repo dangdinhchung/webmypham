@@ -115,30 +115,47 @@
                     </div>
                     <table class="table" id="showTotal">
                         <tbody>
-                            <tr>
-                                <th>Phí vận chuyển</th>
-                                <td style="text-align: right" id="ship">20,000 VNĐ</td>
-                            </tr>
+                        @php
+                            $total =    str_replace(',','',\Cart::subtotal(0));
+                            /*$totalMoney = (int)$total + 20000;*/
+                        @endphp
+                        <tr class="showTotal">
+                            <th>Tổng tiền hàng</th>
+                            <td style="text-align: right" id="subtotal">{{ number_format($total,0,',','.') }} đ</td>
+                        </tr>
+                        <tr class="moneyShip">
                             @php
-                                $total =    str_replace(',','',\Cart::subtotal(0));
-                                $totalMoney = (int)$total + 20000;
+                                $shipMoney =  App\Models\Product::SHIPPING_COST;
                             @endphp
-                            <tr class="showTotal">
-                                <th>Tổng tiền hàng</th>
-                                <td style="text-align: right" id="subtotal">{{ number_format($totalMoney,0,',',',') }} VNĐ</td>
+                            <th>Phí vận chuyển</th>
+                            <td style="text-align: right" id="ship">{{number_format($shipMoney,0,',','.')}} đ</td>
+                        </tr>
+                        @if ($hasCoupon)
+                            @php
+                                $subtotal = str_replace(',','',\Cart::subtotal(0));
+                                $totalDiscount = floor($subtotal * $codeCoupon['cp_discount'] / 100);
+                                $moneyDiscount = number_format(floor($subtotal * $codeCoupon['cp_discount'] / 100));
+                                $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
+
+                                $price = ((100 - $codeCoupon['cp_discount']) * $subtotal)  /  100 ;
+                                $priceSale = number_format($price,0,',','.')
+                            @endphp
+                            <tr class="showTotal"><th> Giảm tối đa {{ number_format($codeCoupon['cp_discount']) }} {{ $discountType }} (<b>Code:</b> {{ $coupon }}) </th>
+                                <td style="text-align: right" id=" %">-{{$priceSale}} đ</td>
                             </tr>
-                            @if ($hasCoupon)
-                                @php
-                                     $subtotal = str_replace(',','',\Cart::subtotal(0));
-                                     $totalDiscount = $codeCoupon['cp_discount_type'] === 'percent' ? floor($subtotal * $codeCoupon['cp_discount'] / 100) : $codeCoupon['cp_discount'];
-                                     $moneyDiscount = $codeCoupon['cp_discount_type'] === 'percent' ? number_format(floor($subtotal * $codeCoupon['cp_discount'] / 100)) : number_format($codeCoupon['cp_discount']);
-                                     $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
-                                @endphp
-                                <tr class="showTotal"><th> Giảm tối đa {{ number_format($codeCoupon['cp_discount']) }} {{ $discountType }} (<b>Code:</b> {{ $coupon }}) </th>
-                                    <td style="text-align: right" id=" %">- 470,250 VNĐ</td>
-                                </tr>
-                                <tr class="showTotal"><th>Tổng tiền cần thanh toán </th><td style="text-align: right" id="subtotal">{{ $cartUpdateTotal }} VNĐ</td></tr>
-                            @endif
+                            {{--<tr class="showTotal"><th>Tổng tiền cần thanh toán </th><td style="text-align: right" id="subtotal">{{ $cartUpdateTotal }} VNĐ</td></tr>--}}
+                        @endif
+                        <tr class="showTotalEnd">
+                            @php
+                                $shipMoney =  App\Models\Product::SHIPPING_COST;
+                                $totalMoneyEnd = (int)str_replace(',','',\Cart::subtotal(0)) + (int)$shipMoney;
+                                if($hasCoupon) {
+                                 $totalMoneyEnd = (int)$totalMoneyEnd - (int)$price;
+                                }
+                            @endphp
+                            <th><b>Tổng tiền cần thanh toán</b></th>
+                            <td style="text-align: right;font-weight: bold" id="subtotalend">{{number_format($totalMoneyEnd,0,',','.') }} đ</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -223,9 +240,9 @@
                             if(result.error ==1){
                                 $('.coupon-msg').html(result.msg).addClass('text-danger').show();
                             }else{
+                                $("#showTotal").find("tr.showTotal, tr.moneyShip, tr.showTotalEnd").remove();
                                 $('#removeCoupon').show();
                                 $('.coupon-msg').html(result.msg).addClass('text-success').show();
-                                $('.showTotal').remove();
                                 $('#showTotal').prepend(result.html);
                             }
                         })
@@ -255,6 +272,8 @@
                     $('.coupon-msg').removeClass('text-success');
                     $('.coupon-msg').hide();
                     $('.showTotal').remove();
+                    $('.moneyShip').remove();
+                    $('.showTotalEnd').remove();
                     $('#showTotal').prepend(result.html);
                 })
                 .fail(function() {

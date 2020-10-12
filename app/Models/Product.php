@@ -9,6 +9,7 @@ use App\User;
 class Product extends Model
 {
 //	use LogsActivity;
+    const SHIPPING_COST      = 20000;
     protected $guarded = [''];
 	protected static $logAttributes = ['*'];
     public $country = [

@@ -25755,8 +25755,12 @@ var Cart = {
         }
 
         if (typeof results.totalMoney !== "undefined") {
+          var shipMoney = 20000;
+          var totalMoney = results.totalMoney;
+          var totalConvert = parseInt(totalMoney.replaceAll(',', '')) + parseInt(shipMoney);
+          var money = totalConvert.toLocaleString('it-IT');
           $input.val(number);
-          $("#sub-total").text(results.totalMoney + " đ");
+          $("#subtotal").text(money + " đ");
           toastr__WEBPACK_IMPORTED_MODULE_3___default.a.success(results.messages);
           $this.parents('tr').find(".js-total-item").text(results.totalItem + ' đ');
         } else {
@@ -25781,7 +25785,6 @@ var Cart = {
       var URL = $this.parent().attr('data-url');
       var productID = $this.parent().attr("data-id-product");
       number = number + 1;
-      console.log(number);
       $.ajax({
         url: URL,
         data: {
@@ -25795,8 +25798,13 @@ var Cart = {
         }
 
         if (typeof results.totalMoney !== "undefined") {
+          var shipMoney = 20000;
+          var totalMoney = results.totalMoney;
+          var totalConvert = parseInt(totalMoney.replaceAll(',', '')) + parseInt(shipMoney);
+          var money = totalConvert.toLocaleString('it-IT');
+          $("#subtotal").text(totalMoney + " đ");
+          $("#subtotalend").text(money + " đ");
           $input.val(number);
-          $("#sub-total").text(results.totalMoney + " đ");
           toastr__WEBPACK_IMPORTED_MODULE_3___default.a.success(results.messages);
           $this.parents('tr').find(".js-total-item").text(results.totalItem + ' đ');
         } else {

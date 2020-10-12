@@ -103,8 +103,13 @@ var Cart = {
                 }
 
                 if (typeof results.totalMoney !== "undefined") {
+                    let shipMoney = 20000;
+                    let totalMoney = results.totalMoney;
+                    let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+                    let money = totalConvert.toLocaleString('it-IT');
+
                     $input.val(number);
-                    $("#sub-total").text(results.totalMoney+ " đ");
+                    $("#subtotal").text(money+ " đ");
                     toast.success(results.messages);
                     $this.parents('tr').find(".js-total-item").text(results.totalItem +' đ');
                 }else {
@@ -131,7 +136,6 @@ var Cart = {
             let productID = $this.parent().attr("data-id-product");
 
             number = number + 1;
-            console.log(number);
             $.ajax({
                 url: URL,
                 data: {
@@ -139,14 +143,19 @@ var Cart = {
                     idProduct  : productID
                 }
             }).done(function( results ) {
-
                 if (typeof results.error != "undefined") {
                     toast.warning(results.messages);
                     return false;
                 }
                 if (typeof results.totalMoney !== "undefined") {
+                    let shipMoney = 20000;
+                    let totalMoney = results.totalMoney;
+                    let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+                    let money = totalConvert.toLocaleString('it-IT');
+
+                    $("#subtotal").text(totalMoney + " đ");
+                    $("#subtotalend").text(money + " đ");
                     $input.val(number);
-                    $("#sub-total").text(results.totalMoney+ " đ");
                     toast.success(results.messages);
                     $this.parents('tr').find(".js-total-item").text(results.totalItem +' đ');
                 }else {

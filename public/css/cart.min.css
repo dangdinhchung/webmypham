@@ -11273,13 +11273,14 @@ p {
   display: flex;
   background: #fff;
   padding: 10px;
+  margin-bottom: 10px;
 }
 .cart .title {
   font-size: 20px;
   margin-bottom: 15px;
 }
 .cart .left {
-  width: 65%;
+  width: 100%;
   margin-right: 20px;
   background-color: white;
 }
@@ -11293,6 +11294,7 @@ p {
 }
 .cart .left .list__content .qty_number {
   display: flex;
+  margin-left: 58px;
 }
 .cart .left .list__content .qty_number input {
   padding: 5px 10px;

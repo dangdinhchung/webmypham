@@ -26,17 +26,9 @@ class ShoppingCartController extends Controller
     public function index()
     {
         $shopping = \Cart::content();
-        $hasCoupon = !empty(session('coupon')) ? true : false;
-        $coupon = !empty(session('coupon')) ? session('coupon') : '';
-        $codeCoupon = Coupon::where(['cp_code' => $coupon])->first();
-        $discountType = $codeCoupon['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
         $viewData = [
             'title_page'   => 'Danh sách giỏ hàng',
             'shopping'     => $shopping,
-            'hasCoupon'    => $hasCoupon,
-            'coupon'       => $coupon,
-            'codeCoupon'   => $codeCoupon,
-            'discountType' => $discountType
         ];
         return view('frontend.pages.shopping.index', $viewData);
     }
@@ -237,5 +229,22 @@ class ShoppingCartController extends Controller
                 'message'    => 'Xoá sản phẩm khỏi đơn hàng thành công'
             ]);
         }
+    }
+
+    public function purchase() {
+        $shopping = \Cart::content();
+        $hasCoupon = !empty(session('coupon')) ? true : false;
+        $coupon = !empty(session('coupon')) ? session('coupon') : '';
+        $codeCoupon = Coupon::where(['cp_code' => $coupon])->first();
+        $discountType = $codeCoupon['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
+        $viewData = [
+            'title_page'   => 'Danh sách sản phẩm',
+            'shopping'     => $shopping,
+            'hasCoupon'    => $hasCoupon,
+            'coupon'       => $coupon,
+            'codeCoupon'   => $codeCoupon,
+            'discountType' => $discountType
+        ];
+        return view('frontend.pages.purchase.index',$viewData);
     }
 }

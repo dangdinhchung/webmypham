@@ -75,6 +75,8 @@ Route::group(['namespace' => 'Frontend'], function() {
         Route::get('update/{id}','ShoppingCartController@update')->name('ajax_get.shopping.update'); // cập nhật
         Route::get('theo-doi-don-hang','TrackOrderController@index')->name('get.track.transaction'); // 
         Route::post('pay','ShoppingCartController@postPay')->name('post.shopping.pay'); // xử lý giỏ hàng lưu thông tin
+
+        Route::get('purchase','ShoppingCartController@purchase')->name('purchase.index'); // thông tin đặt hàng
     });
 
     //Comment

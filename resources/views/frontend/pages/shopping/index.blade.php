@@ -33,6 +33,7 @@
         }
         .table>tbody>tr>th, .table>tbody>tr>td {
             border-top: none !important;
+            text-align: center;
         }
         @media (max-width: 767px) {
             .name-product {
@@ -44,7 +45,7 @@
 @stop
 @section('content')
     <div class="container cart">
-        <div class="left">
+        <div class="left content">
             <div class="list">
                 <div class="title">THÔNG TIN GIỎ HÀNG</div>
                 <div class="list__content">
@@ -52,7 +53,7 @@
                         <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th style="width: 100px;"></th>
+                            <th style="width: 100px;">Hình ảnh</th>
                             <th style="width: 30%">Sản phẩm</th>
                             <th>Giá</th>
                             <th>Số lượng</th>
@@ -69,7 +70,7 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <div style="" class="name-product">
+                                        <div style="line-height: 50px;" class="name-product">
                                             <a href="{{ route('get.product.detail',\Str::slug($item->name).'-'.$item->id) }}"><strong>{{ $item->name }}</strong></a>
                                         </div>
                                     </td>
@@ -101,67 +102,27 @@
                         </tbody>
                     </table>
                     </div>
-                    <div class="form-group">
-                        @php
-                            $style = ($hasCoupon)?"display:inline;":"display: none;";
-                        @endphp
-                        <label class="control-label" for="inputGroupSuccess3"><i class="fa fa-exchange" aria-hidden="true"></i> Mã giảm giá <span style="{{ $style }} cursor: pointer;" class="text-danger" href="{{ route('checkout.apply_coupon_code') }}" id="removeCoupon">(xóa mã đang dùng <i class="fa fa fa-times"></i>)</span></label>
-                        <div class="input-group ds-flex">
-                            <input type="text" placeholder="Nhập mã giảm giá" class="form-control form-coupon" value="{{ $hasCoupon ? session('coupon') : '' }}" id="coupon-value" aria-describedby="inputGroupSuccess3Status">
-                            <span class="input-group-addon"  id="coupon-button" href="{{ route('checkout.apply_coupon_code') }}" style="cursor: pointer;" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Đang kiểm tra">Kiểm tra</span>
-                        </div>
-                        <span class="status-coupon" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-                        <div class="coupon-msg" style="text-align: left;padding-left: 10px;">{{ $hasCoupon ? 'Mã giảm giá có giá trị giảm ' . number_format($codeCoupon['cp_discount']) . $discountType . ' cho đơn hàng này.' : ""  }}</div>
-                    </div>
                     <table class="table" id="showTotal">
                         <tbody>
                         @php
                             $total =    str_replace(',','',\Cart::subtotal(0));
-                            /*$totalMoney = (int)$total + 20000;*/
                         @endphp
-                        <tr class="showTotal">
-                            <th>Tổng tiền hàng</th>
-                            <td style="text-align: right" id="subtotal">{{ number_format($total,0,',','.') }} đ</td>
-                        </tr>
-                        <tr class="moneyShip">
-                            @php
-                                $shipMoney =  App\Models\Product::SHIPPING_COST;
-                            @endphp
-                            <th>Phí vận chuyển</th>
-                            <td style="text-align: right" id="ship">{{number_format($shipMoney,0,',','.')}} đ</td>
-                        </tr>
-                        @if ($hasCoupon)
-                            @php
-                                $subtotal = str_replace(',','',\Cart::subtotal(0));
-                                $totalDiscount = floor($subtotal * $codeCoupon['cp_discount'] / 100);
-                                $moneyDiscount = number_format(floor($subtotal * $codeCoupon['cp_discount'] / 100));
-                                $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
-
-                                $price = ((100 - $codeCoupon['cp_discount']) * $subtotal)  /  100 ;
-                                $priceSale = number_format($price,0,',','.')
-                            @endphp
-                            <tr class="showTotal"><th> Giảm tối đa {{ number_format($codeCoupon['cp_discount']) }} {{ $discountType }} (<b>Code:</b> {{ $coupon }}) </th>
-                                <td style="text-align: right" id=" %">-{{$priceSale}} đ</td>
-                            </tr>
-                            {{--<tr class="showTotal"><th>Tổng tiền cần thanh toán </th><td style="text-align: right" id="subtotal">{{ $cartUpdateTotal }} VNĐ</td></tr>--}}
-                        @endif
                         <tr class="showTotalEnd">
                             @php
-                                $shipMoney =  App\Models\Product::SHIPPING_COST;
-                                $totalMoneyEnd = (int)str_replace(',','',\Cart::subtotal(0)) + (int)$shipMoney;
-                                if($hasCoupon) {
-                                 $totalMoneyEnd = (int)$totalMoneyEnd - (int)$price;
-                                }
+                            $total = str_replace(',','.', \Cart::subtotal(0));
                             @endphp
                             <th><b>Tổng tiền cần thanh toán</b></th>
-                            <td style="text-align: right;font-weight: bold" id="subtotalend">{{number_format($totalMoneyEnd,0,',','.') }} đ</td>
+                            <td style="text-align: right;font-weight: bold" id="subtotalend">{{ $total }} đ</td>
                         </tr>
                         </tbody>
                     </table>
+                    <div class="btn btn-primary btn-lg" style="float: right">
+                        <a href="{{ route('purchase.index') }}" style="color: white">Mua hàng</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="right">
+        {{--<div class="right">
             <div class="customer">
                 <div class="title">THÔNG TIN ĐẶT HÀNG</div>
                 <div class="customer__content">
@@ -206,7 +167,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>--}}
     </div>
 
 @stop
@@ -214,71 +175,4 @@
     <script src="{{ asset('js/cart.js') }}" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $('#coupon-button').click(function() {
-            var coupon = $('#coupon-value').val();
-            let Url = $(this).attr('href');
-            if(coupon==''){
-                $('.coupon-msg').html('Bạn chưa nhập mã giảm giá').addClass('text-danger').show();
-            }else{
-                $('#coupon-button').button('loading');
-                setTimeout(function() {
-                    $.ajax({
-                        url: Url,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            cp_code: coupon,
-                            _token: "{{ csrf_token() }}",
-                        },
-                    })
-                        .done(function(result) {
-                            $('#coupon-value').val(coupon);
-                            $('.coupon-msg').removeClass('text-danger');
-                            $('.coupon-msg').removeClass('text-success');
-                            $('.coupon-msg').hide();
-                            if(result.error ==1){
-                                $('.coupon-msg').html(result.msg).addClass('text-danger').show();
-                            }else{
-                                $("#showTotal").find("tr.showTotal, tr.moneyShip, tr.showTotalEnd").remove();
-                                $('#removeCoupon').show();
-                                $('.coupon-msg').html(result.msg).addClass('text-success').show();
-                                $('#showTotal').prepend(result.html);
-                            }
-                        })
-                        .fail(function() {
-                            console.log("error");
-                        });
-                    $('#coupon-button').button('reset');
-                }, 2000);
-            }
-        });
-
-        $('#removeCoupon').click(function () {
-            let Url = $(this).attr('href');
-            $.ajax({
-                url: Url,
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    action: "remove",
-                    _token: "{{ csrf_token() }}",
-                },
-            })
-                .done(function(result) {
-                    $('#removeCoupon').hide();
-                    $('#coupon-value').val('');
-                    $('.coupon-msg').removeClass('text-danger');
-                    $('.coupon-msg').removeClass('text-success');
-                    $('.coupon-msg').hide();
-                    $('.showTotal').remove();
-                    $('.moneyShip').remove();
-                    $('.showTotalEnd').remove();
-                    $('#showTotal').prepend(result.html);
-                })
-                .fail(function() {
-                    console.log("error");
-                });
-        });
-    </script>
 @stop

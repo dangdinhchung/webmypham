@@ -25756,11 +25756,13 @@ var Cart = {
 
         if (typeof results.totalMoney !== "undefined") {
           var shipMoney = 20000;
-          var totalMoney = results.totalMoney;
-          var totalConvert = parseInt(totalMoney.replaceAll(',', '')) + parseInt(shipMoney);
+          var totalMoney = results.totalMoney; // let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+
+          var totalConvert = parseInt(totalMoney.replaceAll(',', ''));
           var money = totalConvert.toLocaleString('it-IT');
           $input.val(number);
           $("#subtotal").text(money + " đ");
+          $("#subtotalend").text(money + " đ");
           toastr__WEBPACK_IMPORTED_MODULE_3___default.a.success(results.messages);
           $this.parents('tr').find(".js-total-item").text(results.totalItem + ' đ');
         } else {
@@ -25799,8 +25801,9 @@ var Cart = {
 
         if (typeof results.totalMoney !== "undefined") {
           var shipMoney = 20000;
-          var totalMoney = results.totalMoney;
-          var totalConvert = parseInt(totalMoney.replaceAll(',', '')) + parseInt(shipMoney);
+          var totalMoney = results.totalMoney; // let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+
+          var totalConvert = parseInt(totalMoney.replaceAll(',', ''));
           var money = totalConvert.toLocaleString('it-IT');
           $("#subtotal").text(totalMoney + " đ");
           $("#subtotalend").text(money + " đ");

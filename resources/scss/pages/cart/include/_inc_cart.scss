@@ -2,6 +2,7 @@
     display: flex;
     background: #fff;
     padding: 10px;
+    margin-bottom: 10px;
 
     .title {
         font-size: 20px;
@@ -9,7 +10,7 @@
     }
 
     .left {
-        width: 65%;
+        width: 100%;
         margin-right: 20px;
         background-color: white;
         .list {
@@ -27,6 +28,7 @@
 
                 .qty_number {
                     display: flex;
+                    margin-left: 58px;
 
                     input {
                         padding: 5px 10px;

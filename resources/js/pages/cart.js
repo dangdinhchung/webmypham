@@ -84,11 +84,8 @@ var Cart = {
                 toast.warning("Số lượng sản phẩm phải >= 1");
                 return false;
             }
-
             let URL       = $this.parent().attr('data-url');
             let productID = $this.parent().attr("data-id-product");
-
-
             number = number - 1;
             $.ajax({
                 url: URL,
@@ -105,11 +102,13 @@ var Cart = {
                 if (typeof results.totalMoney !== "undefined") {
                     let shipMoney = 20000;
                     let totalMoney = results.totalMoney;
-                    let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+                    // let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+                    let totalConvert =  parseInt(totalMoney.replaceAll(',',''));
                     let money = totalConvert.toLocaleString('it-IT');
 
                     $input.val(number);
                     $("#subtotal").text(money+ " đ");
+                    $("#subtotalend").text(money+ " đ");
                     toast.success(results.messages);
                     $this.parents('tr').find(".js-total-item").text(results.totalItem +' đ');
                 }else {
@@ -150,7 +149,8 @@ var Cart = {
                 if (typeof results.totalMoney !== "undefined") {
                     let shipMoney = 20000;
                     let totalMoney = results.totalMoney;
-                    let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+                    // let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
+                    let totalConvert =  parseInt(totalMoney.replaceAll(',',''));
                     let money = totalConvert.toLocaleString('it-IT');
 
                     $("#subtotal").text(totalMoney + " đ");

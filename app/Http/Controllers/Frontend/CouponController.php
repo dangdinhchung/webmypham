@@ -32,19 +32,19 @@ class CouponController extends Controller
                 $request->session()->forget('coupon');
                 $html = '';
                 $html .= "<tr class='showTotal'>";
-                $html .= '<th>Tổng tiền hàng</th>';
+                $html .= '<th style="text-align: left">Tổng tiền hàng</th>';
                 $html .= "<td style='text-align: right' id='subtotal'>" . number_format($subtotal, 0, ',',
                         '.') . ' đ</td>';
                 $html .= '</tr>';
 
                 $html .= "<tr class='shipConst'>";
-                $html .= '<th>Phí vận chuyển</th>';
+                $html .= '<th style="text-align: left">Phí vận chuyển</th>';
                 $html .= "<td style='text-align: right' id='ship-const'>" . number_format($moneyShip, 0, ',',
                         '.') . ' đ</td>';
                 $html .= '</tr>';
 
                 $html .= "<tr class='showTotalEnd'>";
-                $html .= '<th><b>Tổng tiền cần thanh toán</b></th>';
+                $html .= '<th style="text-align: left"><b>Tổng tiền cần thanh toán</b></th>';
                 $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoney,
                         0, ',', '.') . ' đ</td>';
                 $html .= '</tr>';
@@ -89,24 +89,24 @@ class CouponController extends Controller
                     //$request->session()->forget('coupon'); //not used
 
                     $html .= "<tr class='showTotal'>";
-                    $html .= '<th>Tổng tiền hàng</th>';
+                    $html .= '<th style="text-align: left">Tổng tiền hàng</th>';
                     $html .= "<td style='text-align: right' id='subtotal'>" . \Cart::subtotal(0) . ' đ</td>';
                     $html .= '</tr>';
 
                     $html .= "<tr class='moneyShip'>";
-                    $html .= '<th>Phí vận chuyển</th>';
+                    $html .= '<th style="text-align: left">Phí vận chuyển</th>';
                     $html .= "<td style='text-align: right' id='ship'>" . number_format($moneyShip, 0, ',',
                             '.') . ' đ</td>';
                     $html .= '</tr>';
 
 
                     $html .= "<tr class='showTotal'>";
-                    $html .= '<th> Giảm tối đa ' . number_format($content['cp_discount']) . $discountType . ' (<b>Code:</b> ' . $code . ") </th>
+                    $html .= '<th style="text-align: left"> Giảm tối đa ' . number_format($content['cp_discount']) . $discountType . ' (<b>Code:</b> ' . $code . ") </th>
                 <td style='text-align: right' id='" . $discountType . "'>" . "-" . $moneyDiscount . ' đ' . '</td>
                 </tr>';
 
                     $html .= "<tr class='showTotalEnd'>";
-                    $html .= '<th><b>Tổng tiền cần thanh toán</b> </th>';
+                    $html .= '<th style="text-align: left"><b>Tổng tiền cần thanh toán</b> </th>';
                     $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoneyEnd,
                             0, ',', '.') . " đ</td>";
                     $html .= "</tr>";

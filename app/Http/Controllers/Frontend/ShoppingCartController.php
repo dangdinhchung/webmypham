@@ -88,7 +88,6 @@ class ShoppingCartController extends Controller
             $sale = $product->pro_sale;
         }
 
-
         // 3. Thêm sản phẩm vào giỏ hàng
         \Cart::add([
             'id'      => $product->id,
@@ -112,10 +111,16 @@ class ShoppingCartController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function postPay(Request $request)
     {
         Cache::forget('HOME.PRODUCT_PAY');
         $data = $request->except("_token");
+        //kiểm tra user đăng nhập chưa
         if (!\Auth::user()->id) {
             //4. Thông báo
             \Session::flash('toastr', [
@@ -126,16 +131,11 @@ class ShoppingCartController extends Controller
             return redirect()->back();
         }
 
-        $data['tst_user_id'] = \Auth::user()->id;
-//        $data['cpu_coupon_id'] =  session('coupon');
-//        $data['tst_total_money'] = str_replace(',', '', \Cart::subtotal(0));
-        //update cart after update coupon
         $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
-        $data['tst_total_money'] = str_replace(',', '', $totalCard);
-        $data['created_at'] = Carbon::now();
+        $totalMoney = str_replace(',', '', $totalCard) + (int)Product::SHIPPING_COST;
 
         // check nếu thanh toán ví thì kiểm tra số tiền
-        if ($request->pay == 'online') {
+       /* if ($request->pay == 'online') {
             if (get_data_user('web', 'balance') < $data['tst_total_money']) {
                 \Session::flash('toastr', [
                     'type'    => 'error',
@@ -143,18 +143,45 @@ class ShoppingCartController extends Controller
                 ]);
                 return redirect()->back();
             }
-        }
-
+        }*/
         // Lấy thông tin đơn hàng
-        $shopping = \Cart::content();
+        $products = \Cart::content();
+        dd($products);
+       /* $shopping = \Cart::content();
         $data['options']['orders'] = $shopping;
-
-        $options['drive'] = $request->pay;
+        $options['drive'] = $request->pay;*/
         try {
             \Cart::destroy();
             $request->session()->forget('cartUpdateTotal');
-            /*$request->session()->forget('coupon');*/
-            new PayManager($data, $shopping, $options);
+            /*new PayManager($data, $shopping, $options);*/
+            //lưu bảng transactions
+            $transacionID = Transaction::insertGetId([
+                'tst_user_id'     => \Auth::user()->id,
+                'tst_total_money' => $totalMoney,
+                'tst_name'        => $request->tst_name,
+                'tst_email'       => $request->tst_email,
+                'tst_phone'       => $request->tst_phone,
+                'tst_address'     => $request->tst_address,
+                'tst_note'        => $request->tst_note ? $request->tst_note : '',
+                'tst_type'        => $request->tst_type,
+                'created_at'      => Carbon::now(),
+                'updated_at'      => Carbon::now()
+            ]);
+            //Lưu bảng orders
+            if($transacionID) {
+                foreach ($products as  $product) {
+                    Order::insert([
+                        'od_transaction_id' => $transacionID,
+                        'od_product_id'     => $product->id,
+                        'od_sale'           => $product->options->sale,
+                        'od_qty'            => $product->qty,
+                        'od_price'          => $product->price,
+                        'created_at'        => Carbon::now(),
+                        'updated_at'        => Carbon::now()
+                    ]);
+                }
+            }
+
         } catch (\Exception $exception) {
             Log::error("[Errors pay shopping cart]" . $exception->getMessage());
         }
@@ -167,6 +194,12 @@ class ShoppingCartController extends Controller
         return redirect()->to('/');
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @author chungdd
+     */
     public function update(Request $request, $id)
     {
         if ($request->ajax()) {
@@ -217,8 +250,11 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     *  Xoá sản phẩm đơn hang
-     * */
+     * @param Request $request
+     * @param $rowId
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @author chungdd
+     */
     public function delete(Request $request, $rowId)
     {
         if ($request->ajax()) {
@@ -231,6 +267,10 @@ class ShoppingCartController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function purchase() {
         $shopping = \Cart::content();
         $hasCoupon = !empty(session('coupon')) ? true : false;

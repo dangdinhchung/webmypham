@@ -93,6 +93,13 @@
                                    type="text" value="" class="form-control">
                         </div>
                         <div class="form-group">
+                            <label for="email">Hình thức thanh toán</label>
+                            <select name="tst_type" id="" class="form-control">
+                                <option value="1">Thanh toán khi nhận hàng</option>
+                                <option value="2">Thanh toán VNPAY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="note">Ghi chú thêm</label>
                             <textarea name="tst_note" id="note" cols="3" style="min-height: 100px;" rows="2"
                                       class="form-control"></textarea>

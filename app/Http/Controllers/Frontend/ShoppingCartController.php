@@ -14,11 +14,19 @@ use App\Models\FlashSale;
 use App\Models\FlashSaleProduct;
 use App\Mail\TransactionSuccess;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ShoppingCartController extends Controller
 {
+
+    //thanh toán online
+    private $vnp_TmnCode = "0M8H13SJ";
+    private $vnp_HashSecret = "QXKLHHCYFAALOUNFUCZLHRTYRHOQIEQV"; //Chuỗi bí mật
+    private $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    private $vnp_Returnurl = "http://dinhchung56.abc/gio-hang/form-online";
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author chungdd
@@ -133,26 +141,10 @@ class ShoppingCartController extends Controller
 
         $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
         $totalMoney = str_replace(',', '', $totalCard) + (int)Product::SHIPPING_COST;
-
-        // check nếu thanh toán ví thì kiểm tra số tiền
-       /* if ($request->pay == 'online') {
-            if (get_data_user('web', 'balance') < $data['tst_total_money']) {
-                \Session::flash('toastr', [
-                    'type'    => 'error',
-                    'message' => 'Số tiền của bạn không đủ để thanh toán. Hãy nạp thêm tiền để thanh toán từ ví của bạn'
-                ]);
-                return redirect()->back();
-            }
-        }*/
         // Lấy thông tin đơn hàng
         $products = \Cart::content();
-        dd($products);
-       /* $shopping = \Cart::content();
-        $data['options']['orders'] = $shopping;
-        $options['drive'] = $request->pay;*/
         try {
-            \Cart::destroy();
-            $request->session()->forget('cartUpdateTotal');
+            DB::beginTransaction();
             /*new PayManager($data, $shopping, $options);*/
             //lưu bảng transactions
             $transacionID = Transaction::insertGetId([
@@ -182,16 +174,39 @@ class ShoppingCartController extends Controller
                 }
             }
 
-        } catch (\Exception $exception) {
-            Log::error("[Errors pay shopping cart]" . $exception->getMessage());
-        }
+            //gửi mail cho khách hàng
+            $subject = "Thư cảm ơn mua hàng";
+            $name = $request->tst_name;
+            $data = array('name'=> $name);
+            $email = $request->tst_email;
+            Mail::send('emails.email_order_offline', $data, function($message) use ($email, $subject, $name) {
+                $message->to($email, $name)
+                    ->subject($subject);
+                $message->from(env('MAIL_USERNAME'),'Beauty Store');
+            });
 
-        \Session::flash('toastr', [
-            'type'    => 'success',
-            'message' => 'Đơn hàng của bạn đã được lưu'
-        ]);
-        $request->session()->forget('coupon');
-        return redirect()->to('/');
+            DB::commit();
+
+            //un session card
+            \Cart::destroy();
+            $request->session()->forget('cartUpdateTotal');
+
+            \Session::flash('toastr', [
+                'type'    => 'success',
+                'message' => 'Đơn hàng của bạn đã được lưu'
+            ]);
+            $request->session()->forget('coupon');
+            return redirect()->to('/');
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("[Errors pay shopping cart]" . $exception->getMessage());
+            \Session::flash('toastr', [
+                'type'    => 'error',
+                'message' => 'Có lỗi xảy ra không mong muốn'
+            ]);
+            return redirect()->to('/');
+        }
     }
 
     /**

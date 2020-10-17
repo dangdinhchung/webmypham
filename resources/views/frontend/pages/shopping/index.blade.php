@@ -6,16 +6,20 @@
             background: none;
             border: none;
         }
+
         .ic-coupon {
             color: #888;
             font-size: initial;
         }
+
         .form-coupon {
             width: 30% !important;
         }
+
         .ds-flex {
             display: flex;
         }
+
         .input-group-addon {
             margin-left: 10px;
             cursor: pointer;
@@ -28,16 +32,20 @@
             border-radius: 4px;
             display: table-cell;
         }
+
         .list__content {
             border: none !important;
         }
-        .table>tbody>tr>th, .table>tbody>tr>td {
+
+        .table > tbody > tr > th, .table > tbody > tr > td {
             border-top: none !important;
             text-align: center;
         }
+
         @media (max-width: 767px) {
             .name-product {
-                width: 300px;white-space: normal;
+                width: 300px;
+                white-space: normal;
             }
         }
 
@@ -48,78 +56,93 @@
         <div class="left content">
             <div class="list">
                 <div class="title">THÔNG TIN GIỎ HÀNG</div>
-                <div class="list__content">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th style="width: 100px;">Hình ảnh</th>
-                            <th style="width: 30%">Sản phẩm</th>
-                            <th>Giá</th>
-                            <th>Số lượng</th>
-                            <th>Thành tiền</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($shopping as $key => $item)
+                @if (count($shopping) > 0)
+                    <div class="list__content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
                                 <tr>
-                                    <td>
-                                        <a href="{{ route('get.product.detail',\Str::slug($item->name).'-'.$item->id) }}"
-                                            title="{{ $item->name }}" class="avatar image contain">
-                                            <img alt="" src="{{ pare_url_file($item->options->image) }}" class="lazyload">
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <div style="line-height: 50px;" class="name-product">
-                                            <a href="{{ route('get.product.detail',\Str::slug($item->name).'-'.$item->id) }}"><strong>{{ $item->name }}</strong></a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p><b>{{  number_format($item->price,0,',','.') }} đ</b></p>
-                                        <p>
-
-                                            @if ($item->options->price_old)
-                                                <span style="text-decoration: line-through;">{{  number_format(number_price($item->options->price_old),0,',','.') }} đ</span>
-                                                <span class="sale">- {{ $item->options->sale }} %</span>
-                                            @endif
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <div class="qty_number">
-                                            <input type="number"  min="1" class="input_quantity" disabled name="quantity_14692" value="{{  $item->qty }}" id="">
-                                            <p data-price="{{ $item->price }}" data-url="{{  route('ajax_get.shopping.update', $key) }}" data-id-product="{{  $item->id }}">
-                                                <span class="js-increase">+</span>
-                                                <span class="js-reduction">-</span>
-                                            </p>
-                                            <a href="{{  route('get.shopping.delete', $key) }}" class="js-delete-item btn-action-delete"><i class="la la-trash ic-coupon"></i></a>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="js-total-item">{{ number_format($item->price * $item->qty,0,',','.') }} đ</span>
-                                    </td>
+                                    <th style="width: 100px;">Hình ảnh</th>
+                                    <th style="width: 30%">Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    </div>
-                    <table class="table" id="showTotal">
-                        <tbody>
-                        @php
-                            $total =    str_replace(',','',\Cart::subtotal(0));
-                        @endphp
-                        <tr class="showTotalEnd">
+                                </thead>
+                                <tbody>
+                                @foreach($shopping as $key => $item)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('get.product.detail',\Str::slug($item->name).'-'.$item->id) }}"
+                                               title="{{ $item->name }}" class="avatar image contain">
+                                                <img alt="" src="{{ pare_url_file($item->options->image) }}"
+                                                     class="lazyload">
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div style="line-height: 50px;" class="name-product">
+                                                <a href="{{ route('get.product.detail',\Str::slug($item->name).'-'.$item->id) }}"><strong>{{ $item->name }}</strong></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p><b>{{  number_format($item->price,0,',','.') }} đ</b></p>
+                                            <p>
+
+                                                @if ($item->options->price_old)
+                                                    <span style="text-decoration: line-through;">{{  number_format(number_price($item->options->price_old),0,',','.') }} đ</span>
+                                                    <span class="sale">- {{ $item->options->sale }} %</span>
+                                                @endif
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <div class="qty_number">
+                                                <input type="number" min="1" class="input_quantity" disabled
+                                                       name="quantity_14692" value="{{  $item->qty }}" id="">
+                                                <p data-price="{{ $item->price }}"
+                                                   data-url="{{  route('ajax_get.shopping.update', $key) }}"
+                                                   data-id-product="{{  $item->id }}">
+                                                    <span class="js-increase">+</span>
+                                                    <span class="js-reduction">-</span>
+                                                </p>
+                                                <a href="{{  route('get.shopping.delete', $key) }}"
+                                                   class="js-delete-item btn-action-delete"><i
+                                                            class="la la-trash ic-coupon"></i></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="js-total-item">{{ number_format($item->price * $item->qty,0,',','.') }} đ</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <table class="table" id="showTotal">
+                            <tbody>
                             @php
-                            $total = str_replace(',','.', \Cart::subtotal(0));
+                                $total =    str_replace(',','',\Cart::subtotal(0));
                             @endphp
-                            <th><b>Tổng tiền cần thanh toán</b></th>
-                            <td style="text-align: right;font-weight: bold" id="subtotalend">{{ $total }} đ</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="btn btn-primary btn-lg" style="float: right">
-                        <a href="{{ route('purchase.index') }}" style="color: white">Mua hàng</a>
+                            <tr class="showTotalEnd">
+                                @php
+                                    $total = str_replace(',','.', \Cart::subtotal(0));
+                                @endphp
+                                <th><b>Tổng tiền cần thanh toán</b></th>
+                                <td style="text-align: right;font-weight: bold" id="subtotalend">{{ $total }} đ</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn btn-primary btn-lg" style="float: right">
+                            <a href="{{ route('purchase.index') }}" style="color: white">Mua hàng</a>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div style="width: 475px; margin: 0 auto;">
+                        <img src="{{asset('images/cart-empty.png')}}" alt="">
+                        <div class="content-cart-empty">
+                            <a href="{{route('get.home')}}" class="btn btn-primary" style="margin-left: 29%;margin-bottom: 10%;">Tiếp tục mua sắm</a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
         {{--<div class="right">
@@ -174,5 +197,6 @@
 @section('script')
     <script src="{{ asset('js/cart.js') }}" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"
+            type="text/javascript"></script>
 @stop

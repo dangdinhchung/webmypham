@@ -17,9 +17,9 @@
                     <img alt="" src="{{ pare_url_file($item->product->pro_avatar ?? '') }}" style="width: 80px;height: 80px;" class="lazyload">
                 </a>
             </td>
-            <td>
+            <td style="text-align: center">
                 <a href="{{ route('get.product.detail',\Str::slug($item->product->pro_slug ?? '').'-'.$item->od_product_id) }}">
-                    <strong>{{ strtolower($item->product->pro_name ?? '') }}</strong>
+                    <strong>{{ ($item->product->pro_name ?? '') }}</strong>
                 </a>
             </td>
             <td class="text-center">

@@ -21,6 +21,12 @@
             padding: 5px;
             border-radius: 5px;
         }
+        .text-cancel {
+            text-align: left;
+        }
+        .mr {
+            margin-right: 10px;
+        }
     </style>
 @stop
 @section('content')
@@ -45,15 +51,17 @@
                 <button type="submit" class="btn btn-pink btn-sm">Tìm kiếm</button>
             </div>
         </form>
+        <p style="font-style: italic;margin-bottom: 15px">Lưu ý : Bạn có thể hủy đơn hàng khi đang ở trạng thái tiếp nhận</p>
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th scope="col">Mã đơn</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Họ tên</th>
+                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Kiểu thanh toán</th>
+                        <th scope="col">Thời gian</th>
+                        <th scope="col">Trạng thái</th>
                         <th scope="col" style="text-align: center">Export</th>
                         <th scope="col" style="text-align: center">Action</th>
                     </tr>
@@ -66,7 +74,11 @@
                         </td>
                         <td style="text-align: center">{{ $transaction->tst_name }}</td>
                         <td style="text-align: center">{{ number_format($transaction->tst_total_money,0,',','.') }} đ</td>
-                        <td style="text-align: center">{{  $transaction->created_at }}</td>
+                        <td>
+                            <span class="label label-{{ $transaction->getType($transaction->tst_type)['class'] }}">
+                                {{ $transaction->getType($transaction->tst_type)['name'] }}</span>
+                        </td>
+                        <td style="text-align: center">{{  $transaction->created_at->diffForHumans() }}</td>
                         <td style="text-align: center">
                             <span
                                 class="label label-{{ $transaction->getStatus($transaction->tst_status)['class'] }}">
@@ -79,8 +91,9 @@
                         </td>
                         <td style="text-align: center">
                             @if (!in_array($transaction->tst_status , [-1,2,3]) )
-                                <a href="{{ route('get.user.transaction.cancel',$transaction->id) }}" 
-                                   class="btn-xs label-danger" style="color: white"><i class="fa fa-save"></i> Huỷ đơn</a>
+                               {{-- <a href="{{ route('get.user.transaction.cancel',$transaction->id) }}"
+                                   class="btn-xs label-danger" style="color: white"><i class="fa fa-save"></i> Huỷ đơn</a>--}}
+                                <a data-href="{{ route('get.user.transaction.cancel',$transaction->id) }}" data-transaction="{{$transaction->id}}" class="btn-xs label-danger btn-cancel-order" style="color: white"><i class="fa fa-ban"></i> Huỷ đơn</a>
                            @endif
                         </td>
                     </tr>
@@ -92,9 +105,48 @@
             {!! $transactions->appends($query ?? [])->links() !!}
         </div>
     </section>
+
+    {{--modal hủy đơn hàng--}}
+    <div id="popup-cancel" class="modal text-center">
+        <div class="header">Chọn lý do hủy đơn hàng</div>
+        <div class="content">
+            <div class="table-responsive">
+                <form action="" method="POST">
+                    @csrf
+                <input type="hidden" name="id_update" id="id_update">
+                <input type="hidden" name="url_route" id="url_route">
+                 <table class="table-borderless">
+                    <tbody>
+                    <tr>
+                        <td><input type="radio" class="mr" name="tst_reason" value="Thủ tục thanh toán quá rắc rối"> </td>
+                        <td class="text-cancel">Thủ tục thanh toán quá rắc rối</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" class="mr" name="tst_reason" value="Tìm thấy giá rẻ hơn ở chỗ khác"> </td>
+                        <td class="text-cancel">Tìm thấy giá rẻ hơn ở chỗ khác</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" class="mr" name="tst_reason" value="Đổi ý, không muốn mua nữa"> </td>
+                        <td class="text-cancel">Đổi ý, không muốn mua nữa</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" class="mr" name="tst_reason" value="Lý do khác" checked> </td>
+                        <td class="text-cancel">Lý do khác</td>
+                    </tr>
+                    </tbody>
+                </table>
+                    <a href="#" rel="modal:close" class="btn btn-pink ">Đóng</a>
+                    <a href="" class="btn btn-purple js-cancel-order"> Hủy đơn hàng</a>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    {{--end modal hủy đơn hàng--}}
 @stop
 
 @section('script')
+    {{--export--}}
     <div id="popup-transaction" class="modal text-center">
         <div class="header">Hoá đơn mua hang</div>
         <div class="content">
@@ -105,4 +157,6 @@
             <a href="" class="btn btn-purple js-export-pdf"> Export PDF</a>
         </div>
     </div>
+    {{--lý do hủy đơn hàng--}}
+
 @stop

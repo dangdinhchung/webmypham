@@ -54,6 +54,9 @@
             border-top: none !important;
             text-align: center;
         }
+        .hidden {
+            display: none;
+        }
 
         @media (max-width: 767px) {
             .name-product {
@@ -94,10 +97,48 @@
                         </div>
                         <div class="form-group">
                             <label for="email">Hình thức thanh toán</label>
-                            <select name="tst_type" id="" class="form-control">
+                            <select name="tst_type" id="tst_type" class="form-control">
                                 <option value="1">Thanh toán khi nhận hàng</option>
                                 <option value="2">Thanh toán VNPAY</option>
                             </select>
+                        </div>
+                        <div class="form-group hidden check_bank" id="check_bank">
+                            <!-- <div class="col-md-12"><strong>Ngôn ngữ:</strong></div> -->
+                            <div class="col-md-12">
+                                <select name="tst_language" id="tst_language" class="form-control">
+                                    <option value="vn" selected>Tiếng Việt</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group hidden check_bank" id="check_bank">
+                            <!-- <div class="col-md-12"><strong>Ngân hàng:</strong></div> -->
+                            <div class="col-md-12">
+                                <select name="tst_bank" id="tst_bank" class="form-control">
+                                    <option value="NCB" selected> Ngân hàng NCB</option>
+                                    <option value="AGRIBANK">Ngân hàng Agribank</option>
+                                    <option value="SCB">Ngân hàng SCB</option>
+                                    <option value="SACOMBANK">Ngân hàng SacomBank</option>
+                                    <option value="EXIMBANK"> Ngân hàng EximBank</option>
+                                    <option value="MSBANK"> Ngân hàng MSBANK</option>
+                                    <option value="NAMABANK"> Ngân hàng NamABank</option>
+                                    <option value="VNMART"> Vi dien tu VnMart</option>
+                                    <option value="VIETINBANK">Ngân hàng Vietinbank</option>
+                                    <option value="VIETCOMBANK"> Ngân hàng VCB</option>
+                                    <option value="HDBANK">Ngân hàng HDBank</option>
+                                    <option value="DONGABANK">Ngân hàng Dong A</option>
+                                    <option value="TPBANK"> Ngân hàng TPBank</option>
+                                    <option value="OJB"> Ngân hàng OceanBank</option>
+                                    <option value="BIDV"> Ngân hàng BIDV</option>
+                                    <option value="TECHCOMBANK"> Ngân hàng Techcombank</option>
+                                    <option value="VPBANK"> Ngân hàng VPBank</option>
+                                    <option value="MBBANK"> Ngân hàng MBBank</option>
+                                    <option value="ACB"> Ngân hàng ACB</option>
+                                    <option value="OCB"> Ngân hàng OCB</option>
+                                    <option value="IVB"> Ngân hàng IVB</option>
+                                    <option value="VISA"> Thanh toán qua VISA/MASTER</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="note">Ghi chú thêm</label>
@@ -106,7 +147,7 @@
                         </div>
                         <div class="btn-buy">
                             <button class="buy1 btn btn-purple {{ \Auth::id() ? '' : 'js-show-login' }}" style="width: 100%;border-radius: 5px" type="submit" name="pay" value="transfer">
-                                Thanh toán khi nhận hàng
+                                Thanh toán
                             </button>
                         </div>
                     </form>
@@ -245,6 +286,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"
             type="text/javascript"></script>
     <script type="text/javascript">
+        window.onload = function () {
+            //reset select option back page
+            $('#tst_type').prop('selectedIndex',0);
+        }
         $('#coupon-button').click(function () {
             var coupon = $('#coupon-value').val();
             $('.coupon-msg').text('');
@@ -310,6 +355,17 @@
                 .fail(function () {
                     console.log("error");
                 });
+        });
+        //chane thanh toán
+        $('#tst_type').change(function(){
+            var value_bank = $('#tst_type').val();
+            if(value_bank == 2){
+                $('.check_bank').removeClass('hidden');
+                $('.check').addClass('hidden');
+            }else{
+                $('.check_bank').addClass('hidden');
+                $('.check').removeClass('hidden');
+            }
         });
     </script>
 @stop

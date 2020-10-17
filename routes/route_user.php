@@ -7,7 +7,8 @@
         Route::post('update-info','UserInfoController@saveUpdateInfo');
 
         Route::get('transaction','UserTransactionController@index')->name('get.user.transaction'); // đơn hàng
-        Route::get('transaction/cancel/{id}','UserTransactionController@cancelTransaction')->name('get.user.transaction.cancel'); // huỷ đơn hàng
+        /*Route::get('transaction/cancel/{id}','UserTransactionController@cancelTransaction')->name('get.user.transaction.cancel');*/
+        Route::post('transaction/cancel/{id}','UserTransactionController@cancelTransaction')->name('get.user.transaction.cancel'); // huỷ đơn hàng
         Route::get('order/view/{id}','UserTransactionController@viewOrder')->name('get.user.order'); // chi tiết đơn hàng
 
         Route::get('rating','UserRatingController@index')->name('get.user.rating'); // list đánh giá

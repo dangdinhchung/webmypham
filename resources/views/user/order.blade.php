@@ -5,6 +5,10 @@
 @section('content')
     <section>
         <div class="title">Chi tiết đơn hàng #{{ $transaction->id }}</div>
+       <p>Trạng thái đơn hàng: <b>{{ $transaction->getStatus($transaction->tst_status)['name'] }}</b></p>
+        @if(!empty($transaction->tst_reason))
+            <p>Lý do hủy đơn hàng: <b>{{ $transaction->tst_reason ?? "[N\A]" }}</b></p>
+        @endif
         <div class="row">
             <div class="col-4">
                 <h5>Thông tin người nhận</h5>

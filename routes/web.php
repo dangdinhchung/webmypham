@@ -73,7 +73,8 @@ Route::group(['namespace' => 'Frontend'], function() {
         Route::get('add/{id}','ShoppingCartController@add')->name('get.shopping.add'); // thêm giỏ hàng
         Route::get('delete/{id}','ShoppingCartController@delete')->name('get.shopping.delete'); // xoá sp trong gi hàng
         Route::get('update/{id}','ShoppingCartController@update')->name('ajax_get.shopping.update'); // cập nhật
-        Route::get('theo-doi-don-hang','TrackOrderController@index')->name('get.track.transaction'); // 
+        Route::get('form-online','ShoppingCartController@getFormOnline')->name('get.form.pay.online'); // thanh toán online
+        Route::get('theo-doi-don-hang','TrackOrderController@index')->name('get.track.transaction'); //
         Route::post('pay','ShoppingCartController@postPay')->name('post.shopping.pay'); // xử lý giỏ hàng lưu thông tin
 
         Route::get('purchase','ShoppingCartController@purchase')->name('purchase.index'); // thông tin đặt hàng

@@ -10,8 +10,10 @@ var Cart = {
         this.deleteItemTransaction();
         this.jsIncreaseQty();
         this.jsReductionQty();
-        this.showInvoiceTransaction()
+        this.showInvoiceTransaction();
         this.exportPdfTransaction();
+        this.showCancelOrder();
+        this.processCancelOrder();
     },
 
     exportPdfTransaction()
@@ -44,13 +46,52 @@ var Cart = {
                 url: URL,
                 async: false,
             }).done(function( results ) {
-                console.log(results)
-                $("#popup-transaction .content").html(results.html)
+                $("#popup-transaction .content").html(results.html);
                 $("#popup-transaction").modal({
                     escapeClose: false,
                     clickClose: false,
                     showClose: false
                 });
+            });
+        });
+    },
+
+    showCancelOrder() {
+        $(".btn-cancel-order").click( function(event){
+            event.preventDefault();
+            var idTransaction = $(this).data('transaction');
+            var route = $(this).data('href');
+            $("#popup-cancel").modal({
+                escapeClose: false,
+                clickClose: false,
+                showClose: false
+            });
+            $('#id_update').val(idTransaction);
+            $('#url_route').val(route);
+        });
+    },
+
+    processCancelOrder() {
+        $(".js-cancel-order").click( function(event){
+            event.preventDefault();
+            var contentReason =$('input[name="tst_reason"]:checked').val();
+            var route = $('#url_route').val();
+            $.ajax({
+                type : 'post',
+                url : route,
+                data: {
+                    'tst_reason': contentReason,
+                },
+                success : function(response){
+                    var data = JSON.parse(response);
+                   if(data.success == "success") {
+                       location.reload();
+                       toast.success("Hủy đơn hàng thành công");
+                   }
+                } ,
+                error(jq, status , throwE){
+                    console.log('error cancel order');
+                }
             });
         });
     },

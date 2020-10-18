@@ -6,6 +6,10 @@
         Route::get('update-info','UserInfoController@updateInfo')->name('get.user.update_info'); // cập nhật thông tin
         Route::post('update-info','UserInfoController@saveUpdateInfo');
 
+        Route::get('confirm-account','UserInfoController@confirmAccount')->name('get.confirm.account');
+        Route::post('confirm-account','UserInfoController@requestConfirmAccount');
+        Route::get('xac-nhan-tai-khoan','UserInfoController@verifyAccount')->name('get.verify.account');
+
         Route::get('transaction','UserTransactionController@index')->name('get.user.transaction'); // đơn hàng
         /*Route::get('transaction/cancel/{id}','UserTransactionController@cancelTransaction')->name('get.user.transaction.cancel');*/
         Route::post('transaction/cancel/{id}','UserTransactionController@cancelTransaction')->name('get.user.transaction.cancel'); // huỷ đơn hàng

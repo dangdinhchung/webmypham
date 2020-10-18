@@ -260,12 +260,13 @@ class ShoppingCartController extends Controller
         } else {
             //hủy giao dịch
             $transacion->tst_status = -1;
+            $transacion->tst_reason = "Vì chưa thanh toán qua vnpay";
             \Session::flash('toastr', [
                 'type'    => 'error',
                 'message' => 'Đơn hàng của bạn bị hủy vì chưa thanh toán!'
             ]);
-            //$transacion->save();
-            return redirect()->route('get.user.tracking_order',$transacionID);
+            $transacion->save();
+            return redirect()->route('get.user.order',$transacionID);
         }
     }
 

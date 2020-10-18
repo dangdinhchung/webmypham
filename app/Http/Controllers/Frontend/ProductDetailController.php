@@ -7,10 +7,12 @@ use App\Models\Attribute;
 use App\Models\Comments;
 use App\Models\Coupon;
 use App\Models\Event;
+use App\User;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\ProcessViewService;
 use App\Models\Rating;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -99,21 +101,27 @@ class ProductDetailController extends FrontendController
 			//lay ma giam gia
             $dateNow = strtotime(date('Y-m-d'));
             $couponList = Coupon::where('cp_start_date','<=' , $dateNow)->where('cp_end_date', '>=' , $dateNow)->get();
+
+            //get user active
+            $user = User::where('id',Auth::id())->pluck('active')->first();
+
+
 			$viewData = [
-				'isPopupCaptcha'   => 0,
+                'isPopupCaptcha'   => 0,
 //				'isPopupCaptcha'   => \Auth::user()->count_comment ?? 0,
-				'ratingDefault'    => $ratingDefault,
-				'product'          => $product,
-				'ratings'          => $ratings,
+                'ratingDefault'    => $ratingDefault,
+                'product'          => $product,
+                'ratings'          => $ratings,
 //				'images'           => $images,
-				'event1'           => $event1,
-				'event3'           => $event3,
-				'attribute'        => $this->syncAttributeGroup(),
-				'comments'         => $comments,
-				'attributeOld'     => $attributeOld,
-				'title_page'       => $product->pro_name,
-				'couponList'       => $couponList,
-				'productsSuggests' => $this->getProductSuggests($product->pro_category_id)
+                'event1'           => $event1,
+                'event3'           => $event3,
+                'attribute'        => $this->syncAttributeGroup(),
+                'comments'         => $comments,
+                'attributeOld'     => $attributeOld,
+                'title_page'       => $product->pro_name,
+                'couponList'       => $couponList,
+                'productsSuggests' => $this->getProductSuggests($product->pro_category_id),
+                'user'             => $user
 			];
 			return view('frontend.pages.product_detail.index', $viewData);
 		}

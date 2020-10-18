@@ -54,10 +54,10 @@
                 </div>
                 <div class="form-group">
                     <button class="btn btn-purple">Đăng ký</button>
-                    <p>
+                    {{--<p>
                         <a href="{{ route('get.email_reset_password') }}">Quên mật khẩu</a>
                         <a href="{{ route('get.login') }}">Đăng nhập</a>
-                    </p>
+                    </p>--}}
                     @include('auth.include._inc_social')
                 </div>
             </form>

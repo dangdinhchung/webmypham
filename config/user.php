@@ -40,6 +40,11 @@ return [
         'route' => 'get.user.log_login',
         'icon'  => 'fa fa-bug'
     ],
+    [
+        'name'  => 'Xac thuc tai khoan',
+        'route' => 'get.confirm.account',
+        'icon'  => 'fa fa-check-circle-o'
+    ],
    /* [
         'name'  => 'Tạo shop',
         'route' => 'seller.index',

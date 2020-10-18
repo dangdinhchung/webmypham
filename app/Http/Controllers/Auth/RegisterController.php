@@ -60,13 +60,20 @@ class RegisterController extends Controller
         $id = User::insertGetId($data);
 
         if ($id) {
+            $user = User::find($id);
+            $email = $user->email;
+            $code = bcrypt(md5(time() . $email));
+            $user->code_active = $code;
+            $user->time_active = Carbon::now();
+            $user->save();
             \Session::flash('toastr', [
                 'type'    => 'success',
-                'message' => 'Đăng ký thành công'
+                'message' => 'Đăng ký thành công, moi ban xac thuc tai khoan'
             ]);
             //Mail::to($request->email)->send(new RegisterSuccess($request->name));
             if (\Auth::attempt(['email' => $request->email,'password' => $request->password])) {
-                return redirect()->intended('/');
+                /*return redirect()->intended('/');*/
+                return redirect()->route('get.confirm.account');
             }
             return redirect()->route('get.login');
         }

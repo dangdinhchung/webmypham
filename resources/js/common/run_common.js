@@ -90,13 +90,19 @@ var RunCommon = {
             event.preventDefault();
             toast.warning("Bạn phải đăng nhập để thực hiện tính năng này");
             return false;
-        })
+        });
+
+        $(".js-not-active").click(function(event){
+            event.preventDefault();
+            toast.warning("Bạn phải xác thực tài khoản để thực hiện tính năng này");
+            return false;
+        });
 
         $(".number-empty").click(function(event){
             event.preventDefault();
             toast.warning("Sản phẩm đã hết hàng");
             return false;
-        })
+        });
 
         $(".js-maintain").click(function (event) {
             event.preventDefault();

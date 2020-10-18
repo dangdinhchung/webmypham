@@ -207,7 +207,7 @@
                                        style="opacity: 0;display: none">
                                 <a href="">Quy định đăng bình luận</a>
                             </p>
-                            <button class=" {{ \Auth::id() ? 'js-save-comment' : 'js-show-login' }}">Gửi bình luận
+                            <button class=" {{ \Auth::id() ? 'js-save-comment' : 'js-show-login' }} {{$user == 2 ? 'js-active' : 'js-not-active'}}">Gửi bình luận
                             </button>
                         </div>
                         <div class="gallery"></div>

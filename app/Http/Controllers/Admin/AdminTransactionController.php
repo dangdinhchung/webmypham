@@ -167,7 +167,7 @@ class AdminTransactionController extends Controller
                 \DB::table('products')
                     ->where('id', $order->od_product_id)
                     ->decrement("pro_number", $order->od_qty);
-                $this->synImportGoods($order->od_product_id, $order->od_qty);
+//                $this->synImportGoods($order->od_product_id, $order->od_qty);
             }
         }
     }
@@ -177,7 +177,7 @@ class AdminTransactionController extends Controller
      * @param $qty
      * @author chungdd
      */
-    protected function synImportGoods($productID, $qty)
+    /*protected function synImportGoods($productID, $qty)
     {
         $product = Product::find($productID);
         if ($product) {
@@ -187,5 +187,5 @@ class AdminTransactionController extends Controller
                 $invoiceEntered->save();
             }
         }
-    }
+    }*/
 }

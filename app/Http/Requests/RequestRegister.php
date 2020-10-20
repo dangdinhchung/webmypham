@@ -23,23 +23,42 @@ class RequestRegister extends FormRequest
      */
     public function rules()
     {
-        return [
-            'email'     => 'required|max:190|min:3|unique:users,email,'.$this->id,
-            'name'      => 'required',
-            'phone'     => 'required|unique:users,phone,'.$this->id,
-            'password'  => 'required',
+        $rules = [
+            'email'    => 'required|email|unique:users,email,' . $this->id,
+            'name'     => 'required|max:99|min:4',
+            'phone'    => 'required|min:11|numeric|unique:users,phone,' . $this->id,
+            'password' => 'required|min:8',
+            'address'  => 'required',
 //            'g-recaptcha-response' => 'required|captcha'
         ];
+
+        if($this->avatar) {
+            $merge_rules = [
+                'avatar'   => 'image|mimes:jpeg,png,jpg,gif,svg',
+            ];
+            $rules = array_merge($rules, $merge_rules);
+        }
+        return $rules;
     }
 
     public function messages()
     {
         return [
-            'email.required'         => 'Dữ liệu không được để trống',
-            'email.unique'           => 'Dữ liệu đã tồn tại',
-            'phone.unique'           => 'Dữ liệu đã tồn tại',
-            'phone.required'         => 'Dữ liệu không được để trống',
-            'password.required'      => 'Dữ liệu không được để trống',
+            'name.required'     => 'Họ tên không được bỏ trống',
+            'name.max'          => 'Họ tên phải lớn hơn 3 ký tự và nhỏ hơn 100 ký tự',
+            'name.min'          => 'Họ tên phải lớn hơn 3 ký tự và nhỏ hơn 100 ký tự',
+            'email.required'    => 'Email không được để trống',
+            'email.unique'      => 'Email đã tồn tại',
+            'email.email'       => 'Email không đúng định dạng',
+            'phone.unique'      => 'Số điện thoại đã tồn tại',
+            'phone.required'    => 'Số điện thoại không được để trống',
+            'phone.min'         => 'Số điện thoại không đúng định dạng',
+            'phone.numeric'     => 'Số điện thoại không đúng định dạng',
+            'password.required' => 'Password không được để trống',
+            'password.min'      => 'Password lớn hơn hoặc bằng 8 ký tự',
+            'avatar.mimes'      => 'Hình ảnh không đúng định dạng',
+            'avatar.image'      => 'Hình ảnh không đúng định dạng',
+            'address.required'  => 'Địa chỉ không đúng định dạng',
         ];
     }
 }

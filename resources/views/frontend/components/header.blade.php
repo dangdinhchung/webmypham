@@ -43,7 +43,7 @@
             <!--Thay đổi-->
             <div class="logo">
                 <a href="{{  route('get.home') }}" class="desktop">
-                    <img src="{{ url('images/logo.png') }}" style="height: 35px;" alt="Home">
+                   <h4 style="color: white;font-family: cursive;font-size: 20px;">Beauty Store</h4>
                 </a>
                 <span class="menu js-menu-cate"><i class="fa fa-list-ul"></i> </span>
             </div>

@@ -45,7 +45,6 @@
                                     <th>Avatar</th>
                                     <th>Số lượng</th>
                                     <th>Price</th>
-                                    <th>Hạn sử dụng</th>
                                     <th>Hot</th>
                                     <th>Status</th>
                                     <th>Action</th>

@@ -12,6 +12,10 @@ use App\Models\Product;
 
 class AdminStatisticalController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
 	public function index()
     {
 //    	if (!check_admin()) return redirect()->route('get.admin.index');
@@ -137,8 +141,6 @@ class AdminStatisticalController extends Controller
             }
             $arrRevenueTransactionMonthDefault[] = (int)$total;
         }
-
-
 
         $viewData = [
             'totalTransactions'          => $totalTransactions,

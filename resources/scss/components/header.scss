@@ -67,9 +67,12 @@
 
             .btnSearch {
                 align-items: center;
-                background: #dc0021;
-                border: 1px solid #dc0021;
-                color: white;
+                /*background: #dc0021;*/
+                background: rgb(237, 238, 242);
+                /*border: 1px solid #dc0021;*/
+                border: none;
+                /*color: white;*/
+                color: rgb(74, 74, 74);
                 display: flex;
                 outline: 0;
                 padding: 0 10px;

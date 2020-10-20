@@ -57,6 +57,11 @@ class RegisterController extends Controller
         
         $data['password']   =  Hash::make($data['password']);
         $data['created_at'] = Carbon::now();
+        if ($request->avatar) {
+            $image = upload_image('avatar');
+            if ($image['code'] == 1)
+                $data['avatar'] = $image['name'];
+        }
         $id = User::insertGetId($data);
 
         if ($id) {
@@ -68,7 +73,7 @@ class RegisterController extends Controller
             $user->save();
             \Session::flash('toastr', [
                 'type'    => 'success',
-                'message' => 'Đăng ký thành công, moi ban xac thuc tai khoan'
+                'message' => 'Đăng ký thành công, mời bạn xác thực tài khoản'
             ]);
             //Mail::to($request->email)->send(new RegisterSuccess($request->name));
             if (\Auth::attempt(['email' => $request->email,'password' => $request->password])) {

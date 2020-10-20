@@ -142,7 +142,7 @@
                     <div class="bot">
                         <div class="left">
                             <div class="image">
-                                <a href="https://www.facebook.com/TrungPhuNA" title="" class="Event 1 image" target="_blank">
+                                <a href="https://www.facebook.com/Y2h1bmdjaHVuZ2NodW5nY2h1bmdjaHVuZ2NodW5nY2h1bmdj/" title="" class="Event 1 image" target="_blank">
                                     <img style="height: 310px;" class="lazyload lazy loaded" alt="Event 1" src="{{ asset('images/flash-sale/flash-sale-small.jpg') }}" data-src="/uploads/2020/06/08/2020-06-08__anh1.jpg" data-was-processed="true">
                                 </a>
                             </div>
@@ -159,7 +159,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="flash_sale"> <a href="https://www.facebook.com/TrungPhuNA" title="" class="image" target="_blank"> <img alt="" style="height:250px;" src="{{ asset('images/flash-sale/flash-sale-big.jpg') }}" class="lazyload" width="100%"> </a> </div>
+                <div id="flash_sale"> <a href="https://www.facebook.com/Y2h1bmdjaHVuZ2NodW5nY2h1bmdjaHVuZ2NodW5nY2h1bmdj/" title="" class="image" target="_blank"> <img alt="" style="height:250px;" src="{{ asset('images/flash-sale/flash-sale-big.jpg') }}" class="lazyload" width="100%"> </a> </div>
             </div>
         @endif
         {{--show flash sale end--}}

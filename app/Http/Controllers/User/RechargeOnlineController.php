@@ -39,9 +39,9 @@ class RechargeOnlineController extends Controller
 
 		$cancel_url = urlencode($cancel_url);
 
-		$buyer_fullname = 'Phan Trung Phú';
-		$buyer_email    = 'phupt.humg.94@gmail.com';
-		$buyer_mobile   = '0986420994';
+		$buyer_fullname = 'Đặng Đình Chung';
+		$buyer_email    = 'dangdinhchung98@gmail.com';
+		$buyer_mobile   = '0349978666';
 
 		$payment_type      = '';
 		$order_description = '';

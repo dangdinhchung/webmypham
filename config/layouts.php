@@ -3,11 +3,13 @@
 return [
 	'component' => [
 		'header-top' => [
-			'background' => '#a90019 !important',
+			/*'background' => '#a90019 !important',*/
+			'background' => '#2E33FF !important',
 			''
 		],
 		'menu' => [
-			'background' => '#dc0021 !important'
+			/*'background' => '#dc0021 !important'*/
+			'background' => '#189EFF !important'
 		],
 		'cate' => [
 			'home' => [

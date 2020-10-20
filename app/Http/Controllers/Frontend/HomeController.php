@@ -122,6 +122,7 @@ class HomeController extends FrontendController
             $listID = $request->id;
             array_reverse($listID);
             $products = Product::whereIn('id', $listID)
+                ->where('pro_active',1)
                 ->orderByDesc('id')
                 ->limit(5)
                 ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_review_total',

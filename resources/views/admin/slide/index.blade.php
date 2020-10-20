@@ -24,11 +24,12 @@
                                 <tr>
                                     <th style="width: 10px">STT</th>
                                     <th style="width: 10px">ID</th>
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                    <th>Sort</th>
-                                    <th>Target</th>
-                                    <th>Time</th>
+                                    <th>Tên</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thứ tự</th>
+                                    <th>Click</th>
+                                    <th>Thời gian</th>
                                     <th>Action</th>
                                 </tr>
                                 @if (isset($slides))
@@ -37,6 +38,7 @@
                                             <td>{{ ($key + 1) }}</td>
                                             <td>{{ $slide->id }}</td>
                                             <td>{{ $slide->sd_title }}</td>
+                                            <td><img style="width: 217px;height: 60px;" src="{{ pare_url_file($slide->sd_image) }}" alt=""></td>
                                             <td>
                                                 @if ($slide->sd_active == 1)
                                                     <a href="{{ route('admin.slide.active', $slide->id) }}" class="label label-info">Show</a>

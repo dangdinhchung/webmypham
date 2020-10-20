@@ -245,6 +245,18 @@
                     $('body').removeClass("typed-search-box-shown");
                 }
             }
+
+            //preview image
+            $(".js-upload").change(function () {
+                let $this = $(this);
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $this.parents('.block-images').find('img').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
             {{--end search ajax--}}
         </script>
 

@@ -59,6 +59,11 @@ class LoginController extends Controller
             return redirect()->intended('/');
         }
 
+        \Session::flash('toastr', [
+            'type'    => 'error',
+            'message' => 'Sai tên email hoặc password'
+        ]);
+
         return redirect()->back();
     }
 

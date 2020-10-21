@@ -49,6 +49,11 @@ class AdminAccountController extends Controller
            $data = $request->except("_token","roles");
            $data['password']   =  Hash::make($data['password']);
            $data['created_at'] = Carbon::now();
+           if ($request->avatar) {
+               $image = upload_image('avatar');
+               if ($image['code'] == 1)
+                   $data['avatar'] = $image['name'];
+           }
            $id = Admin::insertGetId($data);
            $admin = Admin::find($id);
            $admin->roles()->attach($request->roles);
@@ -87,6 +92,12 @@ class AdminAccountController extends Controller
             $admin = Admin::find($id);
             if ($request->password) {
                 $admin->password   =  Hash::make($request->password);
+            }
+            if ($request->avatar) {
+                $image = upload_image('avatar');
+                if ($image['code'] == 1) {
+                    $data['avatar'] = $image['name'];
+                }
             }
             $admin->fill($data)->save();
 

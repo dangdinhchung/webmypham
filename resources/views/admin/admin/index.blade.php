@@ -26,6 +26,7 @@
                                     <th style="width: 10px">ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
+                                    <th>Hình ảnh</th>
                                     <th>SDT</th>
                                     <th>Level</th>
                                     <th>Role</th>
@@ -40,6 +41,9 @@
                                             <td>{{ $admin->id }}</td>
                                             <td>{{ $admin->name }}</td>
                                             <td>{{ $admin->email }}</td>
+                                            <td>
+                                                <img style="width: 100px;height: 100px;" src="{{ pare_url_file($admin->avatar ?? '') ?? '/images/no-image.jpg' }}" alt="">
+                                            </td>
                                             <td>{{ $admin->phone }}</td>
                                             <td>
                                                 @if ($admin->level == 1)

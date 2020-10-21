@@ -114,16 +114,16 @@
                 $('.fs_end_date').css('border-color','#d2d6de');
                 $('.fs_product_discounts').text('');
                 if(fs_title == "") {
-                    $('.fs_title').text('Dữ liệu không được bỏ trống');
+                    $('.fs_title').text('Tiêu đề không được bỏ trống');
                     $('.fs_title').css('border-color','red');
                 } else if(fs_start_date == "") {
-                    $('.fs_start_date').text('Dữ liệu không được bỏ trống');
+                    $('.fs_start_date').text('Ngày bắt đầu không được bỏ trống');
                     $('.fs_start_date').css('border-color','red');
                  } else if(convertStartDate < convertToday) {
                     $('.fs_start_date').text('Ngày bắt đầu >= ngày hiện tại');
                     $('.fs_start_date').css('border-color','red');
                  } else if(fs_end_date == "") {
-                    $('.fs_end_date').text('Dữ liệu không được bỏ trống');
+                    $('.fs_end_date').text('Ngày kết thúc không được bỏ trống');
                     $('.fs_end_date').css('border-color','red');
                 } else if(convertEndDate < convertStartDate) {
                     $('.fs_end_date').text('Ngày kết thúc >= ngày bắt đầu');

@@ -108,7 +108,7 @@ class AdminFlashSaleController extends Controller
      * @author chungdd
      * [update description]
      */
-    public function update(Request $request, $id)
+    public function update(AdminRequestFlashSale $request, $id)
     {
         $flashSale = FlashSale::findOrFail($id);
         $flashSale->fs_title = $request->fs_title;

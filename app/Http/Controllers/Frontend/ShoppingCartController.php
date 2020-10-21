@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminPostPayRequest;
 use App\Models\Coupon;
 use App\Services\ShoppingCartService\PayManager;
 use Illuminate\Http\Request;
@@ -120,11 +121,11 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param AdminPostPayRequest $request
      * @return \Illuminate\Http\RedirectResponse
      * @author chungdd
      */
-    public function postPay(Request $request)
+    public function postPay(AdminPostPayRequest $request)
     {
         Cache::forget('HOME.PRODUCT_PAY');
         $data = $request->except("_token");

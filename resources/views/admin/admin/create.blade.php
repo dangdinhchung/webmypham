@@ -14,7 +14,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <div class="box-body">
-                    <form role="form" action="" method="POST">
+                    <form role="form" action="" method="POST" enctype="multipart/form-data">
                          @csrf
                         <div class="col-sm-8">
                             <div class="form-group {{ $errors->first('name') ? 'has-error' : '' }}">
@@ -24,65 +24,87 @@
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="form-group {{ $errors->first('phone') ? 'has-error' : '' }}">
-                                <label for="name">Phone <span class="text-danger">(*)</span></label>
-                                <input type="number" class="form-control" value="{{ old('phone') }}"  name="phone"  placeholder="Phone ...">
-                                @if ($errors->first('phone'))
-                                    <span class="text-danger">{{ $errors->first('phone') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="form-group {{ $errors->first('email') ? 'has-error' : '' }}">
-                                <label for="name">Email <span class="text-danger">(*)</span></label>
-                                <input type="email" class="form-control" value="{{ old('email') }}"  name="email"  placeholder="Email ...">
-                                @if ($errors->first('email'))
-                                    <span class="text-danger">{{ $errors->first('email') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        {{--<div class="col-sm-8">
-                            <div class="form-group ">
+                                <div class="form-group {{ $errors->first('phone') ? 'has-error' : '' }}">
+                                    <label for="name">Phone <span class="text-danger">(*)</span></label>
+                                    <input type="number" class="form-control" value="{{ old('phone') }}"  name="phone"  placeholder="Phone ...">
+                                    @if ($errors->first('phone'))
+                                        <span class="text-danger">{{ $errors->first('phone') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group {{ $errors->first('email') ? 'has-error' : '' }}">
+                                    <label for="name">Email <span class="text-danger">(*)</span></label>
+                                    <input type="email" class="form-control" value="{{ old('email') }}"  name="email"  placeholder="Email ...">
+                                    @if ($errors->first('email'))
+                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    @endif
+                                </div>
+                            {{--<div class="col-sm-8">
+                                <div class="form-group ">
+                                    <label for="name">Chức vụ <span class="text-danger">(*)</span></label>
+                                    <select class="form-control" name="level">
+                                        <option value="1">Admin</option>
+                                        <option value="2">Nhân viên</option>
+                                    </select>
+                                </div>
+                            </div>--}}
+                                <div class="form-group {{ $errors->first('password') ? 'has-error' : '' }}">
+                                    <label for="name">Password <span class="text-danger">(*)</span></label>
+                                    <input type="password" class="form-control" name="password"  placeholder="********">
+                                    @if ($errors->first('password'))
+                                        <span class="text-danger">{{ $errors->first('password') }}</span>
+                                    @endif
+                                </div>
+                                <div class="form-group {{ $errors->first('address') ? 'has-error' : '' }}">
+                                    <label for="name">Địa chỉ <span class="text-danger">(*)</span></label>
+                                    <input type="text" class="form-control" name="address"  placeholder="Hà Nam">
+                                    @if ($errors->first('address'))
+                                        <span class="text-danger">{{ $errors->first('address') }}</span>
+                                    @endif
+                                </div>
                                 <label for="name">Chức vụ <span class="text-danger">(*)</span></label>
-                                <select class="form-control" name="level">
-                                    <option value="1">Admin</option>
-                                    <option value="2">Nhân viên</option>
-                                </select>
-                            </div>
-                        </div>--}}
-                        <div class="col-sm-8">
-                            <div class="form-group {{ $errors->first('password') ? 'has-error' : '' }}">
-                                <label for="name">Password <span class="text-danger">(*)</span></label>
-                                <input type="password" class="form-control" name="password"  placeholder="********">
-                                @if ($errors->first('password'))
-                                    <span class="text-danger">{{ $errors->first('password') }}</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-sm-8">
-                            <label for="name">Chức vụ <span class="text-danger">(*)</span></label>
-                            <div class="box-body">
-                                @if (isset($roles))
-                                    @foreach($roles as $role)
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label class="">
-                                                    <div class="icheckbox_flat-green" aria-checked="false" aria-disabled="false">
-                                                        <input type="checkbox" name="roles[]" value="{{ $role->id }}" class="flat-red" style="position: absolute; opacity: 0;">
-                                                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                    </div>
-                                                    <span>{{ $role->display_name }}</span>
-                                                </label>
+                                <div class="box-body">
+                                    @if (isset($roles))
+                                        @foreach($roles as $role)
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="">
+                                                        <div class="icheckbox_flat-green" aria-checked="false" aria-disabled="false">
+                                                            <input type="checkbox" name="roles[]" value="{{ $role->id }}" class="flat-red" style="position: absolute; opacity: 0;">
+                                                            <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                                                        </div>
+                                                        <span>{{ $role->display_name }}</span>
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-
+                                        @endforeach
+                                    @endif
+                                </div>
+                            @if ($errors->first('roles'))
+                                <span class="text-danger">{{ $errors->first('roles') }}</span>
+                            @endif
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Ảnh đại diện</h3>
+                                </div>
+                                <div class="box-body block-images">
+                                    <div style="margin-bottom: 10px">
+                                        <img src="/images/no-image.jpg" onerror="this.onerror=null;this.src='/images/no-image.jpg';" alt="" class="img-thumbnail" style="width: 200px;height: 200px;">
+                                    </div>
+                                    <div style="position:relative;">
+                                        <a class="btn btn-primary" href="javascript:;"> Choose File...
+                                            <input type="file" style="position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:&quot;progid:DXImageTransform.Microsoft.Alpha(Opacity=0)&quot;;opacity:0;background-color:transparent;color:transparent;" name="avatar" size="40" class="js-upload">
+                                        </a> &nbsp;
+                                        <span class="label label-info" id="upload-file-info"></span>
+                                        @if ($errors->first('avatar'))
+                                            <span class="text-danger">{{ $errors->first('avatar') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-12">
                             <div class="box-footer text-center">
                                 <a href="{{ route('admin.account_admin.index') }}" class="btn btn-danger">
                                 Quay lại <i class="fa fa-undo"></i></a>

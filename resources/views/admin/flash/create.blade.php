@@ -27,37 +27,40 @@
                             <div class="form-group {{ $errors->first('fs_title') ? 'has-error' : '' }}">
                                 <label for="name">Tiêu đề<span class="text-danger">(*)</span></label>
                                 <input type="text" class="form-control fs_title" name="fs_title" value="{{ $flashSale->fs_title ?? old('fs_title') }}"  placeholder="Sự kiện tháng 9...">
-                              {{--   @if ($errors->first('fs_title'))
+                                 @if ($errors->first('fs_title'))
                                     <span class="text-danger">{{ $errors->first('fs_title') }}</span>
-                                @endif --}}
+                                @endif
                                 <span class="text-danger fs_title"></span>
                             </div>
                             <div class="form-group {{ $errors->first('fs_start_date') ? 'has-error' : '' }}" id="time1">
                                 <label for="exampleInputEmail1">Ngày bắt đầu<span class="text-danger">(*)</span></label>
                                 <input type="date" class="form-control fs_start_date" name="fs_start_date" value="{{  isset($flashSale) ? date("Y-m-d",$flashSale->fs_start_date) : old('fs_start_date') }}">
-                               {{--  @if ($errors->first('fs_start_date'))
+                                 @if ($errors->first('fs_start_date'))
                                     <span class="text-danger">{{ $errors->first('fs_start_date') }}</span>
-                                @endif --}}
+                                @endif
                                  <span class="text-danger fs_start_date"></span>
                             </div>
                             <div class="form-group {{ $errors->first('fs_end_date') ? 'has-error' : '' }}" id="time2">
                                 <label for="exampleInputEmail1">Ngày kết thúc<span class="text-danger">(*)</span></label>
                                 <input type="date" class="form-control fs_end_date" name="fs_end_date" value="{{  isset($flashSale) ? date("Y-m-d",$flashSale->fs_end_date) : old('fs_end_date') }}">
-                               {{--  @if ($errors->first('fs_end_date'))
+                                 @if ($errors->first('fs_end_date'))
                                     <span class="text-danger">{{ $errors->first('fs_end_date') }}</span>
-                                @endif --}}
+                                @endif
                                  <span class="text-danger fs_end_date"></span>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="exampleInputEmail1">Sản phẩm <span class="text-danger">(*)</span></label>
-                                    <select name="products[]" id="products" class="form-control demo-select2" multiple required="" data-placeholder="Choose Products">
+                                    <select name="products[]" id="products" class="form-control demo-select2 " multiple required="" data-placeholder="Choose Products">
                                         @foreach(\App\Models\Product::all() as $product)
                                             <option value="{{$product->id}}">{{__($product->pro_name)}}</option>
                                         @endforeach
                                     </select>
                                     <i class="txt-note-sale" style="color: red;font-size: 12px;">Lưu ý: Bạn cần phải chọn ít nhất 4 sản phẩm cho sự kiện flash sale !</i>
                             </div>
+                            @if ($errors->first('products'))
+                                <span class="text-danger">{{ $errors->first('products') }}</span>
+                            @endif
                             <br>
                             <div class="form-group" id="discount_table">
                             </div>
@@ -116,16 +119,16 @@
                 $('.fs_end_date').css('border-color','#d2d6de');
                 $('.fs_product_discounts').text('');
                 if(fs_title == "") {
-                    $('.fs_title').text('Dữ liệu không được bỏ trống');
+                    $('.fs_title').text('Tiêu đề không được bỏ trống');
                     $('.fs_title').css('border-color','red');
                 } else if(fs_start_date == "") {
-                    $('.fs_start_date').text('Dữ liệu không được bỏ trống');
+                    $('.fs_start_date').text('Ngày bắt đầu không được bỏ trống');
                     $('.fs_start_date').css('border-color','red');
                  } else if(convertStartDate < convertToday) {
                     $('.fs_start_date').text('Ngày bắt đầu >= ngày hiện tại');
                     $('.fs_start_date').css('border-color','red');
                  } else if(fs_end_date == "") {
-                    $('.fs_end_date').text('Dữ liệu không được bỏ trống');
+                    $('.fs_end_date').text('Ngày kết thúc không được bỏ trống');
                     $('.fs_end_date').css('border-color','red');
                 } else if(convertEndDate < convertStartDate) {
                     $('.fs_end_date').text('Ngày kết thúc >= ngày bắt đầu');

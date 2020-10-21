@@ -58,6 +58,10 @@
             display: none;
         }
 
+        .has-error {
+            border-color: red;
+        }
+
         @media (max-width: 767px) {
             .name-product {
                 width: 300px;
@@ -77,23 +81,40 @@
                         @csrf
                         <div class="form-group">
                             <label for="name">Họ và tên <span class="cRed">(*)</span></label>
-                            <input name="tst_name" id="name" required="" value="{{ get_data_user('web','name') }}"
-                                   type="text" class="form-control">
+                            {{--{{ get_data_user('web','name') }}--}}
+                            <input name="tst_name" id="name"  value=""
+                                   type="text" class="form-control {{ $errors->first('tst_name') ? 'has-error' : '' }}">
+                            @if ($errors->first('tst_name'))
+                                <span class="text-danger">{{ $errors->first('tst_name') }}</span>
+                            @endif
+                            <span class="text-danger tst_name"></span>
                         </div>
                         <div class="form-group">
                             <label for="phone">Điện thoại <span class="cRed">(*)</span></label>
-                            <input name="tst_phone" id="phone" required="" value="{{ get_data_user('web','phone') }}"
-                                   type="text" class="form-control">
+                            <input name="tst_phone" id="phone" value=""
+                                   type="text" class="form-control {{ $errors->first('tst_phone') ? 'has-error' : '' }}">
+                            @if ($errors->first('tst_phone'))
+                                <span class="text-danger">{{ $errors->first('tst_phone') }}</span>
+                            @endif
+                            <span class="text-danger tst_phone"></span>
                         </div>
                         <div class="form-group">
                             <label for="address">Địa chỉ <span class="cRed">(*)</span></label>
-                            <input name="tst_address" id="address" required=""
-                                   value="{{ get_data_user('web','address') }}" type="text" class="form-control">
+                            <input name="tst_address" id="address"
+                                   value="" type="text" class="form-control {{ $errors->first('tst_address') ? 'has-error' : '' }}">
+                            @if ($errors->first('tst_address'))
+                                <span class="text-danger">{{ $errors->first('tst_address') }}</span>
+                            @endif
+                            <span class="text-danger tst_address"></span>
                         </div>
                         <div class="form-group">
                             <label for="email">Email <span class="cRed">(*)</span></label>
-                            <input name="tst_email" id="email" required="" value="{{ get_data_user('web','email') }}"
-                                   type="text" value="" class="form-control">
+                            <input name="tst_email" id="email"  value=""
+                                   type="text" value="" class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
+                            @if ($errors->first('tst_email'))
+                                <span class="text-danger">{{ $errors->first('tst_email') }}</span>
+                            @endif
+                            <span class="text-danger tst_email"></span>
                         </div>
                         <div class="form-group">
                             <label for="email">Hình thức thanh toán</label>
@@ -268,6 +289,7 @@
                                aria-describedby="inputGroupSuccess3Status">
                         <span class="input-group-addon" id="coupon-button"
                               href="{{ route('checkout.apply_coupon_code') }}" style="cursor: pointer;"
+                              data-user-id="{{\Auth::id()}}"
                               data-loading-text="<i class='fa fa-spinner fa-spin'></i> Đang kiểm tra">Kiểm tra</span>
                     </div>
                     <span class="status-coupon" style="display: none;"
@@ -286,48 +308,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"
             type="text/javascript"></script>
     <script type="text/javascript">
+
         window.onload = function () {
             //reset select option back page
             $('#tst_type').prop('selectedIndex',0);
         }
         $('#coupon-button').click(function () {
-            var coupon = $('#coupon-value').val();
             $('.coupon-msg').text('');
-            let Url = $(this).attr('href');
-            if (coupon == '') {
-                $('.coupon-msg').html('Bạn chưa nhập mã giảm giá').addClass('text-danger').show();
+            var coupon = $('#coupon-value').val();
+            let user_id = $(this).attr('user-id');
+            if (user_id === "undefined") {
+                /*$('.coupon-msg').html('Bạn chưa đănh nhập').addClass('text-danger').show();*/
+                window.location.href = "http://localhost:8000/account/login";
             } else {
-                $('#coupon-button').button('loading');
-                setTimeout(function () {
-                    $.ajax({
-                        url: Url,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            cp_code: coupon,
-                            _token: "{{ csrf_token() }}",
-                        },
-                    })
-                        .done(function (result) {
-                            $('#coupon-value').val(coupon);
-                            $('.coupon-msg').removeClass('text-danger');
-                            $('.coupon-msg').removeClass('text-success');
-                            $('.coupon-msg').hide();
-                            if (result.error == 1) {
-                                $('.coupon-msg').html(result.msg).addClass('text-danger').show();
-                            } else {
-                                $("#showTotalCart").find("tr.showTotal, tr.moneyShip, tr.showTotalEnd, tr.shipConst").remove();
-                                $('#removeCoupon').show();
-                                $('.coupon-msg').html(result.msg).addClass('text-success').show();
-                                $('#showTotalCart').prepend(result.html);
-                            }
+                let Url = $(this).attr('href');
+                if (coupon == '') {
+                    $('.coupon-msg').html('Bạn chưa nhập mã giảm giá').addClass('text-danger').show();
+                } else {
+                    $('#coupon-button').button('loading');
+                    setTimeout(function () {
+                        $.ajax({
+                            url: Url,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                cp_code: coupon,
+                                _token: "{{ csrf_token() }}",
+                            },
                         })
-                        .fail(function () {
-                            console.log("error");
-                        });
-                    $('#coupon-button').button('reset');
-                }, 2000);
+                            .done(function (result) {
+                                $('#coupon-value').val(coupon);
+                                $('.coupon-msg').removeClass('text-danger');
+                                $('.coupon-msg').removeClass('text-success');
+                                $('.coupon-msg').hide();
+                                if (result.error == 1) {
+                                    $('.coupon-msg').html(result.msg).addClass('text-danger').show();
+                                } else {
+                                    $("#showTotalCart").find("tr.showTotal, tr.moneyShip, tr.showTotalEnd, tr.shipConst").remove();
+                                    $('#removeCoupon').show();
+                                    $('.coupon-msg').html(result.msg).addClass('text-success').show();
+                                    $('#showTotalCart').prepend(result.html);
+                                }
+                            })
+                            .fail(function () {
+                                console.log("error");
+                            });
+                        $('#coupon-button').button('reset');
+                    }, 2000);
+                }
             }
+
         });
 
         $('#removeCoupon').click(function () {
@@ -367,5 +397,64 @@
                 $('.check').removeClass('hidden');
             }
         });
+
+        //validate form client
+        $('.btn-purple').on('click', function(event ){
+            event.preventDefault();
+            let tst_name = $("input[name*='tst_name']").val();
+            let tst_phone = $("input[name*='tst_phone']").val();
+            let tst_address = $("input[name*='tst_address']").val();
+            let tst_email = $("input[name*='tst_email']").val();
+            $('.tst_name').text('');
+            $('#name').removeClass('has-error');
+            $('.tst_phone').text('');
+            $('#phone').removeClass('has-error');
+            $('.tst_address').text('');
+            $('#address').removeClass('has-error');
+            $('.tst_email').text('');
+            $('#email').removeClass('has-error');
+            if(tst_name == "") {
+                $('.tst_name').text('Họ tên không được bỏ trống');
+                $('#name').addClass('has-error');
+            } else if(tst_phone == "") {
+                $('.tst_phone').text('Số điện thoại không được bỏ trống');
+                $('#phone').addClass('has-error');
+           /* } else if(IsPhone(tst_phone) == false) {
+                $('.tst_phone').text('Số điện thoại không đúng định dạng');
+                $('#phone').addClass('has-error');*/
+            } else if(tst_address == "") {
+                $('.tst_address').text('Địa chỉ không được bỏ trống');
+                $('#address').addClass('has-error');
+            } else if(tst_email == "") {
+                $('.tst_email').text('Email không được để trống');
+                $('#email').addClass('has-error');
+            } else if(IsEmail(tst_email) == false) {
+                $('.tst_email').text('Email sai định dạng');
+                $('#email').addClass('has-error');
+            } else if(product_ids.length < 4) {
+                $('.select2-selection--multiple').css('border','1px solid red');
+            } else {
+                $( ".from_cart_register" ).submit();
+            }
+
+        });
+
+        function IsEmail(email) {
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if (!regex.test(email)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+       /* function IsPhone(phone) {
+            var phoneno = /^\d{10}$/;
+            if((phone.value.match(phoneno)){
+                return true;
+            } else {
+                return false;
+            }
+        }*/
     </script>
 @stop

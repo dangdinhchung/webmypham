@@ -65,7 +65,7 @@ class CouponController extends Controller
                     } elseif ($check['msg'] == 'error_code_cant_use') {
                         $msg = 'Mã vượt quá số lần sử dụng!';
                     } elseif ($check['msg'] == 'error_user_not_total_price_order') {
-                        $msg = 'Đơn hàng tối thiếu phải lớn hơn 100.000 VNĐ!';
+                        $msg = 'Đơn hàng tối thiếu của bạn phải lớn hơn hoặc bằng 100.000 VNĐ!';
                     } else {
                         $msg = "Lỗi không xác định!";
                     }
@@ -151,7 +151,7 @@ class CouponController extends Controller
             return json_encode(['error' => 1, 'msg' => "error_user_not_start"]);
         }
 
-        if ($totalMoney < "100,000") {
+        if ((int)$totalMoney < (int)Coupon::MONEY_ORDER) {
             return json_encode(['error' => 1, 'msg' => "error_user_not_total_price_order"]);
         }
 

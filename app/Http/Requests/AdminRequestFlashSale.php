@@ -25,8 +25,13 @@ class AdminRequestFlashSale extends FormRequest
     {
         return [
           'fs_title' => 'bail|required',
-          'fs_start_date' => 'bail|required',
+          'fs_start_date' => [
+              'required',
+              'date_format:Y-m-d',// format without hours, minutes and seconds.
+              'after_or_equal:' . date('Y-m-d'),
+          ],
           'fs_end_date' => 'bail|required|after_or_equal:fs_start_date',
+          'products' => 'bail|required|array|min:4',
         ];
     }
 
@@ -38,10 +43,15 @@ class AdminRequestFlashSale extends FormRequest
     public function messages()
     {
         return [
-            'fs_title.required'   => 'Dữ liệu không được để trống',
-            'fs_start_date.required'   => 'Dữ liệu không được để trống',
-            'fs_end_date.required'   => 'Dữ liệu không được để trống',
-            'fs_end_date.required'   => 'Ngày kết thúc phải >= ngày bắt đầu'
+            'fs_title.required'            => 'Tiêu đề không được để trống',
+            'fs_start_date.required'       => 'Ngày bắt đầu không được để trống',
+            'fs_start_date.after_or_equal' => 'Ngày bắt đầu >= ngày hiện tại',
+            'fs_start_date.date_format' => 'Ngày bắt đầu sai định dạng ',
+            'fs_end_date.required'         => 'Ngày kết thúc không được để trống',
+            'fs_end_date.after_or_equal'   => 'Ngày kết thúc phải >= ngày bắt đầu',
+            'products.required'            => 'Bạn chưa chọn sản phẩm nào',
+            'products.array'               => 'Hãy chọn ít nhất 4 sản phẩm',
+            'products.min'                 => 'Hãy chọn ít nhất 4 sản phẩm',
         ];
     }
 }

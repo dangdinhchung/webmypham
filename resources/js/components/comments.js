@@ -8,6 +8,9 @@ var Comments = {
         this.paginationCommentAjax();
     },
 
+    /**
+     * save comment
+     */
     saveComments()
     {
         $("body").on("click",".js-save-comment", function(event){
@@ -21,7 +24,7 @@ var Comments = {
                     toast.warning('Nội dung comments không được để trống!');
                     return false;
                 }
-                let data = new FormData($this.parents('form')[0])
+                let data = new FormData($this.parents('form')[0]);
                 $.ajax({
                     url: ROUTE_COMMENT,
                     method: "POST",
@@ -37,7 +40,7 @@ var Comments = {
                         window.location.reload();
                     }
                     if (results.code == 200) {
-                        $("#list-comment").prepend(results.html)
+                        $("#list-comment").prepend(results.html);
                         $("body .gallery").find("img").remove();
                     }
                 }).fail(function (results) {

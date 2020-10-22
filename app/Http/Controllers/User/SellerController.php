@@ -136,7 +136,7 @@ class SellerController extends Controller
 
         if ($id) {
             $this->syncAttribute($request->attribute, $id);
-            $this->syncKeyword($request->keywords, $id);
+//            $this->syncKeyword($request->keywords, $id);
             if ($request->file) {
                 $this->syncAlbumImageAndProduct($request->file, $id);
             }
@@ -186,7 +186,7 @@ class SellerController extends Controller
      * @param $keywords
      * @param $idProduct
      */
-    private function syncKeyword($keywords, $idProduct)
+   /* private function syncKeyword($keywords, $idProduct)
     {
         if (!empty($keywords)) {
             $datas = [];
@@ -197,10 +197,10 @@ class SellerController extends Controller
                 ];
             }
 
-            \DB::table('products_keywords')->where('pk_product_id', $idProduct)->delete();
+           /* \DB::table('products_keywords')->where('pk_product_id', $idProduct)->delete();
             \DB::table('products_keywords')->insert($datas);
         }
-    }
+    }*/
 
     /**
      * @param $files
@@ -260,13 +260,13 @@ class SellerController extends Controller
             ->pluck('pa_attribute_id')
             ->toArray();
 
-        $keywordOld = \DB::table('products_keywords')
+      /*  $keywordOld = \DB::table('products_keywords')
             ->where('pk_product_id', $id)
             ->pluck('pk_keyword_id')
-            ->toArray();
+            ->toArray();*/
 
         if (!$attributeOld) $attributeOld = [];
-        if (!$keywordOld) $keywordOld = [];
+        /*if (!$keywordOld) $keywordOld = [];*/
         $images = \DB::table('product_images')
             ->where("pi_product_id", $id)
             ->get();
@@ -276,7 +276,7 @@ class SellerController extends Controller
             'attributes'     => $attributes,
             'attributeOld'   => $attributeOld,
             'keywords'       => $keywords,
-            'keywordOld'     => $keywordOld,
+            /*'keywordOld'     => $keywordOld,*/
             'images'         => $images ?? []
         ];
 
@@ -324,7 +324,7 @@ class SellerController extends Controller
             }
 
             $this->syncAttribute($request->attribute, $id);
-            $this->syncKeyword($request->keywords, $id);
+//            $this->syncKeyword($request->keywords, $id);
 
             if ($request->file) {
                 $this->syncAlbumImageAndProduct($request->file, $id);

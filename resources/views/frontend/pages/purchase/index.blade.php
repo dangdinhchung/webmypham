@@ -82,39 +82,38 @@
                         <div class="form-group">
                             <label for="name">Họ và tên <span class="cRed">(*)</span></label>
                             {{--{{ get_data_user('web','name') }}--}}
-                            <input name="tst_name" id="name"  value=""
+                            <input name="tst_name" id="name"  value="{{ old('tst_name') }}"
                                    type="text" class="form-control {{ $errors->first('tst_name') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_name'))
                                 <span class="text-danger">{{ $errors->first('tst_name') }}</span>
                             @endif
-                            <span class="text-danger tst_name"></span>
+{{--                            <span class="text-danger tst_name"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="phone">Điện thoại <span class="cRed">(*)</span></label>
-                            <input name="tst_phone" id="phone" value=""
+                            <input name="tst_phone" id="phone" value="{{old('tst_phone')}}"
                                    type="text" class="form-control {{ $errors->first('tst_phone') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_phone'))
                                 <span class="text-danger">{{ $errors->first('tst_phone') }}</span>
                             @endif
-                            <span class="text-danger tst_phone"></span>
+{{--                            <span class="text-danger tst_phone"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="address">Địa chỉ <span class="cRed">(*)</span></label>
                             <input name="tst_address" id="address"
-                                   value="" type="text" class="form-control {{ $errors->first('tst_address') ? 'has-error' : '' }}">
+                                   value="{{ old('tst_address') }}" type="text" class="form-control {{ $errors->first('tst_address') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_address'))
                                 <span class="text-danger">{{ $errors->first('tst_address') }}</span>
                             @endif
-                            <span class="text-danger tst_address"></span>
+{{--                            <span class="text-danger tst_address"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="email">Email <span class="cRed">(*)</span></label>
-                            <input name="tst_email" id="email"  value=""
-                                   type="text" value="" class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
+                            <input name="tst_email" id="email" type="text" value="{{ old('tst_email') }}" class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_email'))
                                 <span class="text-danger">{{ $errors->first('tst_email') }}</span>
                             @endif
-                            <span class="text-danger tst_email"></span>
+{{--                            <span class="text-danger tst_email"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="email">Hình thức thanh toán</label>
@@ -399,7 +398,7 @@
         });
 
         //validate form client
-        $('.btn-purple').on('click', function(event ){
+        /*$('.btn-purple').on('click', function(event ){
             event.preventDefault();
             let tst_name = $("input[name*='tst_name']").val();
             let tst_phone = $("input[name*='tst_phone']").val();
@@ -419,9 +418,9 @@
             } else if(tst_phone == "") {
                 $('.tst_phone').text('Số điện thoại không được bỏ trống');
                 $('#phone').addClass('has-error');
-           /* } else if(IsPhone(tst_phone) == false) {
+            } else if(IsPhone(tst_phone) == false) {
                 $('.tst_phone').text('Số điện thoại không đúng định dạng');
-                $('#phone').addClass('has-error');*/
+                $('#phone').addClass('has-error');
             } else if(tst_address == "") {
                 $('.tst_address').text('Địa chỉ không được bỏ trống');
                 $('#address').addClass('has-error');
@@ -448,7 +447,7 @@
             }
         }
 
-       /* function IsPhone(phone) {
+        function IsPhone(phone) {
             var phoneno = /^\d{10}$/;
             if((phone.value.match(phoneno)){
                 return true;

@@ -38,7 +38,7 @@
             <ul>
                 @for ($i = 5 ; $i >0 ; $i--)
                     <li class="{{ Request::get('rv') == $i ? "active" : "" }}">
-                        <a href="{{ request()->fullUrlWithQuery(['rv'=> $i]) }}">
+                        <a href="{{ request()->fullUrlWithQuery(['rv'=> $i]) }}">{{----}}
                             <span>
                                 @for($j = 1 ; $j <= 5 ; $j ++)
                                     <i class="la la-star {{ $j <= $i ? 'active' : '' }}"></i>

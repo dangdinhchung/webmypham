@@ -52,7 +52,7 @@
                 <span style="color: red;margin-bottom: 10px;display: block">(Click vào ngôi sao để đánh giá)</span>
             </div>
             <div>
-                <textarea name="content_review"  id="rv_content" cols="30" rows="5" placeholder="Nhập đánh giá sản phẩm (Tối thiểu 40 ký tự )"></textarea>
+                <textarea name="content_review"  id="rv_content" cols="30" rows="5" placeholder="Nhập đánh giá sản phẩm (Tối thiểu 20 ký tự )"></textarea>
                 <input type="hidden" name="review" id="review_value" value="5">
                 <input type="hidden" name="product_id"  value="{{ $product->id }}">
             </div>

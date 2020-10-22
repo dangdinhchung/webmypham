@@ -3,19 +3,30 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequestUpdatePassword;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequestUpdateInfo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class UserInfoController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function updateInfo()
     {
         return view('user.update_info');
     }
 
+    /**
+     * @param UserRequestUpdateInfo $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function saveUpdateInfo(UserRequestUpdateInfo $request)
     {
         $data = $request->except('_token','avatar');
@@ -37,10 +48,18 @@ class UserInfoController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function confirmAccount() {
         return view('user.confirm-account');
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function requestConfirmAccount() {
         $active = get_data_user('web','active');
         if($active == 1) {
@@ -55,17 +74,21 @@ class UserInfoController extends Controller
             });
             \Session::flash('toastr', [
                 'type'    => 'success',
-                'message' => 'Gui yeu cau xac thuc tai khoan thanh cong, moi ban vao kiem tra hom thu trong email'
+                'message' => 'Gửi yêu cầu xác thực tài khoản thành công, mời bạn vào kiểm tra trong hòm thư email'
             ]);
             return redirect()->back();
         }
         \Session::flash('toastr', [
             'type'    => 'success',
-            'message' => 'Tai khoan cua ban da duoc xac thuc'
+            'message' => 'Tài khoản của bạn đã được xác thực'
         ]);
         return redirect()->back();
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function verifyAccount() {
         $checkUser = User::where([
             'code_active' => get_data_user('web','code_active'),
@@ -85,6 +108,33 @@ class UserInfoController extends Controller
                 'message' => 'Xác thực tài khoản thành công'
             ]);
             return redirect()->route('get.home');
+        }
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
+    public function updatePassword() {
+        return view('user.update_password');
+    }
+
+    public function saveUpdatePassword(UserRequestUpdatePassword $request) {
+        if(Hash::check($request->password_old,get_data_user('web','password'))){
+            $user = User::find(get_data_user('web'));
+            $user->password = bcrypt($request->password);
+            $user->save();
+            \Session::flash('toastr', [
+                'type'    => 'success',
+                'message' => 'Cập nhật mật khẩu thành công'
+            ]);
+            return redirect()->back();
+        }else{
+            \Session::flash('toastr', [
+                'type'    => 'error',
+                'message' => 'Cập nhật mật khẩu thất bại'
+            ]);
+            return redirect()->back();
         }
     }
 }

@@ -83,6 +83,15 @@ var ProductDetail = {
             event.preventDefault();
 
             let URL = $(this).parents('form').attr('action');
+            let content_rating = $("#rv_content").val();
+            if (!content_rating.length) {
+                toast.warning('Nội dung đánh giá không được để trống!');
+                return false;
+            }
+            if (content_rating.length <= 20) {
+                toast.warning('Nội dung đánh giá phải lớn hơn 20 ký tự!');
+                return false;
+            }
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

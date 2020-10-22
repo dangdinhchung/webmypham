@@ -143,7 +143,7 @@ class ProductDetailController extends FrontendController
 		if ($id) {
 
 			//1.Lấy sản phẩm
-			$product = Product::with('category:id,c_name,c_slug', 'keywords')->findOrFail($id);
+			$product = Product::with('category:id,c_name,c_slug')->findOrFail($id);
 
 			//2. Lấy đánh giá by ID và điều kiện lọc
 

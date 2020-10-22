@@ -40,10 +40,10 @@
                 </div>
                 <div class="form-group">
                     <button class="btn btn-purple">Đăng nhập</button>
-                    <p>
+                  {{--  <p>
                         <a href="{{ route('get.email_reset_password') }}">Quên mật khẩu</a>
                         <a href="{{ route('get.register') }}">Đăng ký</a>
-                    </p>
+                    </p>--}}
                     @include('auth.include._inc_social')
                 </div>
 

@@ -6,10 +6,10 @@
 @stop
 @section('content')
     <section>
-        <div class="title">Gui yeu cau xac thuc tai khoan</div>
+        <div class="title">Gửi yêu cầu xác thực tài khoản</div>
         <form action="" method="POST" enctype="multipart/form-data">
             @csrf
-            <button type="submit" class="btn btn-blue btn-md">Xac thuc tai khoan</button>
+            <button type="submit" class="btn btn-blue btn-md">Xác thực tài khoản</button>
         </form>
 
     </section>

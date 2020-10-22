@@ -41,9 +41,14 @@ return [
         'icon'  => 'fa fa-bug'
     ],
     [
-        'name'  => 'Xac thuc tai khoan',
+        'name'  => 'Xác thực tài khoản',
         'route' => 'get.confirm.account',
         'icon'  => 'fa fa-check-circle-o'
+    ],
+    [
+        'name'  => 'Cập nhật mật khẩu',
+        'route' => 'get.update.password',
+        'icon'  => 'fa fa-unlock-alt'
     ],
    /* [
         'name'  => 'Tạo shop',

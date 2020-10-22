@@ -7,6 +7,8 @@
         Route::post('update-info','UserInfoController@saveUpdateInfo');
 
         Route::get('confirm-account','UserInfoController@confirmAccount')->name('get.confirm.account');
+        Route::get('update-password','UserInfoController@updatePassword')->name('get.update.password');
+        Route::post('update-password','UserInfoController@saveUpdatePassword');
         Route::post('confirm-account','UserInfoController@requestConfirmAccount');
         Route::get('xac-nhan-tai-khoan','UserInfoController@verifyAccount')->name('get.verify.account');
 

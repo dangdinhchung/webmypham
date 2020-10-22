@@ -27,12 +27,18 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Giảm giá (%)</label>
                              <input type="number" name="pro_sale" value="{{  $product->pro_sale ?? old('pro_sale',0) }}" class="form-control" data-type="currency" placeholder="5">
+                            @if ($errors->first('pro_sale'))
+                                <span class="text-danger">{{ $errors->first('pro_sale') }}</span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Số lượng</label>
                             <input type="number" name="pro_number_import" value="{{  $product->pro_number_import ?? old('pro_number_import',0) }}" class="form-control"  placeholder="5">
+                            @if ($errors->first('pro_number_import'))
+                                <span class="text-danger">{{ $errors->first('pro_number_import') }}</span>
+                            @endif
                         </div>
                     </div>
 {{--                    @if (isset($product))--}}
@@ -99,6 +105,9 @@
                     </div>
                 @endforeach
             </div>
+            @if ($errors->first('attribute'))
+                <span class="text-danger">{{ $errors->first('attribute') }}</span>
+            @endif
             <hr>
 {{--            <div class="box-header with-border">--}}
 {{--                <h3 class="box-title">Album ảnh</h3>--}}
@@ -146,6 +155,9 @@
                 <div style="margin-bottom: 10px">
                     <img src="{{ pare_url_file($product->pro_avatar ?? '') ?? '/images/no-image.jpg' }}" onerror="this.onerror=null;this.src='/images/no-image.jpg';" alt="" class="img-thumbnail" style="width: 200px;height: 200px;">
                 </div>
+                @if ($errors->first('pro_avatar'))
+                    <span class="text-danger">{{ $errors->first('pro_avatar') }}</span>
+                @endif
                 <div style="position:relative;"> <a class="btn btn-primary" href="javascript:;"> Choose File... <input type="file" style="position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:&quot;progid:DXImageTransform.Microsoft.Alpha(Opacity=0)&quot;;opacity:0;background-color:transparent;color:transparent;" name="pro_avatar" size="40" class="js-upload"> </a> &nbsp; <span class="label label-info" id="upload-file-info"></span> </div>
             </div>
         </div>

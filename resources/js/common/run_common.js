@@ -104,11 +104,11 @@ var RunCommon = {
             return false;
         });
 
-        $(".js-maintain").click(function (event) {
+       /* $(".js-maintain").click(function (event) {
             event.preventDefault();
             toast.warning("Tính năng này đang phát triển. Mời bạn quay lại sau");
             return false;
-        })
+        })*/
     },
 
     showCategory()

@@ -21,11 +21,14 @@
                                 <tr>
                                     <th style="width: 10px">Stt</th>
                                     <th style="width: 10px">ID</th>
-                                    <th>Name</th>
+                                    <th>Họ tên</th>
                                     <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Time</th>
-                                    <th>Action</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Kích hoạt</th>
+                                    <th>Thời gian tạo</th>
+                                    <th>Hành động</th>
                                 </tr>
                                 @if (isset($users))
                                     @foreach($users as $key => $user)
@@ -34,10 +37,21 @@
                                             <td>{{ $user->id }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
-                                            <td>{{ $user->phone }}</td>
+                                            <td>
+                                                <img src="{{ $user->social_id ? $user->avatar : pare_url_file($user->avatar) }}" style="width: 80px;height: 100px">
+                                            </td>
+                                            <td>{{ $user->phone ? $user->phone : 'N/A' }}</td>
+                                            <td>{{ $user->address ? $user->address : 'N/A' }}</td>
+                                            <td>
+                                                @if ($user->active == 2)
+                                                    <label for="" class="label label-info">Kích hoạt</label>
+                                                @else
+                                                    <label for="" class="label label-default">Chưa kích hoạt</label>
+                                                @endif
+                                            </td>
                                             <td>{{ $user->created_at }}</td>
                                             <td>
-                                                <a href="{{ route('admin.user.transaction', $user->id) }}" class="btn btn-xs btn-primary js-show-transaction"> Nợ cần thu</a>
+                                                {{--<a href="{{ route('admin.user.transaction', $user->id) }}" class="btn btn-xs btn-primary js-show-transaction"> Nợ cần thu</a>--}}
                                                 <a href="{{  route('admin.user.delete', $user->id) }}" class="btn btn-xs btn-danger js-delete-confirm"><i class="fa fa-trash"></i> Delete</a>
                                             </td>
                                         </tr>

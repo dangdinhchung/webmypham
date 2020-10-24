@@ -353,7 +353,7 @@ class ShoppingCartController extends Controller
         $hasCoupon = !empty(session('coupon')) ? true : false;
         $coupon = !empty(session('coupon')) ? session('coupon') : '';
         $codeCoupon = Coupon::where(['cp_code' => $coupon])->first();
-        $discountType = $codeCoupon['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
+        $discountType = '%';
         $viewData = [
             'title_page'   => 'Danh sách sản phẩm',
             'shopping'     => $shopping,

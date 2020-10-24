@@ -127,7 +127,7 @@ class CouponController extends Controller
     {
         $now = strtotime(Carbon::now()->toDateString());
         $codeCoupon = Coupon::where(['cp_code' => $code])->first();
-        $totalMoney = \Cart::subtotal(0);
+        $totalMoney = str_replace(',','',\Cart::subtotal(0));
         if ($codeCoupon) {
             $idCoupon = Coupon::select('id')->where('cp_code', $code)->first()->id;
             $userOnlyCoupon = CouponUsage::where(['cpu_user_id' => $idUser, 'cpu_coupon_id' => $idCoupon])->first();

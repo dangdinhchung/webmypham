@@ -28,7 +28,7 @@
                                     <th>Email</th>
                                     <th>Hình ảnh</th>
                                     <th>SDT</th>
-                                    <th>Level</th>
+                                    <th>Địa chỉ</th>
                                     <th>Role</th>
                                     <th>Time</th>
                                     <th>Action</th>
@@ -46,11 +46,7 @@
                                             </td>
                                             <td>{{ $admin->phone }}</td>
                                             <td>
-                                                @if ($admin->level == 1)
-                                                    <span class="label label-success"> Admin </span>
-                                                @else 
-                                                    <span class="label label-default">Nhân viên</span>
-                                                @endif
+                                                {{ $admin->address }}
                                             </td>
                                             <td>
                                                 <span class="label-info label">{{  $admin->roles()->pluck('display_name')->implode(' ') ?? "" }}</span>

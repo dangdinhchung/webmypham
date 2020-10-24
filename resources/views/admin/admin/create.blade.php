@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="form-group {{ $errors->first('address') ? 'has-error' : '' }}">
                                     <label for="name">Địa chỉ <span class="text-danger">(*)</span></label>
-                                    <input type="text" class="form-control" name="address"  placeholder="Hà Nam">
+                                    <input type="text" class="form-control" name="address" {{ old('address') }}  placeholder="Hà Nam">
                                     @if ($errors->first('address'))
                                         <span class="text-danger">{{ $errors->first('address') }}</span>
                                     @endif

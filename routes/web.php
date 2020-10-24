@@ -22,6 +22,9 @@ Route::group(['namespace' => 'Auth','prefix' => 'account'], function(){
     Route::get('login','LoginController@getFormLogin')->name('get.login'); // đăng nhập
     Route::post('login','LoginController@postLogin'); // xử lý đăng nhập
 
+    //login social
+    Route::get('/redirect','LoginController@redirectProvider')->name('get.login.social');
+
     Route::get('logout','LoginController@getLogout')->name('get.logout'); // đăng xuất
 
     Route::get('reset-password','ResetPasswordController@getEmailReset')->name('get.email_reset_password'); // gủi gmail  lấy mk
@@ -30,9 +33,11 @@ Route::group(['namespace' => 'Auth','prefix' => 'account'], function(){
     Route::get('new-password','ResetPasswordController@newPassword')->name('get.new_password'); // mk mới
     Route::post('new-password','ResetPasswordController@savePassword'); 
  
-    Route::get('/{social}/redirect', 'SocialAuthController@redirect')->name('get.login.social'); // callback 
-    Route::get('/{social}/callback', 'SocialAuthController@callback')->name('get.login.social_callback'); //
+//    Route::get('/{social}/redirect', 'SocialAuthController@redirect')->name('get.login.social');
+//    Route::get('/{social}/callback', 'SocialAuthController@callback')->name('get.login.social_callback');
 });
+
+Route::get('/callback/google','Auth\LoginController@handleProviderCallback');
 
 // Login admin
 Route::group(['prefix' => 'admin-auth','namespace' => 'Admin\Auth'], function() {

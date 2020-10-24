@@ -43,7 +43,8 @@
                                         <td>{{ (($coupons->currentPage() - 1) * $coupons->perPage()) + ( $key + 1)  }}</td>
                                         <td>{{ $coupon->cp_description ?? "[N\A]" }}</td>
                                         <td>{{ $coupon->cp_code ?? "[N\A]" }}</td>
-                                        <td>{{ $coupon->cp_discount_type == 'amount' ? $coupon->cp_discount . " VNĐ" : $coupon->cp_discount . ' %'  }}</td>
+                                        {{--<td>{{ $coupon->cp_discount_type == 'amount' ? $coupon->cp_discount . " VNĐ" : $coupon->cp_discount . ' %'  }}</td>--}}
+                                        <td>{{$coupon->cp_discount}} %</td>
                                         <td>{{ $coupon->cp_number_uses ?? "[N\A]" }}</td>
                                         <td>{{ date("Y-m-d", $coupon->cp_start_date) ?? "[N\A]" }}</td>
                                         <td>{{ date("Y-m-d", $coupon->cp_end_date) ?? "[N\A]" }}</td>

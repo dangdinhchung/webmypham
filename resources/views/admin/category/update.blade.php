@@ -25,8 +25,6 @@
                                     <span class="text-danger">{{ $errors->first('c_name') }}</span>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-sm-8">
                             <div class="form-group">
                                 <label for="name">Parent <span class="text-danger">(*)</span></label>
                                 <select name="c_parent_id" class="form-control" id="">

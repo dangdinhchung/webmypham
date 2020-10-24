@@ -93,7 +93,7 @@
                             @if (!in_array($transaction->tst_status , [-1,2,3]) )
                                {{-- <a href="{{ route('get.user.transaction.cancel',$transaction->id) }}"
                                    class="btn-xs label-danger" style="color: white"><i class="fa fa-save"></i> Huỷ đơn</a>--}}
-                                <a data-href="{{ route('get.user.transaction.cancel',$transaction->id) }}" data-transaction="{{$transaction->id}}" class="btn-xs label-danger btn-cancel-order" style="color: white"><i class="fa fa-ban"></i> Huỷ đơn</a>
+                                <a data-href="{{ route('get.user.transaction.cancel',$transaction->id) }}" data-transaction="{{$transaction->id}}" class="btn-xs label-danger btn-cancel-order" style="color: white;cursor: pointer"><i class="fa fa-ban"></i> Huỷ đơn</a>
                            @endif
                         </td>
                     </tr>

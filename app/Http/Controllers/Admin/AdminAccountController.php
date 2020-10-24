@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\AdminRequestAccount;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -73,7 +74,7 @@ class AdminAccountController extends Controller
     public function edit($id)
     {
         $admin = Admin::find($id);
-		$roles     = Role::all();
+		$roles     =Role::all();
         $listRoleOfAdmin = \DB::table('role_admin')->where('admin_id',$id)->pluck('role_id');
         return view('admin.admin.update', compact('admin','listRoleOfAdmin','roles'));
     }
@@ -93,6 +94,7 @@ class AdminAccountController extends Controller
             if ($request->password) {
                 $admin->password   =  Hash::make($request->password);
             }
+            $data['updated_at'] = Carbon::now();
             if ($request->avatar) {
                 $image = upload_image('avatar');
                 if ($image['code'] == 1) {
@@ -132,6 +134,7 @@ class AdminAccountController extends Controller
            return redirect()->back();
        } catch (\Exception $exception) {
            DB::rollBack();
+           Log::error('Loi: ' . $exception->getMessage() . $exception->getLine());
        }
     }
 }

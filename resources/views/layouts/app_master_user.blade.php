@@ -29,8 +29,8 @@
             </p>
         </div>
 {{--        <p>Đăng nhập lần cuối <b>{{ get_time_login(Auth::user()->log_login)['time'] ?? "" }}</b></p>--}}
-        <p class="user-info-item"><span>Mã TK</span> <span><b>#{{ Auth::user()->id }}</b></span></p>
-         <p class="user-info-item"><span>Số dư TK</span> <span><b>{{ number_format(Auth::user()->balance,0,',','.') }} đ</b></span></p>
+      {{--  <p class="user-info-item"><span>Mã TK</span> <span><b>#{{ Auth::user()->id }}</b></span></p>
+         <p class="user-info-item"><span>Số dư TK</span> <span><b>{{ number_format(Auth::user()->balance,0,',','.') }} đ</b></span></p>--}}
         <div class="content">
             <ul class="left-nav">
                 @foreach(config('user') as $item)

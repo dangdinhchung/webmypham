@@ -36,8 +36,8 @@ class ShoppingCartController extends Controller
     {
         $shopping = \Cart::content();
         $viewData = [
-            'title_page'   => 'Danh sách giỏ hàng',
-            'shopping'     => $shopping,
+            'title_page' => 'Danh sách giỏ hàng',
+            'shopping'   => $shopping,
         ];
         return view('frontend.pages.shopping.index', $viewData);
     }
@@ -140,13 +140,23 @@ class ShoppingCartController extends Controller
             return redirect()->back();
         }
 
-        $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
-        $totalMoney = str_replace(',', '', $totalCard) + (int)Product::SHIPPING_COST;
         // Lấy thông tin đơn hàng
         $products = \Cart::content();
         try {
             DB::beginTransaction();
             /*new PayManager($data, $shopping, $options);*/
+
+            //check mã giảm giá để lưu
+            if (session('coupon')) {
+                $subtotal = str_replace(',', '', \Cart::subtotal(0));
+                $coupon = Coupon::select('*')->where('cp_code', session('coupon'))->first();
+                $price = (($coupon->cp_discount) * $subtotal) / 100;
+                $priceSale = number_format($price, 0, ',', '.');
+            }
+
+            $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
+            $totalCardConvert = str_replace(',', '', $totalCard);
+            $totalMoney = str_replace(',', '', (int)$totalCardConvert) + (int)Product::SHIPPING_COST;
             //lưu bảng transactions
             $transacionID = Transaction::insertGetId([
                 'tst_user_id'     => \Auth::user()->id,
@@ -157,12 +167,13 @@ class ShoppingCartController extends Controller
                 'tst_address'     => $request->tst_address,
                 'tst_note'        => $request->tst_note ? $request->tst_note : '',
                 'tst_type'        => $request->tst_type,
+                'tst_coupon_id'   => isset($coupon) ? $coupon->id : '',
                 'created_at'      => Carbon::now(),
                 'updated_at'      => Carbon::now()
             ]);
             //Lưu bảng orders
-            if($transacionID) {
-                foreach ($products as  $product) {
+            if ($transacionID) {
+                foreach ($products as $product) {
                     Order::insert([
                         'od_transaction_id' => $transacionID,
                         'od_product_id'     => $product->id,
@@ -174,17 +185,44 @@ class ShoppingCartController extends Controller
                     ]);
                 }
             }
+            // Lưu bảng coupon_usages
+            if(isset($coupon)) {
+                DB::table('coupon_usages')->insertGetId(
+                    array(
+                        'cpu_user_id'   => \Auth::user()->id,
+                        'cpu_coupon_id' => $coupon->id
+                    )
+                );
+            }
             DB::commit();
-            //gửi mail cho khách hàng khi thanh toán offline
-            if($request->tst_type == 1) {
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error("[Errors pay shopping cart]" . $exception->getMessage());
+            \Session::flash('toastr', [
+                'type'    => 'error',
+                'message' => 'Có lỗi xảy ra không mong muốn, mời bạn thử lại sau'
+            ]);
+            $request->session()->forget('cartUpdateTotal');
+            $request->session()->forget('coupon');
+            return redirect()->to('/');
+        }
+        //gửi mail cho khách hàng khi thanh toán offline
+        if ($request->tst_type == 1) {
+            try {
                 $subject = "Thư cảm ơn mua hàng";
                 $name = $request->tst_name;
-                $data = array('name'=> $name);
+                $data = array(
+                    'name'       => $name,
+                    'totalMoney' => (int)$totalMoney,
+                    'code'       => isset($coupon) ? $coupon->cp_code : '',
+                    'discount'   => isset($coupon) ? $coupon->cp_discount : '',
+                    'priceSale'  => isset($coupon) ? $priceSale : '',
+                );
                 $email = $request->tst_email;
-                Mail::send('emails.email_order_offline', $data, function($message) use ($email, $subject, $name) {
+                Mail::send('emails.email_order_offline', $data, function ($message) use ($email, $subject, $name) {
                     $message->to($email, $name)
                         ->subject($subject);
-                    $message->from(env('MAIL_USERNAME'),'Beauty Store');
+                    $message->from(env('MAIL_USERNAME'), 'Beauty Store');
                 });
                 //un session card
                 \Cart::destroy();
@@ -192,72 +230,108 @@ class ShoppingCartController extends Controller
                 $request->session()->forget('coupon');
                 \Session::flash('toastr', [
                     'type'    => 'success',
-                    'message' => 'Đơn hàng của bạn đã được lưu'
+                    'message' => 'Đơn hàng của bạn đã được lưu, bạn có thể theo dõi đơn hàng trong email'
                 ]);
-                return redirect()->route('get.user.tracking_order',$transacionID);
-            } else {
-                //thanh toan online
-                $inputData = array(
-                    "vnp_Version" => "2.0.0",
-                    "vnp_TmnCode" => $this->vnp_TmnCode, // L6SCL6L1
-                    "vnp_Amount" => $totalMoney * 100, // 1000000
-                    "vnp_Command" => "pay",
-                    "vnp_CreateDate" => date('YmdHis'), //20190626054737
-                    "vnp_CurrCode" => "VND",
-                    "vnp_IpAddr" => $_SERVER['REMOTE_ADDR'], //127.0.0.1
-                    "vnp_Locale" => $request->tst_language, // vn,ngon ngu
-                    "vnp_BankCode" => $request->tst_bank, // chọn ngân hàng luôn
-                    "vnp_OrderInfo" => $request->tst_note ? $request->tst_note : 'Gửi hàng nhanh cho tôi nhé', // Noi dung thanh toan
-                    "vnp_OrderType" => $request->tst_type, //2:online
-                    "vnp_ReturnUrl" => $this->vnp_Returnurl, // http://localhost/vnpay_php/vnpay_return.php
-                    "vnp_TxnRef" => $transacionID //20190626053509
-                );
-                ksort($inputData);
-                $query = "";
-                $i = 0;
-                $hashdata = "";
-                foreach ($inputData as $key => $value) {
-                    if ($i == 1) {
-                        $hashdata .= '&' . $key . "=" . $value;
-                    } else {
-                        $hashdata .= $key . "=" . $value;
-                        $i = 1;
-                    }
-                    $query .= urlencode($key) . "=" . urlencode($value) . '&';
-                }
-
-                $vnp_Url = $this->vnp_Url . "?" . $query;
-                if (isset($this->vnp_HashSecret)) {
-                    // $vnpSecureHash = md5($vnp_HashSecret . $hashdata);
-                    $vnpSecureHash = hash('sha256', $this->vnp_HashSecret . $hashdata);
-                    $vnp_Url .= 'vnp_SecureHashType=SHA256&vnp_SecureHash=' . $vnpSecureHash;
-                }
-                $returnData = array('data' => $vnp_Url);
-                \Cart::destroy();
-                $request->session()->forget('cartUpdateTotal');
-                $request->session()->forget('coupon');
-                return redirect()->to($returnData['data']);
+                return redirect()->route('get.user.tracking_order', $transacionID);
+            } catch (\Exception $exception) {
+                Log::error("[Send mail offline error]" . $exception->getMessage());
+                \Session::flash('toastr', [
+                    'type'    => 'error',
+                    'message' => 'Có lỗi xảy ra không mong muốn, mời bạn thử lại sau'
+                ]);
+                return redirect()->to('/');
             }
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            Log::error("[Errors pay shopping cart]" . $exception->getMessage());
-            \Session::flash('toastr', [
-                'type'    => 'error',
-                'message' => 'Có lỗi xảy ra không mong muốn'
-            ]);
-            return redirect()->to('/');
+        } else {
+            //thanh toan online
+            $inputData = array(
+                "vnp_Version"    => "2.0.0",
+                "vnp_TmnCode"    => $this->vnp_TmnCode, // L6SCL6L1
+                "vnp_Amount"     => $totalMoney * 100, // 1000000
+                "vnp_Command"    => "pay",
+                "vnp_CreateDate" => date('YmdHis'), //20190626054737
+                "vnp_CurrCode"   => "VND",
+                "vnp_IpAddr"     => $_SERVER['REMOTE_ADDR'], //127.0.0.1
+                "vnp_Locale"     => $request->tst_language, // vn,ngon ngu
+                "vnp_BankCode"   => $request->tst_bank, // chọn ngân hàng luôn
+                "vnp_OrderInfo"  => $request->tst_note ? $request->tst_note : 'Gửi hàng nhanh cho tôi nhé', // Noi dung thanh toan
+                "vnp_OrderType"  => $request->tst_type, //2:online
+                "vnp_ReturnUrl"  => $this->vnp_Returnurl, // http://localhost/vnpay_php/vnpay_return.php
+                "vnp_TxnRef"     => $transacionID//20190626053509
+            );
+            ksort($inputData);
+            $query = "";
+            $i = 0;
+            $hashdata = "";
+            foreach ($inputData as $key => $value) {
+                if ($i == 1) {
+                    $hashdata .= '&' . $key . "=" . $value;
+                } else {
+                    $hashdata .= $key . "=" . $value;
+                    $i = 1;
+                }
+                $query .= urlencode($key) . "=" . urlencode($value) . '&';
+            }
+
+            $vnp_Url = $this->vnp_Url . "?" . $query;
+            if (isset($this->vnp_HashSecret)) {
+                // $vnpSecureHash = md5($vnp_HashSecret . $hashdata);
+                $vnpSecureHash = hash('sha256', $this->vnp_HashSecret . $hashdata);
+                $vnp_Url .= 'vnp_SecureHashType=SHA256&vnp_SecureHash=' . $vnpSecureHash;
+            }
+            $returnData = array('data' => $vnp_Url);
+            return redirect()->to($returnData['data']);
         }
     }
 
-    public function getFormOnline(Request $request) {
+    public function getFormOnline(Request $request)
+    {
         $transacionID = $request->vnp_TxnRef;
         $transacion = Transaction::find($transacionID);
-        if($request->vnp_ResponseCode == "00" && $transacion){
-            \Session::flash('toastr', [
-                'type'    => 'success',
-                'message' => 'Giao dịch đơn hàng thành công'
-            ]);
-            return redirect()->route('get.user.tracking_order',$transacionID);
+        if (session('coupon')) {
+            $subtotal = str_replace(',', '', \Cart::subtotal(0));
+            $coupon = Coupon::select('*')->where('cp_code', session('coupon'))->first();
+            $price = (($coupon->cp_discount) * $subtotal) / 100;
+            $priceSale = number_format($price, 0, ',', '.');
+        }
+        $totalCard = !empty(session('coupon')) ? session('cartUpdateTotal') : str_replace(',', '', \Cart::subtotal(0));
+        $totalCardConvert = str_replace(',', '', $totalCard);
+        $totalMoney = str_replace(',', '', (int)$totalCardConvert) + (int)Product::SHIPPING_COST;
+        if ($request->vnp_ResponseCode == "00" && $transacion) {
+            try {
+                //send mail online
+                $subject = "Thư cảm ơn mua hàng";
+                $name = $transacion->tst_name;
+                $data = array(
+                    'name'       => $name,
+                    'totalMoney' => (int)$totalMoney,
+                    'code'       => isset($coupon) ? $coupon->cp_code : '',
+                    'discount'   => isset($coupon) ? $coupon->cp_discount : '',
+                    'priceSale'  => isset($coupon) ? $priceSale : '',
+                );
+                $email = $transacion->tst_email;
+                Mail::send('emails.email_order_online', $data, function ($message) use ($email, $subject, $name) {
+                    $message->to($email, $name)
+                        ->subject($subject);
+                    $message->from(env('MAIL_USERNAME'), 'Beauty Store');
+                });
+
+                \Cart::destroy();
+                $request->session()->forget('cartUpdateTotal');
+                $request->session()->forget('coupon');
+
+                \Session::flash('toastr', [
+                    'type'    => 'success',
+                    'message' => 'Giao dịch đơn hàng thành công, bạn có thể theo dõi đơn hàng trong email'
+                ]);
+                return redirect()->route('get.user.tracking_order', $transacionID);
+            } catch (\Exception $exception) {
+                Log::error("[Send mail online error]" . $exception->getMessage());
+                \Session::flash('toastr', [
+                    'type'    => 'error',
+                    'message' => 'Có lỗi xảy ra không mong muốn, mời bạn thử lại sau'
+                ]);
+                return redirect()->to('/');
+            }
         } else {
             //hủy giao dịch
             $transacion->tst_status = -1;
@@ -267,7 +341,7 @@ class ShoppingCartController extends Controller
                 'message' => 'Đơn hàng của bạn bị hủy vì chưa thanh toán!'
             ]);
             $transacion->save();
-            return redirect()->route('get.user.order',$transacionID);
+            return redirect()->route('get.user.order', $transacionID);
         }
     }
 
@@ -308,7 +382,8 @@ class ShoppingCartController extends Controller
             $flash_deal = FlashSale::where('fs_status', 1)->first();
             if ($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->fs_start_date && strtotime(date('d-m-Y')) <= $flash_deal->fs_end_date && FlashSaleProduct::where('fsp_flash_deal_id',
                     $flash_deal->id)->where('fsp_product_id', $product->id)->first() != null) {
-                $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id',
+                $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id',
+                    $flash_deal->id)->where('fsp_product_id',
                     $product->id)->first();
                 $price -= ($price * $flash_deal_product->fsp_discount) / 100;
                 $sale = $flash_deal_product->fsp_discount;
@@ -348,7 +423,8 @@ class ShoppingCartController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author chungdd
      */
-    public function purchase() {
+    public function purchase()
+    {
         $shopping = \Cart::content();
         $hasCoupon = !empty(session('coupon')) ? true : false;
         $coupon = !empty(session('coupon')) ? session('coupon') : '';
@@ -362,6 +438,6 @@ class ShoppingCartController extends Controller
             'codeCoupon'   => $codeCoupon,
             'discountType' => $discountType
         ];
-        return view('frontend.pages.purchase.index',$viewData);
+        return view('frontend.pages.purchase.index', $viewData);
     }
 }

@@ -17,6 +17,18 @@ session('cartUpdateTotal')
 https://www.youtube.com/watch?v=ajqaKxGRWHc
 https://stackoverflow.com/questions/45034581/laravel-5-4-cross-env-is-not-recognized-as-an-internal-or-external-command : fix loi npm
 
+
+
+ if(session('coupon')) {
+            $idCoupon = Coupon::select('id')->where('cp_code', session('coupon'))->first()->id;
+            DB::table('coupon_usages')->insertGetId(
+                array(
+                    'cpu_user_id' =>  $dataTransaction['tst_user_id'],
+                    'cpu_coupon_id' =>  $idCoupon
+                )
+            );
+        }
+
 ---------------------------vnpay----------------------------------------
 1
 Ngân hàng: NCB

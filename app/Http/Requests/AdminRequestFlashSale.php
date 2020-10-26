@@ -27,7 +27,7 @@ class AdminRequestFlashSale extends FormRequest
           'fs_title' => 'bail|required',
           'fs_start_date' => [
               'required',
-              'date_format:Y-m-d',// format without hours, minutes and seconds.
+              'date_format:Y-m-d',
               'after_or_equal:' . date('Y-m-d'),
           ],
           'fs_end_date' => 'bail|required|after_or_equal:fs_start_date',

@@ -248,15 +248,14 @@
                             $subtotal = str_replace(',','',\Cart::subtotal(0));
                             $totalDiscount = floor($subtotal * $codeCoupon['cp_discount'] / 100);
                             $moneyDiscount = number_format(floor($subtotal * $codeCoupon['cp_discount'] / 100));
-                            $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
-                            $price = ((100 - $codeCoupon['cp_discount']) * $subtotal)  /  100 ;
+                            $moneyDiscountConvert = str_replace(',','',$moneyDiscount);
+                            $cartUpdateTotal = (int)$moneyDiscountConvert > 0 ? number_format((int)$subtotal - (int)$totalDiscount) : \Cart::subtotal(0);
+                            $price = (($codeCoupon['cp_discount']) * $subtotal)  /  100 ;
                             $priceSale = number_format($price,0,',','.');
                             $totalCardEnd = (int)str_replace(',','',$cartUpdateTotal) + (int)$shipMoney;
                         @endphp
                         <tr class="showTotal">
-                            <th style="text-align: left" class="th-coupon01"> Giảm tối
-                                đa {{ number_format($codeCoupon['cp_discount'])}} {{$discountType }}
-                                (<b>Code:</b> {{ $coupon }})
+                            <th style="text-align: left" class="th-coupon01"> Giảm tối đa {{ number_format($codeCoupon['cp_discount'])}} {{$discountType }}(<b>Code:</b> {{ $coupon }})
                             </th>
                             <td style="text-align: right" id=" %" class="th-coupon01">-{{$priceSale}} đ</td>
                         </tr>

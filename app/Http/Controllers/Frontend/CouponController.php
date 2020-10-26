@@ -45,8 +45,7 @@ class CouponController extends Controller
 
                 $html .= "<tr class='showTotalEnd'>";
                 $html .= '<th style="text-align: left"><b>Tổng tiền cần thanh toán</b></th>';
-                $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoney,
-                        0, ',', '.') . ' đ</td>';
+                $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoney, 0, ',', '.') . ' đ</td>';
                 $html .= '</tr>';
 
                 return json_encode(['html' => $html]);
@@ -57,7 +56,7 @@ class CouponController extends Controller
                     if ($check['msg'] == 'error_code_not_exist') {
                         $msg = "Mã giảm giá không hợp lệ!";
                     } elseif ($check['msg'] == 'error_user_used') {
-                        $msg = "Bạn đã dùng mã này rồi!";
+                        $msg = "Mã giảm giá đã được sử dụng";
                     } elseif ($check['msg'] == 'error_user_not_start') {
                         $msg = "Chưa đến chương trình giảm giá!";
                     } elseif ($check['msg'] == 'error_user_expired') {
@@ -80,7 +79,7 @@ class CouponController extends Controller
                     $msg = 'Mã giảm giá có giá trị giảm ' . number_format($content['cp_discount']) . $discountType . ' cho đơn hàng này.';
 
                     if ($code) {
-                        $price = ((100 - $content['cp_discount']) * $subtotal) / 100;
+                        $price = (($content['cp_discount']) * $subtotal) / 100;
                         $totalMoneyEnd = (int)$totalMoney - (int)$price;
                     }
 

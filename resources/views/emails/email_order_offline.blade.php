@@ -131,30 +131,28 @@ $constShip = (int)Product::SHIPPING_COST;
                                 </tr>
                             @endforeach
                         @endif
-
-
-                        <tr>
-                            <td colspan="7">
-                                <div class="ds-flex">
-                                    <h4 class="mr-30 ft-normal">Tổng tiền </h4>
-                                    <h4 class="ft-normal" style="margin-left: 94px">: {{ number_format($tong,0,',','.') }} đ</h4>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-                                <div class="ds-flex">
-                                    <h4 class="mr-30 ft-normal">Phí vận chuyển </h4>
-                                    <h4 class="ft-normal" style="margin-left: 64px">: {{ number_format($constShip,0,',','.') }} đ</h4>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-                                <h4 class="mr-30"><span>Tổng tiền cần thanh toán</span> : {{ number_format($tong + $constShip,0,',','.') }} đ</h4>
-                            </td>
-                        </tr>
                         </tbody>
+                    </table>
+
+                    <table style="width: 500px;margin-right: 70px" class="cke_show_border" cellspacing="1" cellpadding="1" border="0" align="right">
+                        <tr>
+                            <td style="text-align: right; line-height: 150%;">Tổng tiền:</td>
+                            <td style="text-align: right; line-height: 150%;">{{ number_format($tong,0,',','.') }} đ</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; line-height: 150%;">Phí vận chuyển :</td>
+                            <td style="text-align: right; line-height: 150%;"><strong>{{ number_format($constShip,0,',','.') }} đ</strong></td>
+                        </tr>
+                        @if(session('coupon'))
+                        <tr>
+                            <td style="text-align: right; line-height: 150%;">Mã giảm giá {{$discount}} % (Code: <b>{{$code}}</b>):</td>
+                            <td style="text-align: right; line-height: 150%;">-{{$priceSale}} đ</td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td style="text-align: right; line-height: 150%;"><strong>Tổng tiền cần thanh toán:</strong></td>
+                            <td style="text-align: right; line-height: 150%;"><strong>{{ number_format($totalMoney,0,',','.') }} đ</strong></td>
+                        </tr>
                     </table>
                 </td>
             </tr>

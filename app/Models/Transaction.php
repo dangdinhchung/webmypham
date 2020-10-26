@@ -67,4 +67,8 @@ class Transaction extends Model
 	{
 		return $this->belongsTo(Admin::class,'tst_admin_id','id');
 	}
+
+	/*public function coupon() {
+        return $this->hasOne(Coupon::class);
+    }*/
 }

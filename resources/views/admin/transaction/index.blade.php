@@ -43,10 +43,9 @@
                             <tbody>
                                 <tr>
                                     <th style="width: 10px">STT</th>
-                                    <th style="width: 10px">ID</th>
-                                    <th style="width: 30%">Info</th>
-                                    <th>Money</th>
-                                    <th>Account</th>
+                                    <th style="width: 10px">Mã</th>
+                                    <th style="width: 30%">Thông tin</th>
+                                    <th>Tổng tiền</th>
                                     <th>Type</th>
                                     <th>Status</th>
                                     <th>Time</th>
@@ -66,13 +65,6 @@
                                                 </ul>
                                             </td>
                                             <td>{{ number_format($transaction->tst_total_money,0,',','.') }} đ</td>
-                                            <td>
-                                                @if ($transaction->tst_user_id)
-                                                    <span class="label label-success">Thành viên</span>
-                                                @else
-                                                    <span class="label label-default">Khách</span>
-                                                @endif
-                                            </td>
                                             <td>
                                                 <span class="label label-{{ $transaction->getType($transaction->tst_type)['class'] }}">
                                                     {{ $transaction->getType($transaction->tst_type)['name'] }}</span>

@@ -20,6 +20,9 @@ class CategoryController extends FrontendController
         $arraySlug = explode('-', $slug);
         $id = array_pop($arraySlug);
         if ($id) {
+
+            /*$listIdParent = Category::select('id')->where('c_parent_id',$id)->toArray();*/
+
             $category = Category::find($id);
 
             $products = Product::where([

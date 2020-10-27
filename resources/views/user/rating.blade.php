@@ -18,10 +18,11 @@
                 <thead>
                     <tr>
                         <th scope="col" style="width: 50px">STT</th>
-                        <th scope="col" style="text-align: left;">Name</th>
+                        <th scope="col" >Name</th>
+                        <th scope="col" >Hình ảnh</th>
                         <th scope="col" style="text-align: center;">Rating</th>
                         <th scope="col" style="text-align: center;">Time</th>
-                        <th scope="col" style="text-align: center;">Action</th>
+{{--                        <th scope="col" style="text-align: center;">Action</th>--}}
                     </tr>
                     </thead>
 
@@ -30,8 +31,11 @@
                         @foreach($ratings as $key => $rating)
                             <tr>
                                 <td style="text-align: center;">{{ (($ratings->currentPage() - 1) * $ratings->perPage()) + ( $key + 1)  }}</td>
-                                <td style="width: 30%;text-align: left">{{ $rating->product->pro_name ?? "[N\A]" }}</td>
-                                <td style="text-align: center;">
+                                <td style="width: 30%;text-align: center">{{ $rating->product->pro_name ?? "[N\A]" }}</td>
+                                <td style="text-align: center">
+                                    <img st src="{{ pare_url_file($rating->product->pro_avatar ?? "") }}"  style="width: 100px;height: 100px;" class="lazyload">
+                                </td>
+                                <td style="text-align: center">
                                     <div class="ratings">
                                         @for($i = 1 ; $i <= 5 ; $i ++)
                                             <span class="{{  $i <= $rating->r_number ? 'active' : '' }}"><i class="fa fa-star"></i></span>
@@ -39,7 +43,7 @@
                                     </div>
                                 </td>
                                 <td style="text-align: center;">{{ $rating->created_at }}</td>
-                                <td style="text-align: center;">
+                                <td style="text-align: center;display: none">
                                     <a href="{{  route('get.user.rating.delete', $rating->id) }}" class="btn btn-xs label-danger js-delete-confirm"><i class="fa fa-trash"></i> Delete</a>
                                 </td>
                             </tr>

@@ -12,7 +12,7 @@ class UserRatingController extends Controller
 {
     public function index()
     {
-        $ratings = Rating::with('product:id,pro_name,pro_slug')
+        $ratings = Rating::with('product:id,pro_name,pro_slug,pro_avatar')
             ->where('r_user_id', get_data_user('web'))
             ->orderByDesc('id')
             ->paginate(10);
@@ -43,6 +43,10 @@ class UserRatingController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * not used
+     */
     public function delete()
     {
         $rating = Rating::where('r_user_id', get_data_user('web'))->first();
@@ -74,10 +78,10 @@ class UserRatingController extends Controller
         $product->pro_review_star += $number;
         $product->save();
 
-        if ($product->pro_review_total)
+       /* if ($product->pro_review_total)
         {
             $product->pro_age_review = round($product->pro_review_star / $product->pro_review_total,0);
             $product->save();
-        }
+        }*/
     }
 }

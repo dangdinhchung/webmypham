@@ -38,14 +38,14 @@ class ConvertProductCommand extends Command
      */
     public function handle()
     {
-     	$products = Product::all();
-     	foreach ($products as $item)
-		{
-			$this->info("ID: ". $item->id);
-			\DB::table('products')->where('id', $item->id)
-				->update([
-					'pro_number_import' => $item->pro_number
-				]);
-		}
+//     	$products = Product::all();
+//     	foreach ($products as $item)
+//		{
+//			$this->info("ID: ". $item->id);
+//			\DB::table('products')->where('id', $item->id)
+//				->update([
+//					'pro_number_import' => $item->pro_number
+//				]);
+//		}
     }
 }

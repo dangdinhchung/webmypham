@@ -12,13 +12,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+//         $this->call(UserSeeder::class);
+        $this->call(CategorySeeder::class);
 
-        \DB::table('admins')->insert([
-            'name'     => 'Admin',
-            'email'    => 'doantotnghiep@gmail.com',
-            'phone'    => '0988999999',
-            'password' => Hash::make('123456789')
-        ]);
+//        \DB::table('admins')->insert([
+//            'name'     => 'Admin',
+//            'email'    => 'doantotnghiep@gmail.com',
+//            'phone'    => '0988999999',
+//            'password' => Hash::make('123456789')
+//        ]);
     }
 }

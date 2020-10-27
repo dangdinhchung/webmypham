@@ -15,7 +15,7 @@
                 @php 
                     $iactive = 0;
                     if ($product->pro_review_total){
-                        $iactive = round($product->pro_review_star / $product->pro_review_total,2);    
+                        $iactive = round($product->pro_review_star / $product->pro_review_total,2);
                     }
                     
                 @endphp

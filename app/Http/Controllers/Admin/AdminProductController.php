@@ -79,7 +79,7 @@ class AdminProductController extends Controller
     {
         $data = $request->except('_token', 'pro_avatar', 'attribute', 'keywords', 'file', 'pro_sale');
         $data['pro_slug'] = Str::slug($request->pro_name);
-        $data['pro_number'] = $request->pro_number_import;
+        $data['pro_number'] = $request->pro_number;
         $data['created_at'] = Carbon::now();
         if ($request->pro_sale) {
             $data['pro_sale'] = $request->pro_sale;
@@ -166,7 +166,7 @@ class AdminProductController extends Controller
     {
         $product = Product::find($id);
         $productOld = $product;
-        $data = $request->except('_token', 'pro_avatar', 'attribute', 'file', 'pro_sale', 'add_number');
+        $data = $request->except('_token', 'pro_avatar', 'attribute', 'file', 'pro_sale');
         $data['pro_slug'] = Str::slug($request->pro_name);
         $data['updated_at'] = Carbon::now();
         if ($request->pro_sale) {
@@ -180,7 +180,7 @@ class AdminProductController extends Controller
             }
         }
 
-        $old_number = $product->pro_number_import;
+//        $old_number = $product->pro_number_import;
 
         $update = $product->update($data);
 
@@ -195,14 +195,14 @@ class AdminProductController extends Controller
 //			}
 
             //  Xử lý thêm mới số lượng
-            if ($addNumber = $request->add_number) {
-                $product->pro_number_import += $addNumber;
-                $product->save();
-                if ($invoiceEntered) {
-                    $invoiceEntered->ie_number += $addNumber;
-                    $invoiceEntered->save();
-                }
-            }
+//            if ($addNumber = $request->add_number) {
+//                $product->pro_number_import += $addNumber;
+//                $product->save();
+//                if ($invoiceEntered) {
+//                    $invoiceEntered->ie_number += $addNumber;
+//                    $invoiceEntered->save();
+//                }
+//            }
 
             $this->syncAttribute($request->attribute, $id);
             //$this->syncKeyword($request->keywords, $id);

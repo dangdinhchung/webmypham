@@ -35,9 +35,9 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Số lượng</label>
-                            <input type="number" name="pro_number_import" value="{{  $product->pro_number_import ?? old('pro_number_import',0) }}" class="form-control"  placeholder="5">
-                            @if ($errors->first('pro_number_import'))
-                                <span class="text-danger">{{ $errors->first('pro_number_import') }}</span>
+                            <input type="number" name="pro_number" value="{{  $product->pro_number ?? old('pro_number',0) }}" class="form-control"  placeholder="5">
+                            @if ($errors->first('pro_number'))
+                                <span class="text-danger">{{ $errors->first('pro_number') }}</span>
                             @endif
                         </div>
                     </div>

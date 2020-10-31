@@ -7,7 +7,7 @@
     Route::group(['prefix' => 'api-admin','namespace' => 'Admin','middleware' => 'check_admin_login'], function() {
         Route::get('','AdminController@index')->name('get.admin.index');
  
-        Route::get('statistical','AdminStatisticalController@index')->name('admin.statistical');
+        Route::get('statistical','AdminStatisticalController@index')->name('admin.statistical')->middleware('check_permission_acl:statistical-list');
         Route::get('contact','AdminContactController@index')->name('admin.contact');
 		Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('admin.logs.index');
         Route::get('contact/delete/{id}','AdminContactController@delete')->name('admin.contact.delete');
@@ -35,16 +35,16 @@
          * Route danh mục sản phẩm
          **/
         Route::group(['prefix' => 'category'], function(){
-            Route::get('','AdminCategoryController@index')->name('admin.category.index');
-            Route::get('create','AdminCategoryController@create')->name('admin.category.create');
-            Route::post('create','AdminCategoryController@store');
+            Route::get('','AdminCategoryController@index')->name('admin.category.index')->middleware('check_permission_acl:category-list');
+            Route::get('create','AdminCategoryController@create')->name('admin.category.create')->middleware('check_permission_acl:category-add');
+            Route::post('create','AdminCategoryController@store')->middleware('check_permission_acl:category-add');
 
-            Route::get('update/{id}','AdminCategoryController@edit')->name('admin.category.update');
-            Route::post('update/{id}','AdminCategoryController@update');
+            Route::get('update/{id}','AdminCategoryController@edit')->name('admin.category.update')->middleware('check_permission_acl:category-edit');
+            Route::post('update/{id}','AdminCategoryController@update')->middleware('check_permission_acl:category-edit');
 
-            Route::get('active/{id}','AdminCategoryController@active')->name('admin.category.active');
-            Route::get('hot/{id}','AdminCategoryController@hot')->name('admin.category.hot');
-            Route::get('delete/{id}','AdminCategoryController@delete')->name('admin.category.delete');
+            Route::get('active/{id}','AdminCategoryController@active')->name('admin.category.active')->middleware('check_permission_acl:category-edit');
+            Route::get('hot/{id}','AdminCategoryController@hot')->name('admin.category.hot')->middleware('check_permission_acl:category-edit');
+            Route::get('delete/{id}','AdminCategoryController@delete')->name('admin.category.delete')->middleware('check_permission_acl:category-delete');
         });
 
 		Route::group(['prefix' => 'ncc'], function (){
@@ -82,16 +82,16 @@
         });
 
         Route::group(['prefix' => 'flash-sale'], function(){
-            Route::get('','AdminFlashSaleController@index')->name('admin.flash.index');
-            Route::get('create','AdminFlashSaleController@create')->name('admin.flash.create');
-            Route::post('create','AdminFlashSaleController@store')->name('admin.flash.store');
-            Route::post('flash_deals/product_discount', 'AdminFlashSaleController@product_discount')->name('flash_sales.product_discount');
-            Route::post('flash_deals/product_discount_edit', 'AdminFlashSaleController@product_discount_edit')->name('flash_sales.product_discount_edit');
+            Route::get('','AdminFlashSaleController@index')->name('admin.flash.index')->middleware('check_permission_acl:flash-sale-list');
+            Route::get('create','AdminFlashSaleController@create')->name('admin.flash.create')->middleware('check_permission_acl:flash-sale-add');
+            Route::post('create','AdminFlashSaleController@store')->name('admin.flash.store')->middleware('check_permission_acl:flash-sale-add');
+            Route::post('flash_deals/product_discount', 'AdminFlashSaleController@product_discount')->name('flash_sales.product_discount')->middleware('check_permission_acl:flash-sale-add');
+            Route::post('flash_deals/product_discount_edit', 'AdminFlashSaleController@product_discount_edit')->name('flash_sales.product_discount_edit')->middleware('check_permission_acl:flash-sale-add');
 
-            Route::get('update/{id}','AdminFlashSaleController@edit')->name('admin.flash.update');
-            Route::post('update/{id}','AdminFlashSaleController@update');
-            Route::get('delete/{id}','AdminFlashSaleController@delete')->name('admin.flash.delete');
-            Route::get('active/{id}','AdminFlashSaleController@active')->name('admin.flash.active');
+            Route::get('update/{id}','AdminFlashSaleController@edit')->name('admin.flash.update')->middleware('check_permission_acl:flash-sale-edit');
+            Route::post('update/{id}','AdminFlashSaleController@update')->middleware('check_permission_acl:flash-sale-edit');
+            Route::get('delete/{id}','AdminFlashSaleController@delete')->name('admin.flash.delete')->middleware('check_permission_acl:flash-sale-delete');
+            Route::get('active/{id}','AdminFlashSaleController@active')->name('admin.flash.active')->middleware('check_permission_acl:flash-sale-delete');
         });
 
         Route::group(['prefix' => 'attribute'], function(){
@@ -118,11 +118,11 @@
         });
 
         Route::group(['prefix' => 'transaction'], function(){
-            Route::get('','AdminTransactionController@index')->name('admin.transaction.index');
+            Route::get('','AdminTransactionController@index')->name('admin.transaction.index')->middleware('check_permission_acl:transaction-list');
             Route::get('delete/{id}','AdminTransactionController@delete')->name('admin.transaction.delete');
             Route::get('order-delete/{id}','AdminTransactionController@deleteOrderItem')->name('ajax_admin.transaction.order_item');
             Route::get('view-transaction/{id}','AdminTransactionController@getTransactionDetail')->name('ajax.admin.transaction.detail');
-            Route::get('action/{action}/{id}','AdminTransactionController@getAction')->name('admin.action.transaction');
+            Route::get('action/{action}/{id}','AdminTransactionController@getAction')->name('admin.action.transaction')->middleware('check_permission_acl:transaction-edit');
         });
 
 
@@ -169,28 +169,28 @@
         });
 
         Route::group(['prefix' => 'coupon'], function(){
-            Route::get('','AdminCouponController@index')->name('admin.coupon.index');
-            Route::get('delete/{id}','AdminCouponController@delete')->name('admin.coupon.delete');
+            Route::get('','AdminCouponController@index')->name('admin.coupon.index')->middleware('check_permission_acl:coupon-list');
+            Route::get('delete/{id}','AdminCouponController@delete')->name('admin.coupon.delete')->middleware('check_permission_acl:coupon-delete');
 
-            Route::get('active/{id}','AdminCouponController@active')->name('admin.coupon.active');
-            Route::get('update/{id}','AdminCouponController@edit')->name('admin.coupon.update');
-            Route::post('update/{id}','AdminCouponController@update');
-            Route::get('create','AdminCouponController@create')->name('admin.coupon.create');
-            Route::post('create','AdminCouponController@store')->name('admin.coupon.store');
-            Route::get('delete/{id}','AdminCouponController@delete')->name('admin.coupon.delete');
+            Route::get('active/{id}','AdminCouponController@active')->name('admin.coupon.active')->middleware('check_permission_acl:coupon-edit');
+            Route::get('update/{id}','AdminCouponController@edit')->name('admin.coupon.update')->middleware('check_permission_acl:coupon-edit');
+            Route::post('update/{id}','AdminCouponController@update')->middleware('check_permission_acl:coupon-edit');
+            Route::get('create','AdminCouponController@create')->name('admin.coupon.create')->middleware('check_permission_acl:coupon-add');
+            Route::post('create','AdminCouponController@store')->name('admin.coupon.store')->middleware('check_permission_acl:coupon-add');
+            Route::get('delete/{id}','AdminCouponController@delete')->name('admin.coupon.delete')->middleware('check_permission_acl:coupon-delete');
         });
 
         Route::group(['prefix' => 'article'], function(){
-            Route::get('','AdminArticleController@index')->name('admin.article.index');
-            Route::get('create','AdminArticleController@create')->name('admin.article.create');
-            Route::post('create','AdminArticleController@store');
+            Route::get('','AdminArticleController@index')->name('admin.article.index')->middleware('check_permission_acl:article-list');
+            Route::get('create','AdminArticleController@create')->name('admin.article.create')->middleware('check_permission_acl:article-add');
+            Route::post('create','AdminArticleController@store')->middleware('check_permission_acl:article-add');
 
-            Route::get('update/{id}','AdminArticleController@edit')->name('admin.article.update');
-            Route::post('update/{id}','AdminArticleController@update');
+            Route::get('update/{id}','AdminArticleController@edit')->name('admin.article.update')->middleware('check_permission_acl:article-edit');
+            Route::post('update/{id}','AdminArticleController@update')->middleware('check_permission_acl:article-edit');
 
-            Route::get('active/{id}','AdminArticleController@active')->name('admin.article.active');
-            Route::get('hot/{id}','AdminArticleController@hot')->name('admin.article.hot');
-            Route::get('delete/{id}','AdminArticleController@delete')->name('admin.article.delete');
+            Route::get('active/{id}','AdminArticleController@active')->name('admin.article.active')->middleware('check_permission_acl:article-edit');
+            Route::get('hot/{id}','AdminArticleController@hot')->name('admin.article.hot')->middleware('check_permission_acl:article-edit');
+            Route::get('delete/{id}','AdminArticleController@delete')->name('admin.article.delete')->middleware('check_permission_acl:article-delete');
 
         });
 
@@ -204,11 +204,11 @@
             Route::get('create','AdminSlideController@create')->name('admin.slide.create')->middleware('check_permission_acl:slide-add');
             Route::post('create','AdminSlideController@store')->middleware('check_permission_acl:slide-add');
 
-            Route::get('update/{id}','AdminSlideController@edit')->name('admin.slide.update')->middleware('check_permission_acl:slide-add');
-            Route::post('update/{id}','AdminSlideController@update')->middleware('check_permission_acl:slide-add');
+            Route::get('update/{id}','AdminSlideController@edit')->name('admin.slide.update')->middleware('check_permission_acl:slide-edit');
+            Route::post('update/{id}','AdminSlideController@update')->middleware('check_permission_acl:slide-edit');
 
-            Route::get('active/{id}','AdminSlideController@active')->name('admin.slide.active');
-            Route::get('hot/{id}','AdminSlideController@hot')->name('admin.slide.hot');
+            Route::get('active/{id}','AdminSlideController@active')->name('admin.slide.active')->middleware('check_permission_acl:slide-edit');
+            Route::get('hot/{id}','AdminSlideController@hot')->name('admin.slide.hot')->middleware('check_permission_acl:slide-edit');
             Route::get('delete/{id}','AdminSlideController@delete')->name('admin.slide.delete')->middleware('check_permission_acl:slide-delete');
         });
 
@@ -235,33 +235,33 @@
         });
 
 		Route::group(['prefix' => 'permission'], function () {
-			Route::get('/','AclPermissionController@index')->name('admin.permission.list');
-			Route::get('create','AclPermissionController@create')->name('admin.permission.create');
-			Route::post('create','AclPermissionController@store');
+			Route::get('/','AclPermissionController@index')->name('admin.permission.list')->middleware('check_permission_acl:permission-list');
+			Route::get('create','AclPermissionController@create')->name('admin.permission.create')->middleware('check_permission_acl:permission-add');
+			Route::post('create','AclPermissionController@store')->middleware('check_permission_acl:permission-add');
 
-			Route::get('update/{id}','AclPermissionController@edit')->name('admin.permission.update');
-			Route::post('update/{id}','AclPermissionController@update');
-			Route::get('delete/{id}','AclPermissionController@delete')->name('admin.permission.delete');
+			Route::get('update/{id}','AclPermissionController@edit')->name('admin.permission.update')->middleware('check_permission_acl:permission-edit');
+			Route::post('update/{id}','AclPermissionController@update')->middleware('check_permission_acl:permission-edit');
+			Route::get('delete/{id}','AclPermissionController@delete')->name('admin.permission.delete')->middleware('check_permission_acl:permission-delete');
 		});
 
 		Route::group(['prefix' => 'role'], function () {
-			Route::get('/','AclRoleController@index')->name('admin.role.list');
-			Route::get('create','AclRoleController@create')->name('admin.role.create');
-			Route::post('create','AclRoleController@store');
-			Route::get('update/{id}','AclRoleController@edit')->name('admin.role.update');
-			Route::post('update/{id}','AclRoleController@update');
-			Route::get('delete/{id}','AclRoleController@delete')->name('admin.role.delete');
+			Route::get('/','AclRoleController@index')->name('admin.role.list')->middleware('check_permission_acl:role-list');
+			Route::get('create','AclRoleController@create')->name('admin.role.create')->middleware('check_permission_acl:role-add');
+			Route::post('create','AclRoleController@store')->middleware('check_permission_acl:role-add');
+			Route::get('update/{id}','AclRoleController@edit')->name('admin.role.update')->middleware('check_permission_acl:role-edit');
+			Route::post('update/{id}','AclRoleController@update')->middleware('check_permission_acl:role-edit');
+			Route::get('delete/{id}','AclRoleController@delete')->name('admin.role.delete')->middleware('check_permission_acl:role-delete');
 		});
 
 		Route::group(['prefix' => 'account-admin'], function (){
-			Route::get('','AdminAccountController@index')->name('admin.account_admin.index');
-			Route::get('create','AdminAccountController@create')->name('admin.account_admin.create');
-			Route::post('create','AdminAccountController@store');
+			Route::get('','AdminAccountController@index')->name('admin.account_admin.index')->middleware('check_permission_acl:admin-add');
+			Route::get('create','AdminAccountController@create')->name('admin.account_admin.create')->middleware('check_permission_acl:admin-add');
+			Route::post('create','AdminAccountController@store')->middleware('check_permission_acl:admin-add');
 
-			Route::get('update/{id}','AdminAccountController@edit')->name('admin.account_admin.update');
-			Route::post('update/{id}','AdminAccountController@update');
+			Route::get('update/{id}','AdminAccountController@edit')->name('admin.account_admin.update')->middleware('check_permission_acl:admin-edit');
+			Route::post('update/{id}','AdminAccountController@update')->middleware('check_permission_acl:admin-edit');
 
-			Route::get('delete/{id}','AdminAccountController@delete')->name('admin.account_admin.delete');
+			Route::get('delete/{id}','AdminAccountController@delete')->name('admin.account_admin.delete')->middleware('check_permission_acl:admin-delete');
 		});
 
 //        ->middleware('permission:full')

@@ -86,6 +86,7 @@ class LoginController extends Controller
     {
         $log = get_agent();
         $historyLog = \Auth::user()->log_login;
+        // convert to array
         $historyLog = json_decode($historyLog,true) ?? [];
         $historyLog[] = $log;
         \DB::table('users')->where('id', \Auth::user()->id)

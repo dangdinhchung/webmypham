@@ -17,8 +17,8 @@
                 </p>
             @endif
             <p class="item-footer">
-                <a href="" class="js-show-form-reply" data-id="{{ $comment->id }}"
-                   data-product="{{ $comment->cmt_product_id }}" data-name="{{ $comment->user->name ?? "[N\A]" }}">Trả lời</a>
+              {{--  <a href="" class="js-show-form-reply" data-id="{{ $comment->id }}"
+                   data-product="{{ $comment->cmt_product_id }}" data-name="{{ $comment->user->name ?? "[N\A]" }}">Trả lời</a>--}}
                 <span>-</span>
                 <a href="">{{ $comment->created_at->diffForHumans() }}</a>
             </p>

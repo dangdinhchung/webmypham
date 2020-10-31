@@ -78,6 +78,7 @@ class HomeController extends FrontendController
                 ->get();
         });
 
+        // Lâý bài viết
         $articlesHot = Cache::remember('HOME.ARTICLE_HOT', 60 * 24, function () {
             return Article::where([
                 'a_active' => 1,
@@ -89,9 +90,8 @@ class HomeController extends FrontendController
                 ->get();
         });
 
-        //get event flash sale
+        //get sự kiện flash sale
         $flashSale = FlashSale::where('fs_status', 1)->first();
-
 
         $viewData = [
             'productsNew' => $productsNew,

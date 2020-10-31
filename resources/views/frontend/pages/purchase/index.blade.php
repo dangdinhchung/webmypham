@@ -17,7 +17,7 @@
 
         .image img {
             width: 77%;
-            height: 22%;
+            height: 10%;
         }
 
         .ic-coupon {

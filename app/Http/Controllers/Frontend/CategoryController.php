@@ -24,7 +24,6 @@ class CategoryController extends FrontendController
             /*$listIdParent = Category::select('id')->where('c_parent_id',$id)->toArray();*/
 
             $category = Category::find($id);
-
             $products = Product::where([
                 'pro_active'      => 1,
                 'pro_category_id' => $id

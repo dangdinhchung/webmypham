@@ -289,6 +289,7 @@
 		var CSS = "{{ asset('css/home.min.css') }}";
     </script>
     <script type="text/javascript">
+        //sản phẩm vừa xem - getLoadProductRecently
 		<?php $js = file_get_contents('js/home.js');echo $js;?>
     </script>
 @stop

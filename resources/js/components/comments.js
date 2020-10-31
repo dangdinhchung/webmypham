@@ -17,6 +17,7 @@ var Comments = {
             event.preventDefault();
             let $this = $(this);
             let $domForm = $this.closest('form');
+            console.log($domForm,111111111);
             if (typeof ROUTE_COMMENT !== "undefined")
             {
                 let comment = $this.parents('form').find("textarea").val();

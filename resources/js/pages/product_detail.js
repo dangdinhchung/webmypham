@@ -216,6 +216,7 @@ var ProductDetail = {
         });
     },
 
+    /*sản phẩm vừa xem*/
     addProductRecently()
     {
         let id = $("#product-detail").attr('data-id');

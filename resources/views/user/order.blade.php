@@ -27,7 +27,7 @@
                 <h5>Hình thức thanh toán</h5>
                 <div class="box">
                     <p>Hình thức: <b>Giao hàng nhận tiền</b></p>
-                    <p>Tổng tiền: <b>{{ number_format($transaction->tst_total_money,0,',','.') }} VNĐ</b></p>
+                    <p>Tổng tiền: <b>{{ number_format($transaction->tst_total_money,0,',','.') }} VNĐ</b></p> (Phí vận chuyển: {{ number_format(App\Models\Product::SHIPPING_COST,0,',','.') }} đ)
                 </div>
             </div>
         </div>

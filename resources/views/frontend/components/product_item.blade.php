@@ -42,7 +42,7 @@
         <p>
             <span class="percent">-{{ home_discounted_base_sale($product->id) }}%</span>
             <span class="price">{{ home_discounted_base_price($product->id) }} đ</span>
-            <span class="price-sale">{{ number_format($product->pro_price,0,',','.') }} đđ</span>
+            <span class="price-sale">{{ number_format($product->pro_price,0,',','.') }} đ</span>
         </p>
         
     </div>

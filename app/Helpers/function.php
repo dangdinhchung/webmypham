@@ -64,6 +64,7 @@ if (!function_exists('get_client_ip')) {
      * @author chungdd
      * [get_client_ip description]
      * @return [type] [description]
+     * lấy ip người dung
      */
     function get_client_ip()
     {
@@ -301,18 +302,15 @@ if (! function_exists('home_discounted_base_sale')) {
     * [home_discounted_base_sale description]
     * @param  [type] $id [description]
     * @return [type]     [description]
+    * lấy giá sale sản phẩm
+    * nếu có sản phẩm đó có trong sự kiện thì lấy giá sale đó <> lấy giá sale sản phẩm
     */
     function home_discounted_base_sale($id)
     {
         $product = Product::findOrFail($id);
-       
-
         $flash_deal = \App\Models\FlashSale::where('fs_status', 1)->first();
-
         if ($flash_deal != null && strtotime(date('d-m-Y')) >= $flash_deal->fs_start_date && strtotime(date('d-m-Y')) <= $flash_deal->fs_end_date && FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id', $id)->first() != null) {
-
             $flash_deal_product = FlashSaleProduct::where('fsp_flash_deal_id', $flash_deal->id)->where('fsp_product_id', $id)->first();
-
             $sale = $flash_deal_product->fsp_discount;
         } else {
              $sale = $product->pro_sale;

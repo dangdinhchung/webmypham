@@ -65,3 +65,13 @@ Số thẻ: 9704194841945513
 Tên chủ thẻ:NGUYEN VAN A
 Ngày phát hành:07/15
 Thẻ bị hết hạn
+
+
+
+
+
+----------------------------------------------
+display:block;margin-left:auto;margin-right:auto;
+
+
+->middleware('check_permission_acl:product-list');

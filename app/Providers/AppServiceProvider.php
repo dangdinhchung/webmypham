@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use View;
 use Illuminate\Support\Facades\Schema;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         $this->bootDBLogger();
         try{
+            //get list categories
             $categories = Category::with('children:id,c_name,c_slug,c_parent_id')
                 ->where('c_parent_id',0)
                 ->select('id','c_name','c_slug','c_avatar','c_parent_id')
@@ -40,14 +42,13 @@ class AppServiceProvider extends ServiceProvider
 
             View::share('categories', $categories);
 
-
             $categoriesHot = Category::where('c_hot', 1)->select('id','c_name','c_slug','c_avatar')->get();
             View::share('categoriesHot', $categoriesHot);
 
             $menus = Menu::select('id','mn_name','mn_slug')->get();
             View::share('menus',$menus);
         }catch (\Exception $exception) {
-
+            Log::error("[Errors get categories]" . $exception->getMessage());
         }
     }
 

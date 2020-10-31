@@ -163,29 +163,14 @@ class AdminTransactionController extends Controller
             ->get();
         if ($orders) {
             foreach ($orders as $order) {
+                $product = Product::find($order->od_product_id);
+                $product->pro_pay++;
+                $product->save();
                 Cache::forget('PRODUCT_DETAIL_' . $order->od_product_id);
                 \DB::table('products')
                     ->where('id', $order->od_product_id)
                     ->decrement("pro_number", $order->od_qty);
-//                $this->synImportGoods($order->od_product_id, $order->od_qty);
             }
         }
     }
-
-    /**
-     * @param $productID
-     * @param $qty
-     * @author chungdd
-     */
-    /*protected function synImportGoods($productID, $qty)
-    {
-        $product = Product::find($productID);
-        if ($product) {
-            $invoiceEntered = InvoiceEntered::where('ie_product_id', $product->id)->first();
-            if ($invoiceEntered) {
-                $invoiceEntered->ie_number_sold += $qty;
-                $invoiceEntered->save();
-            }
-        }
-    }*/
 }

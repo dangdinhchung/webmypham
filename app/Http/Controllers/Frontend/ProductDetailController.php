@@ -36,7 +36,7 @@ class ProductDetailController extends FrontendController
 				return Product::with('category:id,c_name,c_slug')->findOrFail($id);
 			});
 
-			//2. Xử lý view
+			//2. Xử lý số lượt xem
 			ProcessViewService::view('products', 'pro_view', 'product', $id);
 
 			// 3. Lấy đánh giá
@@ -47,6 +47,8 @@ class ProductDetailController extends FrontendController
 					->limit(5)
 					->get();
 			});
+
+			//gom nhóm số người đánh giá lại, tổng số sao đánh giá, số sao đánh giá
 			$ratingsDashboard = Cache::remember('RATING_DASHBOARD_'. $id, 60 * 24 * 24, function () use ($id) {
 				return Rating::groupBy('r_number')
 					->where('r_product_id', $id)
@@ -60,8 +62,6 @@ class ProductDetailController extends FrontendController
 			foreach ($ratingsDashboard as $key => $item) {
 				$ratingDefault[$item['r_number']] = $item;
 			}
-
-			// Lấy album ảnh
 			//  4 Lấy comment
 			$page_comment = $request->page ?? 1;
 			$comments = Cache::remember('COMMENT_PRODUCT_'. $id.'_PAGE_'. $page_comment, 60 * 24 * 24, function () use ($id) {
@@ -105,7 +105,6 @@ class ProductDetailController extends FrontendController
             //get user active
             $user = User::where('id',Auth::id())->pluck('active')->first();
 
-
 			$viewData = [
                 'isPopupCaptcha'   => 0,
 //				'isPopupCaptcha'   => \Auth::user()->count_comment ?? 0,
@@ -120,7 +119,7 @@ class ProductDetailController extends FrontendController
                 'attributeOld'     => $attributeOld,
                 'title_page'       => $product->pro_name,
                 'couponList'       => $couponList,
-                'productsSuggests' => $this->getProductSuggests($product->pro_category_id),
+                'productsSuggests' => $this->getProductSuggests($product->pro_category_id,$id),
                 'user'             => $user
 			];
 			return view('frontend.pages.product_detail.index', $viewData);
@@ -195,9 +194,9 @@ class ProductDetailController extends FrontendController
 		$ratingDefault = [];
 		for ($i = 1; $i <= 5; $i++) {
 			$ratingDefault[$i] = [
-				"count_number" => 0,
-				"total"        => 0,
-				"r_number"     => 0
+				"count_number" => 0, // số người đánh giá
+				"total"        => 0, // tổng số sao đánh giá
+				"r_number"     => 0 // số sao đánh giá
 			];
 		}
 
@@ -210,12 +209,13 @@ class ProductDetailController extends FrontendController
      * @return mixed
      * @author chungdd
      */
-	private function getProductSuggests($categoriID)
+	private function getProductSuggests($categoriID,$productID)
 	{
-		$products = Cache::remember('PRODUCT_RELATE_'.$categoriID, 60 * 24 * 10, function () use ($categoriID) {
+		$products = Cache::remember('PRODUCT_RELATE_'.$categoriID, 60 * 24 * 10, function () use ($categoriID,$productID) {
 			return Product::where([
-				'pro_active'      => 1,
-				'pro_category_id' => $categoriID
+            ['pro_active','=',1],
+            ['pro_category_id','=',$categoriID],
+            ['id','<>',$productID],
 			])
 				->orderByDesc('id')
 				->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_number','pro_avatar', 'pro_price', 'pro_review_total', 'pro_review_star')

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Request;
+
 /**
  *  
  */
@@ -10,6 +12,7 @@ class ProcessViewService
     
     public static function view($table, $column, $key, $id)
     {
+        //Request::ip()
         $ipAddress = get_client_ip();
         $timeNow   = time();
         // Let the views expire after one hour.
@@ -22,8 +25,6 @@ class ProcessViewService
             }
         }
         \Session::put($key, $timeNow);
-        
-        \DB::table($table)->where('id', $id)
-                    ->increment($column);
+        \DB::table($table)->where('id', $id)->increment($column);
     }
 }

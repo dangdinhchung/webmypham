@@ -22,12 +22,15 @@ class CouponController extends Controller
         $moneyShip = Product::SHIPPING_COST;
         $subtotal = str_replace(',', '', \Cart::subtotal(0));
         $totalMoney = (int)$moneyShip + (int)$subtotal;
+        if (!isset(\Auth::user()->id)) {
+            return json_encode(['error' => 1, 'msg' => 'Bạn phải đăng nhập để thực hiện chức năng này']);
+        }
         $idUser = \Auth::user()->id;
         if ($request->ajax()) {
             $html = '';
             $code = $request->get('cp_code');
             $action = $request->get('action');
-            //check action remove
+            //check action remove coupon
             if ($action === 'remove') {
                 $request->session()->forget('coupon');
                 $html = '';
@@ -45,7 +48,8 @@ class CouponController extends Controller
 
                 $html .= "<tr class='showTotalEnd'>";
                 $html .= '<th style="text-align: left"><b>Tổng tiền cần thanh toán</b></th>';
-                $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoney, 0, ',', '.') . ' đ</td>';
+                $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoney,
+                        0, ',', '.') . ' đ</td>';
                 $html .= '</tr>';
 
                 return json_encode(['html' => $html]);
@@ -71,11 +75,11 @@ class CouponController extends Controller
                 } else {
                     $content = $check['content'];
                     $error = 0;
-                    $discountType = $content['cp_discount_type'] === 'percent' ? ' %' : ' VNĐ';
+                    $discountType = ' %';
                     $subtotal = str_replace(',', '', \Cart::subtotal(0));
-                    $moneyDiscount = $content['cp_discount_type'] === 'percent' ? number_format(floor($subtotal * $content['cp_discount'] / 100)) : number_format($content['cp_discount']);
-                    $totalDiscount = $content['cp_discount_type'] === 'percent' ? floor($subtotal * $content['cp_discount'] / 100) : $content['cp_discount'];
-                    $cartUpdateTotal = $moneyDiscount > 0 ? number_format($subtotal - $totalDiscount) : \Cart::subtotal(0);
+                    //FLOOR: làm tròn về số nguyên
+                    $totalDiscount = floor($subtotal * $content['cp_discount'] / 100);
+                    $cartUpdateTotal = (int)$subtotal > (int)$totalDiscount ? number_format((int)$subtotal - (int)$totalDiscount) : \Cart::subtotal(0);
                     $msg = 'Mã giảm giá có giá trị giảm ' . number_format($content['cp_discount']) . $discountType . ' cho đơn hàng này.';
 
                     if ($code) {
@@ -98,11 +102,10 @@ class CouponController extends Controller
                             '.') . ' đ</td>';
                     $html .= '</tr>';
 
-
                     $html .= "<tr class='showTotal'>";
                     $html .= '<th style="text-align: left"> Giảm tối đa ' . number_format($content['cp_discount']) . $discountType . ' (<b>Code:</b> ' . $code . ") </th>
-                <td style='text-align: right' id='" . $discountType . "'>" . "-" . $moneyDiscount . ' đ' . '</td>
-                </tr>';
+                     <td style='text-align: right' id='" . $discountType . "'>" . "-" . number_format($totalDiscount) . ' đ' . '</td>
+                     </tr>';
 
                     $html .= "<tr class='showTotalEnd'>";
                     $html .= '<th style="text-align: left"><b>Tổng tiền cần thanh toán</b> </th>';
@@ -126,7 +129,7 @@ class CouponController extends Controller
     {
         $now = strtotime(Carbon::now()->toDateString());
         $codeCoupon = Coupon::where(['cp_code' => $code])->first();
-        $totalMoney = str_replace(',','',\Cart::subtotal(0));
+        $totalMoney = str_replace(',', '', \Cart::subtotal(0));
         if ($codeCoupon) {
             $idCoupon = Coupon::select('id')->where('cp_code', $code)->first()->id;
             $userOnlyCoupon = CouponUsage::where(['cpu_user_id' => $idUser, 'cpu_coupon_id' => $idCoupon])->first();

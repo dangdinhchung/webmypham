@@ -23,9 +23,9 @@ class ShoppingCartController extends Controller
 {
 
     //thanh toán online
-    private $vnp_TmnCode = "0M8H13SJ";
-    private $vnp_HashSecret = "QXKLHHCYFAALOUNFUCZLHRTYRHOQIEQV"; //Chuỗi bí mật
-    private $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    private $vnp_TmnCode = "0M8H13SJ"; //mã của website khi đăng ký
+    private $vnp_HashSecret = "QXKLHHCYFAALOUNFUCZLHRTYRHOQIEQV"; //Chuỗi bí mật để kiểm tra
+    private $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //url thanh toán
     private $vnp_Returnurl = "http://localhost:8000/shopping/form-online";
 
     /**
@@ -54,18 +54,19 @@ class ShoppingCartController extends Controller
 
         //1. Kiểm tra tồn tại sản phẩm
         if (!$product) {
-            return redirect()->to('/');
+            //return redirect()->to('/');
+            return json_encode(['error' => 1, 'msg' => 'Sản phẩm không tồn tại']);
         }
 
         // 2. Kiểm tra số lượng sản phẩm
         if ($product->pro_number < 1) {
             //4. Thông báo
-            \Session::flash('toastr', [
-                'type'    => 'error',
-                'message' => 'Số lượng sản phẩm không đủ'
-            ]);
-
-            return redirect()->back();
+//            \Session::flash('toastr', [
+//                'type'    => 'error',
+//                'message' => 'Số lượng sản phẩm không đủ'
+//            ]);
+//            return redirect()->back();
+            return json_encode(['error' => 1, 'msg' => 'Số lượng sản phẩm không đủ']);
         }
         $cart = \Cart::content();
         $idCartProduct = $cart->search(function ($cartItem) use ($product) {
@@ -76,11 +77,12 @@ class ShoppingCartController extends Controller
         if ($idCartProduct) {
             $productByCart = \Cart::get($idCartProduct);
             if ($product->pro_number < ($productByCart->qty + 1)) {
-                \Session::flash('toastr', [
-                    'type'    => 'error',
-                    'message' => 'Số lượng sản phẩm không đủ'
-                ]);
-                return redirect()->back();
+//                \Session::flash('toastr', [
+//                    'type'    => 'error',
+//                    'message' => 'Số lượng sản phẩm không đủ'
+//                ]);
+//                return redirect()->back();
+                return json_encode(['error' => 1, 'msg' => 'Số lượng sản phẩm không đủ']);
             }
         }
 
@@ -112,12 +114,12 @@ class ShoppingCartController extends Controller
         ]);
 
         //4. Thông báo
-        \Session::flash('toastr', [
-            'type'    => 'success',
-            'message' => 'Thêm giỏ hàng thành công'
-        ]);
+//        \Session::flash('toastr', [
+//            'type'    => 'success',
+//            'message' => 'Thêm giỏ hàng thành công'
+//        ]);
 
-        return redirect()->back();
+        return json_encode(['error' => 0, 'msg' => 'Thêm giỏ hàng thành công','cartCount' => \Cart::count() ]);
     }
 
     /**
@@ -131,7 +133,6 @@ class ShoppingCartController extends Controller
         $data = $request->except("_token");
         //kiểm tra user đăng nhập chưa
         if (!\Auth::user()->id) {
-            //4. Thông báo
             \Session::flash('toastr', [
                 'type'    => 'error',
                 'message' => 'Đăng nhập để thực hiện tính năng này'
@@ -246,22 +247,25 @@ class ShoppingCartController extends Controller
             $inputData = array(
                 "vnp_Version"    => "2.0.0",
                 "vnp_TmnCode"    => $this->vnp_TmnCode, // L6SCL6L1
-                "vnp_Amount"     => $totalMoney * 100, // 1000000
-                "vnp_Command"    => "pay",
+                "vnp_Amount"     => $totalMoney * 100, // số tiền thanh toán: x100 khử phần thập phân
+                "vnp_Command"    => "pay", //mã api sử dụng cho giao dịch thanh toán là pay
                 "vnp_CreateDate" => date('YmdHis'), //20190626054737
-                "vnp_CurrCode"   => "VND",
-                "vnp_IpAddr"     => $_SERVER['REMOTE_ADDR'], //127.0.0.1
-                "vnp_Locale"     => $request->tst_language, // vn,ngon ngu
-                "vnp_BankCode"   => $request->tst_bank, // chọn ngân hàng luôn
-                "vnp_OrderInfo"  => $request->tst_note ? $request->tst_note : 'Gửi hàng nhanh cho tôi nhé', // Noi dung thanh toan
+                "vnp_CurrCode"   => "VND", //Đơn vị tiền tệ sử dụng thanh toán
+                "vnp_IpAddr"     => $_SERVER['REMOTE_ADDR'], //127.0.0.1: Địa chỉ ip khách hàng thực hiện giao dịch
+                "vnp_Locale"     => $request->tst_language, // vn: Ngôn ngữ giao diện hiển thị
+                "vnp_BankCode"   => $request->tst_bank, // mã ngân hàng: NCB
+                "vnp_OrderInfo"  => $request->tst_note ? $request->tst_note : 'Gửi hàng nhanh cho tôi nhé', // Mô tả Noi dung thanh toan
                 "vnp_OrderType"  => $request->tst_type, //2:online
-                "vnp_ReturnUrl"  => $this->vnp_Returnurl, // http://localhost/vnpay_php/vnpay_return.php
-                "vnp_TxnRef"     => $transacionID//20190626053509
+                "vnp_ReturnUrl"  => $this->vnp_Returnurl, // http://localhost:8000/shopping/form-online: URL thông báo kết quả giao dịch khi kết thúc thanh toán
+                "vnp_TxnRef"     => rand(12,50) //20190626053509: mã duy nhất để phân biệt đơn hàng không được trùng nhau
             );
-            ksort($inputData);
+            ksort($inputData); // sắp xếp theo thứ tự alphab
             $query = "";
             $i = 0;
             $hashdata = "";
+            //tạo url thanh toán
+//            "vnp_Amount=1200&vnp_BankCode=NCB&vnp_Command=pay&vnp_CreateDate=20201101095450&vnp_CurrCode=VND&vnp_IpAddr=127.0.0.1&vnp_Locale=vn&vnp_OrderInfo=G%E1%BB%ADi+h%C3%A0ng+nhanh+cho+t%C3%B4i+nh%C3%A9%21
+//            &vnp_OrderType=2&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A8000%2Fshopping%2Fform-online&vnp_TmnCode=0M8H13SJ&vnp_TxnRef=1111111111&vnp_Version=2.0.0&
             foreach ($inputData as $key => $value) {
                 if ($i == 1) {
                     $hashdata .= '&' . $key . "=" . $value;
@@ -269,12 +273,12 @@ class ShoppingCartController extends Controller
                     $hashdata .= $key . "=" . $value;
                     $i = 1;
                 }
-                $query .= urlencode($key) . "=" . urlencode($value) . '&';
+                $query .= urlencode($key) . "=" . urlencode($value) . '&'; //urlencode: mã hóa khoảng trắng thành dấu +
             }
-
-            $vnp_Url = $this->vnp_Url . "?" . $query;
+            $vnp_Url = $this->vnp_Url . "?" . $query; //http://sandbox.vnpayment.vn/paymentv2/vpcpay.html + query ở trên
             if (isset($this->vnp_HashSecret)) {
                 // $vnpSecureHash = md5($vnp_HashSecret . $hashdata);
+                //loại mã băm sử dụng: md5,sha256
                 $vnpSecureHash = hash('sha256', $this->vnp_HashSecret . $hashdata);
                 $vnp_Url .= 'vnp_SecureHashType=SHA256&vnp_SecureHash=' . $vnpSecureHash;
             }
@@ -396,6 +400,7 @@ class ShoppingCartController extends Controller
             return response([
                 'messages'   => 'Cập nhật thành công',
                 'totalMoney' => \Cart::subtotal(0),
+                'cartCount'  => \Cart::count(),
                 'totalItem'  => number_format($price * $qty, 0, ',', '.')
             ]);
         }
@@ -405,16 +410,20 @@ class ShoppingCartController extends Controller
      * @param Request $request
      * @param $rowId
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Throwable
      * @author chungdd
      */
     public function delete(Request $request, $rowId)
     {
         if ($request->ajax()) {
             \Cart::remove($rowId);
+            $html = view('frontend.pages.product.include._inc_cart_empty_item')->render();
             return response([
                 'totalMoney' => \Cart::subtotal(0),
+                'cartCount'  => \Cart::count(),
+                'html'       => $html,
                 'type'       => 'success',
-                'message'    => 'Xoá sản phẩm khỏi đơn hàng thành công'
+                'messages'   => 'Xoá đơn hàng thành công'
             ]);
         }
     }

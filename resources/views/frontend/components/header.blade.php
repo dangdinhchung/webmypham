@@ -82,7 +82,7 @@
                 <li>
                     <a href="{{ route('get.shopping.list') }}" title="Giỏ hàng">
                         <i class="fa fa-shopping-bag"></i>
-                        <span class="">  ({{ \Cart::count() }})</span>
+                        <span class="cart-count">  ({{ \Cart::count() }})</span>
                     </a>
                 </li>
                 <li class="desktop">

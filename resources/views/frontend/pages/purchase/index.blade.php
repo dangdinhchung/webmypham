@@ -54,6 +54,7 @@
             border-top: none !important;
             text-align: center;
         }
+
         .hidden {
             display: none;
         }
@@ -82,38 +83,41 @@
                         <div class="form-group">
                             <label for="name">Họ và tên <span class="cRed">(*)</span></label>
                             {{--{{ get_data_user('web','name') }}--}}
-                            <input name="tst_name" id="name"  value="{{ old('tst_name') }}"
+                            <input name="tst_name" id="name" value="{{ old('tst_name') }}"
                                    type="text" class="form-control {{ $errors->first('tst_name') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_name'))
                                 <span class="text-danger">{{ $errors->first('tst_name') }}</span>
                             @endif
-{{--                            <span class="text-danger tst_name"></span>--}}
+                            {{--                            <span class="text-danger tst_name"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="phone">Điện thoại <span class="cRed">(*)</span></label>
                             <input name="tst_phone" id="phone" value="{{old('tst_phone')}}"
-                                   type="text" class="form-control {{ $errors->first('tst_phone') ? 'has-error' : '' }}">
+                                   type="text"
+                                   class="form-control {{ $errors->first('tst_phone') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_phone'))
                                 <span class="text-danger">{{ $errors->first('tst_phone') }}</span>
                             @endif
-{{--                            <span class="text-danger tst_phone"></span>--}}
+                            {{--                            <span class="text-danger tst_phone"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="address">Địa chỉ <span class="cRed">(*)</span></label>
                             <input name="tst_address" id="address"
-                                   value="{{ old('tst_address') }}" type="text" class="form-control {{ $errors->first('tst_address') ? 'has-error' : '' }}">
+                                   value="{{ old('tst_address') }}" type="text"
+                                   class="form-control {{ $errors->first('tst_address') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_address'))
                                 <span class="text-danger">{{ $errors->first('tst_address') }}</span>
                             @endif
-{{--                            <span class="text-danger tst_address"></span>--}}
+                            {{--                            <span class="text-danger tst_address"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="email">Email <span class="cRed">(*)</span></label>
-                            <input name="tst_email" id="email" type="text" value="{{ old('tst_email') }}" class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
+                            <input name="tst_email" id="email" type="text" value="{{ old('tst_email') }}"
+                                   class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_email'))
                                 <span class="text-danger">{{ $errors->first('tst_email') }}</span>
                             @endif
-{{--                            <span class="text-danger tst_email"></span>--}}
+                            {{--                            <span class="text-danger tst_email"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="email">Hình thức thanh toán</label>
@@ -166,7 +170,8 @@
                                       class="form-control"></textarea>
                         </div>
                         <div class="btn-buy">
-                            <button class="buy1 btn btn-purple {{ \Auth::id() ? '' : 'js-show-login' }}" style="width: 100%;border-radius: 5px" type="submit" name="pay" value="transfer">
+                            <button class="buy1 btn btn-purple {{ \Auth::id() ? '' : 'js-show-login' }}"
+                                    style="width: 100%;border-radius: 5px" type="submit" name="pay" value="transfer">
                                 Thanh toán
                             </button>
                         </div>
@@ -231,7 +236,7 @@
                 @php
                     $total = str_replace(',','.', \Cart::subtotal(0));
                      $shipMoney =  App\Models\Product::SHIPPING_COST;
-                    $totalMoneyShip = (int)str_replace(',','',\Cart::subtotal(0)) + (int)$shipMoney;
+                    $totalMoneyShip = (int)str_replace(',','',\Cart::subtotal(0)) + $shipMoney;
                 @endphp
                 <table class="table" id="showTotalCart" style="margin-top: 15px">
                     <tbody>
@@ -247,15 +252,15 @@
                         @php
                             $subtotal = str_replace(',','',\Cart::subtotal(0));
                             $totalDiscount = floor($subtotal * $codeCoupon['cp_discount'] / 100);
-                            $moneyDiscount = number_format(floor($subtotal * $codeCoupon['cp_discount'] / 100));
-                            $moneyDiscountConvert = str_replace(',','',$moneyDiscount);
-                            $cartUpdateTotal = (int)$moneyDiscountConvert > 0 ? number_format((int)$subtotal - (int)$totalDiscount) : \Cart::subtotal(0);
+                            $cartUpdateTotal = (int)$subtotal > (int)$totalDiscount ? number_format((int)$subtotal - (int)$totalDiscount) : \Cart::subtotal(0);
                             $price = (($codeCoupon['cp_discount']) * $subtotal)  /  100 ;
                             $priceSale = number_format($price,0,',','.');
-                            $totalCardEnd = (int)str_replace(',','',$cartUpdateTotal) + (int)$shipMoney;
+                            $totalCardEnd = (int)str_replace(',','',$cartUpdateTotal) + $shipMoney;
                         @endphp
                         <tr class="showTotal">
-                            <th style="text-align: left" class="th-coupon01"> Giảm tối đa {{ number_format($codeCoupon['cp_discount'])}} {{$discountType }}(<b>Code:</b> {{ $coupon }})
+                            <th style="text-align: left" class="th-coupon01"> Giảm tối
+                                đa {{ number_format($codeCoupon['cp_discount'])}} {{$discountType }}
+                                (<b>Code:</b> {{ $coupon }})
                             </th>
                             <td style="text-align: right" id=" %" class="th-coupon01">-{{$priceSale}} đ</td>
                         </tr>
@@ -309,7 +314,7 @@
 
         window.onload = function () {
             //reset select option back page
-            $('#tst_type').prop('selectedIndex',0);
+            $('#tst_type').prop('selectedIndex', 0);
         }
         $('#coupon-button').click(function () {
             $('.coupon-msg').text('');
@@ -385,12 +390,12 @@
                 });
         });
         //chane thanh toán
-        $('#tst_type').change(function(){
+        $('#tst_type').change(function () {
             var value_bank = $('#tst_type').val();
-            if(value_bank == 2){
+            if (value_bank == 2) {
                 $('.check_bank').removeClass('hidden');
                 $('.check').addClass('hidden');
-            }else{
+            } else {
                 $('.check_bank').addClass('hidden');
                 $('.check').removeClass('hidden');
             }

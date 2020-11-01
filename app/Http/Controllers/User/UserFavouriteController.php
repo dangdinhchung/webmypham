@@ -27,7 +27,6 @@ class UserFavouriteController extends Controller
     public function addFavourite(Request $request, $id)
     {
         if ($request->ajax()) {
-
             //1.  Kiểm tra tồn tại sản phẩm
             $product = Product::find($id);
             if (!$product) return response(['messages' => 'Không tồn tại sản phẩm']);

@@ -131,13 +131,13 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="btn btn-primary btn-lg" style="float: right">
+                        <div class="btn btn-primary btn-lg btn-next-cart" style="float: right">
                             <a href="{{ route('purchase.index') }}" style="color: white">Mua hàng</a>
                         </div>
                     </div>
                 @else
-                    <div style="width: 475px; margin: 0 auto;">
-                        <img src="{{asset('images/cart-empty.png')}}" alt="">
+                    <div class="list__content" style="width: 475px; margin: 0 auto;">
+                        {{--<img src="{{asset('images/cart-empty.png')}}" alt="">--}}
                         <div class="content-cart-empty">
                             <a href="{{route('get.home')}}" class="btn btn-primary" style="margin-left: 29%;margin-bottom: 10%;">Tiếp tục mua sắm</a>
                         </div>

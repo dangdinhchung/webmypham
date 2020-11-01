@@ -17,6 +17,10 @@ session('cartUpdateTotal')
 https://www.youtube.com/watch?v=ajqaKxGRWHc
 https://stackoverflow.com/questions/45034581/laravel-5-4-cross-env-is-not-recognized-as-an-internal-or-external-command : fix loi npm
 
+Webpack là công cụ giúp gói gọn toàn bộ file js, css(bao gồm cả scss,sass,..). Việc gói gọn không phải là lộn xộn hết cả lên mà nó được gói theo cấu trúc project, từ phần modul này sang phần kia.
+Ngoài ra webpack còn rất nhiều chức năng hữu dụng nữa, vd như optimize hay  tuỳ chọn chạy trên môi trường khác nhau(dev hoặc production), watch file,… Mình đã xem qua webpack sử dụng plugin nén 1 file js từ 6mb xuống còn 76 kb
+Với sự contribute của một cộng đồng dev khổng lồ nên webpack là tool hỗ trợ rất tốt cho các dev js, việc sử dụng webpack để dùng cho các project lớn là đều hết sức tuyệt vời.
+
 
 
  if(session('coupon')) {
@@ -28,6 +32,7 @@ https://stackoverflow.com/questions/45034581/laravel-5-4-cross-env-is-not-recogn
                 )
             );
         }
+        https://www.w3schools.com/jsref/jsref_tolocalestring.asp
 
 ---------------------------vnpay----------------------------------------
 1
@@ -66,7 +71,43 @@ Tên chủ thẻ:NGUYEN VAN A
 Ngày phát hành:07/15
 Thẻ bị hết hạn
 
+---------------------------response trả về----------------------------
+"vnp_Amount" => "20000000"
+  "vnp_BankCode" => "NCB"
+  "vnp_BankTranNo" => "20201101-105744"
+  "vnp_CardType" => "ATM"
+  "vnp_OrderInfo" => "sdfsd"
+  "vnp_PayDate" => "20201101105725"
+  "vnp_ResponseCode" => "00"
+  "vnp_TmnCode" => "0M8H13SJ"
+  "vnp_TransactionNo" => "13411303"
+  "vnp_TxnRef" => "40"
+  "vnp_SecureHashType" => "SHA256"
+  "vnp_SecureHash" => "c3bb29b96b7ad435fda5c3ae1a92500ad75361c11a07ca3d00466fd1688ad80d"
 
+
+  --------------------------bảng mã lỗi----------------------------------------------
+00	Giao dịch thành công
+01	Giao dịch đã tồn tại
+02	Merchant không hợp lệ (kiểm tra lại vnp_TmnCode)
+03	Dữ liệu gửi sang không đúng định dạng
+04	Khởi tạo GD không thành công do Website đang bị tạm khóa
+05	Giao dịch không thành công do: Quý khách nhập sai mật khẩu quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch
+13	Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.
+07	Giao dịch bị nghi ngờ là giao dịch gian lận
+09	Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.
+10	Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần
+11	Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.
+12	Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.
+51	Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.
+65	Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.
+08	Giao dịch không thành công do: Hệ thống Ngân hàng đang bảo trì. Xin quý khách tạm thời không thực hiện giao dịch bằng thẻ/tài khoản của Ngân hàng này.
+99	Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)
+
+----------------------------URL thanh toán có dạng----------------------------------------------
+http://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=10000000&vnp_BankCode=NCB&vnp_Command=pay&vnp_CreateDate=20170829103111&vnp_CurrCode=VND&vnp_IpAddr=172.16.68.68
+&vnp_Locale=vn&vnp_Merchant=DEMO&vnp_OrderInfo=Nap+tien+cho+thue+bao+0123456789.+So+tien+100%2c000&vnp_OrderType=topup&vnp_ReturnUrl=http%3a%2f%2fsandbox.vnpayment.vn%2ftryitnow%2fHome%2fVnPayReturn
+&vnp_TmnCode=2QXUI4J4&vnp_TxnRef=23554&vnp_Version=2&vnp_SecureHashType=SHA256&vnp_SecureHash=e6ce09ae6695ad034f8b6e6aadf2726f
 
 
 

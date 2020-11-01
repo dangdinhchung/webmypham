@@ -20,6 +20,7 @@ var ProductDetail = {
         this.showFormReview();
         this.processReview();
         this.showTabContent();
+        this.addCart();
     },
 
     showTabContent()
@@ -160,16 +161,39 @@ var ProductDetail = {
             event.preventDefault();
             let $this = $(this);
             let URL = $this.attr('href');
-
             if (URL) {
                 $.ajax({
                     method: "POST",
                     url: URL,
                 }).done(function (results) {
-                    toast.warning(results.messages);
+                    toast.success(results.messages);
                 });
             }
         })
+    },
+
+    addCart() {
+        $(".js-add-cart").click(function(event) {
+            event.preventDefault();
+           let $this = $(this);
+           let URL = $this.attr('href');
+            if (URL) {
+                $.ajax({
+                    method: "GET",
+                    url: URL,
+                }).done(function (results) {
+                    // toast.success(results.messages);
+                    let convertResults = JSON.parse(results);
+                    console.log(convertResults);
+                    if(convertResults.error == 1) {
+                        toast.error(convertResults.msg);
+                    } else {
+                        toast.success(convertResults.msg);
+                        $(".cart-count").text('('+ convertResults.cartCount + ')');
+                    }
+                });
+            }
+        });
     },
 
     runSlider(){

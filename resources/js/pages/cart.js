@@ -102,14 +102,21 @@ var Cart = {
             event.preventDefault();
             let $this = $(this);
             let url    = $this.attr('href');
-
             if(url) {
                 $.ajax({
                     url: url,
                 }).done(function( results ) {
                     toast.success(results.messages);
                     $this.parents('tr').remove();
-                    $("#sub-total").text(results.totalMoney+ " đ");
+                    $("#subtotalend").text(results.totalMoney+ " đ");
+                    $(".cart-count").text('(' + results.cartCount + ')');
+                    if(results.cartCount <= 0) {
+                        $(".table-responsive").remove();
+                        $("#showTotal").remove();
+                        $(".btn-next-cart").remove();
+                        $(".list__content").html(results.html);
+                        $(".list__content").css({"width":"475px" , "margin" : "0 auto"});
+                    }
                 });
             }
         })
@@ -151,6 +158,7 @@ var Cart = {
                     $("#subtotal").text(money+ " đ");
                     $("#subtotalend").text(money+ " đ");
                     toast.success(results.messages);
+                    $(".cart-count").text('(' + results.cartCount + ')');
                     $this.parents('tr').find(".js-total-item").text(results.totalItem +' đ');
                 }else {
                     $input.val(number + 1);
@@ -192,10 +200,10 @@ var Cart = {
                     let totalMoney = results.totalMoney;
                     // let totalConvert =  parseInt(totalMoney.replaceAll(',','')) + parseInt(shipMoney);
                     let totalConvert =  parseInt(totalMoney.replaceAll(',',''));
-                    let money = totalConvert.toLocaleString('it-IT');
-
+                    let money = totalConvert.toLocaleString('it-IT'); //540.000 đ
                     $("#subtotal").text(totalMoney + " đ");
                     $("#subtotalend").text(money + " đ");
+                    $(".cart-count").text('(' + results.cartCount + ')');
                     $input.val(number);
                     toast.success(results.messages);
                     $this.parents('tr').find(".js-total-item").text(results.totalItem +' đ');

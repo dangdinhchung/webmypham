@@ -126,9 +126,8 @@
                                 </p>
                             </div>
                             <div class="btn-cart">
-                                <a href="{{ route('get.shopping.add', $product->id) }}" title=""
-                                   onclick="add_cart_detail('17617',0);"
-                                   class="muangay {{ $product->pro_number <= 0 ? 'number-empty' : '' }}">
+                                <a href="{{ route('get.shopping.add', $product->id) }}" title="Thêm vào giỏ hàng"
+                                   class="muangay {{ $product->pro_number <= 0 ? 'number-empty' : '' }} {{ !\Auth::id() ? 'js-show-login' : 'js-add-cart' }}">
                                     <span>Mua ngay</span>
                                     <span>Hotline: 1800.6005</span>
                                 </a>

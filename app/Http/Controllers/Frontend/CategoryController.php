@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends FrontendController
 {
@@ -15,20 +16,25 @@ class CategoryController extends FrontendController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author chungdd
      */
-    public function index(Request $request, $slug)
+    public function index(Request $request, $process, $slug)
     {
         $arraySlug = explode('-', $slug);
         $id = array_pop($arraySlug);
         if ($id) {
-
-            /*$listIdParent = Category::select('id')->where('c_parent_id',$id)->toArray();*/
-
             $category = Category::find($id);
-            $products = Product::where([
-                'pro_active'      => 1,
-                'pro_category_id' => $id
-            ]);
-
+            if($process == 'children') {
+                $products = Product::where([
+                    'pro_active'      => 1,
+                    'pro_category_id' => $id
+                ]);
+            }
+            if($process == 'parent') {
+                $categoryGetId = Category::where([
+                    'c_status'      => 1,
+                    'c_parent_id' => $category->id
+                ])->get()->pluck('id')->toArray();
+                $products = DB::table('products')->select('products.*')->where('pro_active',1)->whereIn('pro_category_id',$categoryGetId);
+            }
             $paramAtbSearch = $request->except('price', 'page', 'k', 'country', 'rv', 'sort');
             $paramAtbSearch = array_values($paramAtbSearch);
 

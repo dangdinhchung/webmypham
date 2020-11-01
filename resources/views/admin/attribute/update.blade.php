@@ -39,7 +39,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-sm-8">
+                        {{--<div class="col-sm-8">
                             <div class="form-group  {{ $errors->first('atb_category_id') ? 'has-error' : '' }}">
                                 <label for="name">Category <span class="text-danger">(*)</span></label>
                                 <select class="form-control" name="atb_category_id">
@@ -52,7 +52,7 @@
                                     <span class="text-danger">{{ $errors->first('atb_category_id') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div>--}}
                         <div class="col-sm-12">
                             <div class="box-footer text-center "  style="margin-top: 20px;">
                                 <a href="{{ route('admin.attribute.index') }}" class="btn btn-danger">

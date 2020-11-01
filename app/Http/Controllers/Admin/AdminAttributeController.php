@@ -36,6 +36,7 @@ class AdminAttributeController extends Controller
     {
         $data = $request->except('_token');
         $data['atb_slug']     = Str::slug($request->atb_name);
+        $data['atb_category_id'] = 1;
         $data['created_at'] = Carbon::now();
 
         $id = Attribute::insertGetId($data);

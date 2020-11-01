@@ -335,61 +335,63 @@
     {{-- <script src="https://code.highcharts.com/modules/export-data.js"></script> --}}
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script type="text/javascript">
+        //trạng thái đơn hàng
         let dataTransaction = $("#container").attr('data-json');
         dataTransaction  =  JSON.parse(dataTransaction);
 
+        //danh sách mảng các ngày  trong tháng
         let listday = $("#container2").attr("data-list-day");
         listday = JSON.parse(listday);
 
+        //trạng thái đã xử lý (tổng tiền => các ngày trong tháng)
         let listMoneyMonth = $("#container2").attr('data-money');
         listMoneyMonth = JSON.parse(listMoneyMonth);
-        
+
+        //trạng thái tiếp nhận (tổng tiền => các ngày trong tháng)
         let listMoneyMonthDefault = $("#container2").attr('data-money-default');
         listMoneyMonthDefault = JSON.parse(listMoneyMonthDefault);
 
+        //thống kê trạng thái đơn hàng
         Highcharts.chart('container', {
 
             chart: {
-                styledMode: true
+                styledMode: false
             },
 
             title: {
                 text: 'Thống kê trạng thái đơn hàng'
             },
 
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr']
-            },
+            // xAxis: {
+            //     categories: ['Jan', 'Feb', 'Mar', 'Apr']
+            // },
 
             series: [{
-                type: 'pie',
-                allowPointSelect: true,
-                keys: ['name', 'y', 'selected', 'sliced'],
+                type: 'pie', //biểu đồ hình tròn
+                allowPointSelect: true, //hiệu ứng khi click
+                // keys: ['name', 'y', 'selected', 'sliced'],
                 data: dataTransaction,
-                showInLegend: true
+                showInLegend: true // chủ giải ở dưới
             }]
         });
 
         Highcharts.chart('container2', {
             chart: {
-                type: 'spline'
+                type: 'spline' //biểu đồ đường
             },
             title: {
                 text: 'Biểu đồ doanh thu các ngày trong tháng'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
             },
             xAxis: {
                 categories: listday
             },
             yAxis: {
                 title: {
-                    text: 'Temperature'
+                    text: 'Tổng tiền'
                 },
                 labels: {
                     formatter: function () {
-                        return this.value + '°';
+                        return this.value + ' vnđ';
                     }
                 }
             },

@@ -34,7 +34,6 @@ class CheckPermissionAcl
             ->select('permissions.*')
             ->get()->pluck('id')->unique();
 
-
        //3.lay ma man hinh tuong ung de check
         $checkPermission = Permission::where('name', $permission)->value('id');
 

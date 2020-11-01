@@ -43,22 +43,22 @@ class AdminStatisticalController extends Controller
 			->where('tst_status',Transaction::STATUS_SUCCESS)
 			->sum('tst_total_money');
 
+		//Doanh thu tuần
 		$mondayLast = Carbon::now()->startOfWeek();
 		$sundayFirst = Carbon::now()->endOfWeek();
 		$totalMoneyWeed = Transaction::whereBetween('created_at',[$mondayLast,$sundayFirst])
 			->where('tst_status',Transaction::STATUS_SUCCESS)
 			->sum('tst_total_money');
 
-		// doanh thu thag
+		// Doanh thu tháng
 		$totalMoneyMonth = Transaction::whereMonth('created_at',date('m'))
 			->where('tst_status',Transaction::STATUS_SUCCESS)
 			->sum('tst_total_money');
 
-		// doanh thu nam
+		// Doanh thu năm
 		$totalMoneyYear = Transaction::whereYear('created_at',date('Y'))
 			->where('tst_status',Transaction::STATUS_SUCCESS)
 			->sum('tst_total_money');
-
 
         // Top sản phẩm xem nhiều
         $topViewProducts = Product::orderByDesc('pro_view')
@@ -119,6 +119,7 @@ class AdminStatisticalController extends Controller
             ->groupBy('day')
             ->get()->toArray();
 
+        //tính tổng tiền với trạng thái đã xử lý
         $arrRevenueTransactionMonth = [];
         $arrRevenueTransactionMonthDefault = [];
         foreach($listDay as $day) {
@@ -129,9 +130,9 @@ class AdminStatisticalController extends Controller
                     break;
                 }
             }
-
             $arrRevenueTransactionMonth[] = (int)$total;
 
+            //tính tổng tiền với trạng thái tiếp nhận
             $total = 0;
             foreach ($revenueTransactionMonthDefault as $key => $revenue) {
                 if ($revenue['day'] ==  $day) {
@@ -141,6 +142,7 @@ class AdminStatisticalController extends Controller
             }
             $arrRevenueTransactionMonthDefault[] = (int)$total;
         }
+
 
         $viewData = [
             'totalTransactions'          => $totalTransactions,

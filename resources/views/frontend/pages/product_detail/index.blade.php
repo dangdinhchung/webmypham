@@ -146,7 +146,8 @@
                                         <p class="text1">Danh mục:</p>
                                         <h3 class="text2">
                                             @if (isset($product->category->c_name))
-                                                <a href="{{  route('get.category.list', $product->category->c_slug).'-'.$product->pro_category_id }}">{{ $product->category->c_name }}</a>
+                                                {{--<a href="{{  route('get.category.list', $product->category->c_slug).'-'.$product->pro_category_id }}">{{ $product->category->c_name }}</a>--}}
+                                                {{ $product->category->c_name }}
                                             @else
                                                 "[N\A]"
                                             @endif

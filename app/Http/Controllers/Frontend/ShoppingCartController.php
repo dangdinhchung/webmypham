@@ -257,7 +257,7 @@ class ShoppingCartController extends Controller
                 "vnp_OrderInfo"  => $request->tst_note ? $request->tst_note : 'Gửi hàng nhanh cho tôi nhé', // Mô tả Noi dung thanh toan
                 "vnp_OrderType"  => $request->tst_type, //2:online
                 "vnp_ReturnUrl"  => $this->vnp_Returnurl, // http://localhost:8000/shopping/form-online: URL thông báo kết quả giao dịch khi kết thúc thanh toán
-                "vnp_TxnRef"     => rand(12,50) //20190626053509: mã duy nhất để phân biệt đơn hàng không được trùng nhau
+                "vnp_TxnRef"     =>$transacionID //20190626053509: mã duy nhất để phân biệt đơn hàng không được trùng nhau
             );
             ksort($inputData); // sắp xếp theo thứ tự alphab
             $query = "";

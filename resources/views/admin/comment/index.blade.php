@@ -30,7 +30,7 @@
                                 <th style="width: 10px">STT</th>
                                 <th>Name</th>
                                 <th>Comment </th>
-                                <th>Time</th>
+                                <th style="width: 15%">Time</th>
                                 <th>Action</th>
                             </tr>
                             @if (isset($comments))

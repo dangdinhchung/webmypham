@@ -67,7 +67,7 @@
                                             </td>
                                             <td>
                                                 <ul style="margin-left: 0;padding-left: 0">
-                                                    <li>Số lượng nhập <b>{{ $product->pro_number_import }}</b></li>
+{{--                                                    <li>Số lượng nhập <b>{{ $product->pro_number_import }}</b></li>--}}
                                                     <li>
                                                         @if ($product->pro_number <= 0)
                                                             <span class="text-danger">Còn lại: <b>Hết hàng</b></span>

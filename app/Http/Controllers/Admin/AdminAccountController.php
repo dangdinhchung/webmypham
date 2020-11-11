@@ -59,10 +59,11 @@ class AdminAccountController extends Controller
            $admin = Admin::find($id);
            $admin->roles()->attach($request->roles);
            DB::commit();
-           return redirect()->back();
+           return redirect()->route('admin.account_admin.index')->with('msg','Thêm nhân viên thành công');
 
        } catch (\Exception $exception) {
            DB::rollBack();
+           return redirect()->route('admin.account_admin.index')->with('error','Thêm nhân viên thất bại');
        }
     }
 
@@ -107,9 +108,10 @@ class AdminAccountController extends Controller
             \DB::table('role_admin')->where('admin_id',$id)->delete();
             $admin->roles()->attach($request->roles);
             DB::commit();
-            return redirect()->back();
+            return redirect()->route('admin.account_admin.index')->with('msg','Cập nhật nhân viên thành công');
         } catch (\Exception $exception) {
             DB::rollBack();
+            return redirect()->route('admin.account_admin.index')->with('error','Cập nhật nhân viên thất bại');
         }
     }
 
@@ -131,10 +133,11 @@ class AdminAccountController extends Controller
            //delete user of role
            $admin->roles()->detach();
            DB::commit();
-           return redirect()->back();
+           return redirect()->route('admin.account_admin.index')->with('msg','Xóa nhân viên thành công');
        } catch (\Exception $exception) {
            DB::rollBack();
            Log::error('Loi: ' . $exception->getMessage() . $exception->getLine());
+           return redirect()->route('admin.account_admin.index')->with('error','Xóa nhân viên thất bại');
        }
     }
 }

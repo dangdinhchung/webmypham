@@ -37,6 +37,6 @@ class AdminRatingController extends Controller
             $rating->delete();
         }
 
-        return redirect()->back();
+        return redirect()->route('admin.rating.index')->with('msg','Xóa đánh giá thành công');
     }
 }

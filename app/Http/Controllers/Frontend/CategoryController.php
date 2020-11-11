@@ -16,13 +16,19 @@ class CategoryController extends FrontendController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author chungdd
      */
-    public function index(Request $request, $process, $slug)
+    public function index(Request $request, $slug)
     {
         $arraySlug = explode('-', $slug);
         $id = array_pop($arraySlug);
         if ($id) {
             $category = Category::find($id);
-            if($process == 'children') {
+
+            $products = Product::where([
+                'pro_active'      => 1,
+                'pro_category_id' => $id
+            ]);
+
+         /*   if($process == 'children') {
                 $products = Product::where([
                     'pro_active'      => 1,
                     'pro_category_id' => $id
@@ -34,7 +40,8 @@ class CategoryController extends FrontendController
                     'c_parent_id' => $category->id
                 ])->get()->pluck('id')->toArray();
                 $products = DB::table('products')->select('products.*')->where('pro_active',1)->whereIn('pro_category_id',$categoryGetId);
-            }
+            }*/
+
             $paramAtbSearch = $request->except('price', 'page', 'k', 'country', 'rv', 'sort');
             $paramAtbSearch = array_values($paramAtbSearch);
 
@@ -52,7 +59,6 @@ class CategoryController extends FrontendController
                     $products->where('pro_price', '<=', 20000 * $price);
                 }
             }
-
             if ($request->k) {
                 $products->where('pro_name', 'like', '%' . $request->k . '%');
             }
@@ -66,7 +72,6 @@ class CategoryController extends FrontendController
             $products = $products->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_number', 'pro_avatar',
                 'pro_price', 'pro_review_total', 'pro_review_star')
                 ->paginate(12);
-
             $modelProduct = new Product();
 
             // Lấy thuộc tính

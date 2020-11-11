@@ -102,7 +102,7 @@ class AdminProductController extends Controller
             }
         }
 
-        return redirect()->back();
+        return redirect()->route('admin.product.index')->with('msg','Thêm sản phẩm thành công');
     }
 
     /**
@@ -221,7 +221,7 @@ class AdminProductController extends Controller
             ])
             ->log('Cập nhật product');
 
-        return redirect()->back();
+        return redirect()->route('admin.product.index')->with('msg','Cập nhật sản phẩm thành công');
     }
 
     /**
@@ -319,7 +319,7 @@ class AdminProductController extends Controller
             $product->delete();
         }
 
-        return redirect()->back();
+        return redirect()->route('admin.product.index')->with('msg','Xóa sản phẩm thành công');
     }
 
     /**

@@ -26,6 +26,8 @@
         <link rel="icon" sizes="32x32" type="image/png" href="{{ asset('ico.png') }}" />
         <link rel="stylesheet" href="{{  asset('admin/bower_components/select2/dist/css/select2.min.css') }}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+        <!-- toastr -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <!-- Google Font -->
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -204,6 +206,8 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+        <!-- toastr -->
+        <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <style>
             .select2-selection {
                 height: 34px !important;
@@ -212,6 +216,13 @@
         @yield('script')
         <!-- page script -->
         <script type="text/javascript">
+
+            @if (session('msg'))
+                toastr.success('{{ session('msg') }}');
+            @elseif(session('error'))
+                toastr.error('{{ session('error') }}');
+            @endif
+
             $('#time input').datepicker({
                 autoclose: true,
                 minDate: 0,

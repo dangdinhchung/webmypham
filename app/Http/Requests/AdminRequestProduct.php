@@ -42,7 +42,7 @@ class AdminRequestProduct extends FormRequest
 
         if($this->pro_avatar) {
             $merge_rules = [
-                'pro_avatar'   => 'image|mimes:jpeg,png,jpg,gif,svg',
+                'pro_avatar'   => 'image|mimes:jpeg,png,jpg',
             ];
             $rules = array_merge($rules, $merge_rules);
         }
@@ -70,8 +70,8 @@ class AdminRequestProduct extends FormRequest
             'pro_category_id.required'   => 'Danh mục sản phẩm không được bỏ trống',
             'attribute.required'         => 'Thuộc tính sản phẩm không được bỏ trống',
             'pro_content.required'       => 'Nội dung sản phẩm không được bỏ trống',
-            'pro_avatar.mimes'           => 'Sai định dạng hình ảnh',
-            'pro_avatar.image'           => 'Sai định dạng hình ảnh'
+            'pro_avatar.mimes'           => 'Chỉ được upload ảnh dạng .jpeg, .png, .jpg',
+            'pro_avatar.image'           => 'Chỉ được upload ảnh dạng .jpeg, .png, .jpg'
         ];
     }
 }

@@ -85,7 +85,8 @@ var Cart = {
                 success : function(response){
                     var data = JSON.parse(response);
                    if(data.success == "success") {
-                       $("#popup-cancel").modal.close();
+                       // $("#popup-cancel").modal.close();
+                       location.reload();
                        toast.success("Hủy đơn hàng thành công");
                    }
                 } ,

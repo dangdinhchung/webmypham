@@ -100,7 +100,7 @@ class ProductDetailController extends FrontendController
 
 			//lay ma giam gia
             $dateNow = strtotime(date('Y-m-d'));
-            $couponList = Coupon::where('cp_start_date','<=' , $dateNow)->where('cp_end_date', '>=' , $dateNow)->get();
+            $couponList = Coupon::where('cp_start_date','<=' , $dateNow)->where('cp_end_date', '>=' , $dateNow)->where('cp_active',1)->get();
 
             //get user active
             $user = User::where('id',Auth::id())->pluck('active')->first();

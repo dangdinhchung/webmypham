@@ -31,6 +31,6 @@ class AdminCommentController extends Controller
     public function delete($id)
     {
         Comments::find($id)->delete($id);
-        return redirect()->back();
+        return redirect()->route('admin.comment.index')->with('msg','Xóa bình luận thành công');
     }
 }

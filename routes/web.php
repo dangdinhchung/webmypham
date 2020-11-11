@@ -59,7 +59,7 @@ Route::group(['namespace' => 'Frontend'], function() {
 
 //    Route::get('ajax-load-slide','HomeController@loadSlideHome')->name('ajax_get.slide');
     Route::get('san-pham','ProductController@index')->name('get.product.list'); // list sp
-    Route::get('dan-muc/{process}/{slug}','CategoryController@index')->name('get.category.list'); // list sp theo danh mục
+    Route::get('dan-muc/{slug}','CategoryController@index')->name('get.category.list'); // list sp theo danh mục
 
     Route::get('san-pham/{slug}','ProductDetailController@getProductDetail')->name('get.product.detail'); // chi tiet sp 
     Route::get('san-pham/{slug}/danh-gia','ProductDetailController@getListRatingProduct')->name('get.product.rating_list'); // list dánh giá của sp đó

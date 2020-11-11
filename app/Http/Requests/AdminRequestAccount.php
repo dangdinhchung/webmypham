@@ -38,7 +38,7 @@ class AdminRequestAccount extends FormRequest
 
         if($this->avatar) {
             $merge_rules = [
-                'avatar'   => 'image|mimes:jpeg,png,jpg,gif,svg',
+                'avatar'   => 'image|mimes:jpeg,png,jpg',
             ];
             $rules = array_merge($rules, $merge_rules);
         }
@@ -62,8 +62,8 @@ class AdminRequestAccount extends FormRequest
             'password.required' => 'Password không được để trống',
             'password.min'      => 'Password lớn hơn hoặc bằng 8 ký tự',
             'address.required'  => 'Địa chỉ không được bỏ trống',
-            'avatar.mimes'      => 'Hình ảnh không đúng định dạng',
-            'avatar.image'      => 'Hình ảnh không đúng định dạng',
+            'avatar.mimes'      => 'Chỉ được upload ảnh dạng .jpeg, .png, .jpg',
+            'avatar.image'      => 'Chỉ được upload ảnh dạng .jpeg, .png, .jpg',
             'roles.required'    => "Chức vụ không được bỏ trống"
         ];
     }

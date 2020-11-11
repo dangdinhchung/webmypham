@@ -34,7 +34,7 @@ class RequestRegister extends FormRequest
 
         if($this->avatar) {
             $merge_rules = [
-                'avatar'   => 'image|mimes:jpeg,png,jpg,gif,svg',
+                'avatar'   => 'image|mimes:jpeg,png,jpg',
             ];
             $rules = array_merge($rules, $merge_rules);
         }
@@ -56,9 +56,9 @@ class RequestRegister extends FormRequest
             'phone.numeric'     => 'Số điện thoại không đúng định dạng',
             'password.required' => 'Password không được để trống',
             'password.min'      => 'Password lớn hơn hoặc bằng 8 ký tự',
-            'avatar.mimes'      => 'Hình ảnh không đúng định dạng',
-            'avatar.image'      => 'Hình ảnh không đúng định dạng',
-            'address.required'  => 'Địa chỉ không đúng định dạng',
+            'avatar.mimes'      => 'Chỉ được upload ảnh dạng .jpeg, .png, .jpg',
+            'avatar.image'      => 'Chỉ được upload ảnh dạng .jpeg, .png, .jpg',
+            'address.required'  => 'Địa chỉ không được để trống',
         ];
     }
 }

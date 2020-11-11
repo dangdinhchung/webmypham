@@ -49,18 +49,9 @@ class AdminFlashSaleController extends Controller
                 $flash_sale_product->fsp_discount_type = $request['discount_type_' . $product];
                 $flash_sale_product->save();
             }
-            \Session::flash('toastr', [
-                'type'    => 'success',
-                'message' => 'Thêm sự kiện thành công'
-            ]);
-
-            return redirect()->back();
+            return redirect()->route('admin.flash.index')->with('msg','Thêm sự kiện thành công');
         } else {
-            \Session::flash('toastr', [
-                'type'    => 'error',
-                'message' => 'Tạo sự kiện thất bại!'
-            ]);
-            return redirect()->back();
+            return redirect()->route('admin.flash.index')->with('error','Thêm sự kiện thất bại');
         }
 
     }
@@ -126,18 +117,9 @@ class AdminFlashSaleController extends Controller
                 $flash_sale_product->fsp_discount_type = $request['discount_type_' . $product];
                 $flash_sale_product->save();
             }
-            \Session::flash('toastr', [
-                'type'    => 'success',
-                'message' => 'Sửa sự kiện thành công'
-            ]);
-
-            return redirect()->back();
+            return redirect()->route('admin.flash.index')->with('msg','Cập nhật sự kiện thành công');
         } else {
-            \Session::flash('toastr', [
-                'type'    => 'error',
-                'message' => 'Sửa sự kiện thất bại!'
-            ]);
-            return redirect()->back();
+            return redirect()->route('admin.flash.index')->with('error','Cập nhật sự kiện thất bại');
         }
     }
 
@@ -169,18 +151,9 @@ class AdminFlashSaleController extends Controller
             $flash_sale_product->delete();
         }
         if (FlashSale::destroy($id)) {
-            \Session::flash('toastr', [
-                'type'    => 'success',
-                'message' => 'Xóa sự kiện thành công'
-            ]);
-
-            return redirect()->back();
+            return redirect()->route('admin.flash.index')->with('msg','Xóa sự kiện thành công');
         } else {
-            \Session::flash('toastr', [
-                'type'    => 'error',
-                'message' => 'Xóa sự kiện thất bại!'
-            ]);
-            return redirect()->back();
+            return redirect()->route('admin.flash.index')->with('error','Xóa sự kiện thất bại');
         }
     }
 }

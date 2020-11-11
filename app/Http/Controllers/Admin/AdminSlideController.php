@@ -49,7 +49,10 @@ class AdminSlideController extends Controller
         }
 
         $id = Slide::insertGetId($data);
-        return redirect()->back();
+        if($id) {
+            return redirect()->route('admin.slide.index')->with('msg','Thêm slide thành công');
+        }
+        return redirect()->route('admin.slide.index')->with('error','Thêm slide thất bại');
     }
 
     /**
@@ -83,7 +86,7 @@ class AdminSlideController extends Controller
         }
 
         $update = $slide->update($data);
-        return redirect()->back();
+        return redirect()->route('admin.slide.index')->with('msg','Cập nhật slide thành công');
     }
 
     /**
@@ -111,8 +114,7 @@ class AdminSlideController extends Controller
         if ($slide) {
             $slide->delete();
         }
-
-        return redirect()->back();
+        return redirect()->route('admin.slide.index')->with('msg','Xóa slide thành công');
     }
 
 }

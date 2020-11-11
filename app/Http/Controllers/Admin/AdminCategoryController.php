@@ -52,7 +52,11 @@ class AdminCategoryController extends AdminController
         }
 
         $id = Category::insertGetId($data);
-        return redirect()->back();
+        if($id) {
+            return redirect()->route('admin.category.index')->with('msg','Thêm danh mục thành công');
+        } else {
+            return redirect()->route('admin.category.index')->with('error','Thêm danh mục thất bại');
+        }
     }
 
     /**
@@ -85,9 +89,8 @@ class AdminCategoryController extends AdminController
             if ($image['code'] == 1)
                 $data['c_avatar'] = $image['name'];
         }
-
         $category->update($data);
-        return redirect()->back();
+        return redirect()->route('admin.category.index')->with('msg','Cập nhật danh mục thành công');
     }
 
     /**
@@ -128,7 +131,7 @@ class AdminCategoryController extends AdminController
         $category = Category::find($id);
         if ($category) $category->delete();
 
-        return redirect()->back();
+        return redirect()->route('admin.category.index')->with('msg','Xóa danh mục thành công');
     }
 
     /**

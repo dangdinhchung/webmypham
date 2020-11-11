@@ -60,10 +60,11 @@ class AclRoleController extends Controller
             $role = Role::find($id);
             $role->permissions()->attach($request->permissions);
             DB::commit();
-            return redirect()->back();
+            return redirect()->route('admin.role.list')->with('msg','Thêm nhóm quyền thành công');
         } catch (\Exception $exception) {
 		    DB::rollBack();
 		    Log::error('Loi: ' . $exception->getMessage() . $exception->getLine());
+            return redirect()->route('admin.role.list')->with('msg','Thêm nhóm quyền thất bại');
         }
 	}
 
@@ -109,10 +110,11 @@ class AclRoleController extends Controller
             $role->permissions()->attach($request->permissions);
 
             DB::commit();
-            return redirect()->back();
+            return redirect()->route('admin.role.list')->with('msg','Cập nhật nhóm quyền thành công');
         } catch (\Exception $exception) {
 		    DB::rollBack();
 		    Log::error('Loi: ' . $exception->getMessage() . $exception->getLine());
+            return redirect()->route('admin.role.list')->with('error','Cập nhật nhóm quyền thất bại');
         }
 	}
 
@@ -130,9 +132,11 @@ class AclRoleController extends Controller
             //delete user of role
             $role->permissions()->detach();
             DB::commit();
-            return redirect()->back();
+            return redirect()->route('admin.role.list')->with('msg','Xóa nhóm quyền thành công');
         } catch (\Exception $exception) {
             DB::rollBack();
+            Log::error('Loi: ' . $exception->getMessage() . $exception->getLine());
+            return redirect()->route('admin.role.list')->with('error','Xóa nhóm quyền thất bại');
         }
     }
 }

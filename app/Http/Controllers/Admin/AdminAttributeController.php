@@ -12,6 +12,10 @@ use Carbon\Carbon;
 
 class AdminAttributeController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function index()
     {
         $attibutes = Attribute::with('category:id,c_name')->orderByDesc('id')
@@ -24,6 +28,10 @@ class AdminAttributeController extends Controller
         return view('admin.attribute.index', $viewData);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function create()
     {
         $categories = Category::select('id','c_name')->get();
@@ -32,6 +40,11 @@ class AdminAttributeController extends Controller
         return view('admin.attribute.create',compact('categories','attribute_type'));
     }
 
+    /**
+     * @param AdminRequestAttribute $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function store(AdminRequestAttribute $request)
     {
         $data = $request->except('_token');
@@ -40,9 +53,18 @@ class AdminAttributeController extends Controller
         $data['created_at'] = Carbon::now();
 
         $id = Attribute::insertGetId($data);
-        return redirect()->back();
+        if($id) {
+            return redirect()->route('admin.attribute.index')->with('msg','Thêm thuộc tính thành công');
+        } else {
+            return redirect()->route('admin.attribute.index')->with('error','Thêm thuộc tính thất bại');
+        }
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
     public function edit($id)
     {
         $attribute = Attribute::find($id);
@@ -51,6 +73,12 @@ class AdminAttributeController extends Controller
         return view('admin.attribute.update', compact('attribute','categories','attribute_type'));
     }
 
+    /**
+     * @param AdminRequestAttribute $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function update(AdminRequestAttribute $request, $id)
     {
         $attribute          = Attribute::find($id);
@@ -59,14 +87,19 @@ class AdminAttributeController extends Controller
         $data['updated_at'] = Carbon::now(); 
 
         $attribute->update($data);
-        return redirect()->back();
+        return redirect()->route('admin.attribute.index')->with('msg','cập nhật thuộc tính thành công');
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function delete($id)
     {
         $attribute          = Attribute::find($id);
         if ($attribute) $attribute->delete();
 
-        return redirect()->back();
+        return redirect()->route('admin.attribute.index')->with('msg','Xóa thuộc tính thành công');
     }
 }

@@ -48,7 +48,10 @@ class AdminCouponController extends Controller
         $data['cp_start_date'] = $request->cp_start_date ? strtotime($request->cp_start_date) : Carbon::now()->timestamp;
         $data['cp_end_date'] = $request->cp_end_date ? strtotime($request->cp_end_date) : Carbon::now()->timestamp;
         $id = Coupon::insertGetId($data);
-        return redirect()->back();
+       if($id) {
+           return redirect()->route('admin.coupon.index')->with('msg','Thêm mã giảm giá thành công');
+       }
+        return redirect()->route('admin.coupon.index')->with('error','Thêm mã giảm giá thất bại');
     }
 
     /**
@@ -80,8 +83,9 @@ class AdminCouponController extends Controller
         $data['update_at'] = Carbon::now();
         $update = $coupon->update($data);
         if ($update) {
-            return redirect()->back();
+            return redirect()->route('admin.coupon.index')->with('msg','Cập nhật mã giảm giá thành công');
         }
+        return redirect()->route('admin.coupon.index')->with('error','Cập nhật mã giảm giá thất bại');
     }
 
     /**
@@ -95,7 +99,7 @@ class AdminCouponController extends Controller
         if ($coupon) {
             $coupon->delete();
         }
-        return redirect()->back();
+        return redirect()->route('admin.coupon.index')->with('msg','Xóa mã giảm giá thành công');
     }
 
     /**

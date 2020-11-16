@@ -72,6 +72,27 @@ class CouponController extends Controller
                     } else {
                         $msg = "Lỗi không xác định!";
                     }
+
+                    //remove html if input coupon 
+                    //remove session
+                    $request->session()->forget('cartUpdateTotal');
+                    $request->session()->forget('coupon');
+                    // append html
+                    $html .= "<tr class='showTotal'>";
+                    $html .= '<th style="text-align: left">Tổng tiền hàng</th>';
+                    $html .= "<td style='text-align: right' id='subtotal'>" . \Cart::subtotal(0) . ' đ</td>';
+                    $html .= '</tr>';
+
+                    $html .= "<tr class='moneyShip'>";
+                    $html .= '<th style="text-align: left">Phí vận chuyển</th>';
+                    $html .= "<td style='text-align: right' id='ship'>" . number_format($moneyShip, 0, ',','.') . ' đ</td>';
+                    $html .= '</tr>';
+
+                    $html .= "<tr class='showTotalEnd'>";
+                    $html .= '<th style="text-align: left"><b>Tổng tiền cần thanh toán</b> </th>';
+                    $html .= "<td style='text-align: right;font-weight: bold' id='subtotal'>" . number_format($totalMoney,0, ',', '.') . " đ</td>";
+                    $html .= "</tr>";
+
                 } else {
                     $content = $check['content'];
                     $error = 0;

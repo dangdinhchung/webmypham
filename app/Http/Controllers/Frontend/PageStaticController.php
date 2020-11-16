@@ -52,7 +52,7 @@ class PageStaticController extends Controller
 			array_reverse($listID);
             $products = Product::whereIn('id', $listID)
                 ->orderByDesc('id')
-                ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_review_total', 'pro_review_star')
+                ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_review_total', 'pro_review_star', 'pro_number')
                 ->get();
 
             $html     = view('frontend.pages.home.include._recently', compact('products'))->render();

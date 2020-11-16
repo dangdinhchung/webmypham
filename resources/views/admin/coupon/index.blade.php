@@ -42,7 +42,9 @@
                                     <tr>
                                         <td>{{ (($coupons->currentPage() - 1) * $coupons->perPage()) + ( $key + 1)  }}</td>
                                         <td>{{ $coupon->cp_description ?? "[N\A]" }}</td>
-                                        <td>{{ $coupon->cp_code ?? "[N\A]" }}</td>
+                                        <td>
+                                            <p class="label label-info">{{ $coupon->cp_code ?? "[N\A]" }}</p>
+                                        </td>
                                         {{--<td>{{ $coupon->cp_discount_type == 'amount' ? $coupon->cp_discount . " VNĐ" : $coupon->cp_discount . ' %'  }}</td>--}}
                                         <td>{{$coupon->cp_discount}} %</td>
                                         <td>{{ $coupon->cp_number_uses ?? "[N\A]" }}</td>

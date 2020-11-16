@@ -346,6 +346,8 @@
                                 $('.coupon-msg').hide();
                                 if (result.error == 1) {
                                     $('.coupon-msg').html(result.msg).addClass('text-danger').show();
+                                    $("#showTotalCart").find("tr.showTotal, tr.moneyShip, tr.showTotalEnd, tr.shipConst").remove();
+                                    $('#showTotalCart').prepend(result.html);
                                 } else {
                                     $("#showTotalCart").find("tr.showTotal, tr.moneyShip, tr.showTotalEnd, tr.shipConst").remove();
                                     $('#removeCoupon').show();

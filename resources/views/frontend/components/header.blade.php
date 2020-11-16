@@ -107,8 +107,8 @@
                 <ul class="menu-list">
                     @foreach($categories as $item)
                     <li>
-                        {{--<a href="{{  route('get.category.list', ['process' => 'parent','slug' => $item->c_slug.'-'.$item->id]) }}"--}}
-                        <a href="{{  route('get.category.list', $item->c_slug.'-'.$item->id) }}"
+                        <a href="{{  route('get.category.list', ['process' => 'parent','slug' => $item->c_slug.'-'.$item->id]) }}"
+                        {{--<a href="{{  route('get.category.list', $item->c_slug.'-'.$item->id) }}"--}}
                            title="{{  $item->c_name }}" class="js-open-menu">
                             <img src="{{ pare_url_file($item->c_avatar) }}" alt="{{ $item->c_name }}">
                             <span>{{  $item->c_name }}</span>
@@ -123,8 +123,8 @@
                             <div class="group">
                                 <div class="item">
                                     @foreach($item->children as $children)
-                                        {{--<a href="{{  route('get.category.list', ['process' => 'children','slug' => $children->c_slug.'-'.$children->id]) }}"--}}
-                                        <a href="{{  route('get.category.list', $children->c_slug.'-'.$children->id) }}"
+                                        <a href="{{  route('get.category.list', ['process' => 'children','slug' => $children->c_slug.'-'.$children->id]) }}"
+                                        {{--<a href="{{  route('get.category.list', $children->c_slug.'-'.$children->id) }}"--}}
                                            title="{{  $children->c_name }}" class="js-open-menu">
                                             <span>{{  $children->c_name }}</span>
                                         </a>

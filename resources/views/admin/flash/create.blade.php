@@ -52,7 +52,7 @@
                             <div class="form-group mb-3">
                                 <label for="exampleInputEmail1">Sản phẩm <span class="text-danger">(*)</span></label>
                                     <select name="products[]" id="products" class="form-control demo-select2 " multiple required="" data-placeholder="Choose Products">
-                                        @foreach(\App\Models\Product::all() as $product)
+                                        @foreach($productSale as $product)
                                             <option value="{{$product->id}}">{{__($product->pro_name)}}</option>
                                         @endforeach
                                     </select>

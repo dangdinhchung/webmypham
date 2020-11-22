@@ -43,7 +43,7 @@
                             <div class="form-group mb-3">
                                 <label for="exampleInputEmail1">Sản phẩm <span class="text-danger">(*)</span></label>
                                     <select name="products[]" id="products" class="form-control demo-select2" multiple required="" data-placeholder="Choose Products">
-                                        @foreach(\App\Models\Product::all() as $product)
+                                        @foreach($productSale as $product)
                                          @php
                                                 $flash_sale_product = \App\Models\FlashSaleProduct::where('fsp_flash_deal_id', $flashSale->id)->where('fsp_product_id', $product->id)->first();
                                         @endphp

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\FlashSale;
 use App\Models\FlashSaleProduct;
+use App\Models\Order;
+use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\AdminRequestFlashSale;
 
@@ -26,7 +29,8 @@ class AdminFlashSaleController extends Controller
      */
     public function create()
     {
-        return view('admin.flash.create');
+       $productSale = $this->getProductSale();
+        return view('admin.flash.create',compact('productSale'));
     }
 
     /**
@@ -88,8 +92,9 @@ class AdminFlashSaleController extends Controller
      */
     public function edit($id)
     {
+        $productSale = $this->getProductSale();
         $flashSale = FlashSale::findOrFail($id);
-        return view('admin.flash.edit', compact('flashSale'));
+        return view('admin.flash.edit', compact('flashSale','productSale'));
     }
 
     /**
@@ -155,5 +160,21 @@ class AdminFlashSaleController extends Controller
         } else {
             return redirect()->route('admin.flash.index')->with('error','Xóa sự kiện thất bại');
         }
+    }
+
+    /**
+     * get list product sale
+     *
+     * @return mixed
+     * @author chungdd
+     */
+    public function getProductSale() {
+        $topProductBuyMonth = Order::select('od_product_id')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->groupBy('od_product_id')
+            ->get()->pluck('od_product_id')->toArray();
+
+        $productSale = Product::select('*')->whereIn('id',$topProductBuyMonth)->get();
+        return $productSale;
     }
 }

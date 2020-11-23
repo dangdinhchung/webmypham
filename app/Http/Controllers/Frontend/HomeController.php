@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\FlashSale;
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Slide;
@@ -44,18 +46,37 @@ class HomeController extends FrontendController
                 ->get();
         });
 
-        //Sản phẩm mua nhiều
-        $productsPay = Cache::remember('HOME.PRODUCT_PAY', 60 * 24, function () {
-            return Product::where([
-                'pro_active' => 1,
-            ])
-                ->where('pro_pay', '>', 0)
-                ->orderByDesc('pro_pay')
-                ->limit(10)
-                ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_number',
-                    'pro_review_total', 'pro_review_star')
-                ->get();
+        //Sản phẩm mua nhiều trong ngày hôm nay
+//        $mondayLast = Carbon::now()->startOfWeek();
+//        $sundayFirst = Carbon::now()->endOfWeek();
+//        $totalMoneyWeed = Transaction::whereBetween('created_at',[$mondayLast,$sundayFirst])
+//        $productsPay = Cache::remember('HOME.PRODUCT_PAY', 60 * 24, function () {
+//            return Product::where([
+//                'pro_active' => 1,
+//            ])
+//                ->where('pro_pay', '>', 0)
+//                ->whereDate('created_at', Carbon::today())
+//                ->orderByDesc('pro_pay')
+//                ->limit(10)
+//                ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_number',
+//                    'pro_review_total', 'pro_review_star')
+//                ->get();
+//        });
+
+        //sản phẩm mua nhiều trong ngày hôm nay
+        $topProductBuyNow = Cache::remember('HOME.PRODUCT_PAY', 60 * 24, function () {
+         return  Order::with('product:id,pro_name,pro_slug,pro_sale,pro_avatar,pro_price,pro_number,pro_review_total,pro_review_star')
+             ->whereDate('created_at', Carbon::today())
+             /*->whereMonth('created_at',date('m'))*/
+            ->select(\DB::raw('sum(od_qty) as quantity'))
+            ->addSelect('od_product_id','od_price')
+            ->groupBy('od_product_id')
+            ->limit(20)
+            ->orderByDesc('quantity')
+            ->get();
         });
+
+
 
         // Lấy event hiển thị đầu
         $event1 = Cache::remember('HOME.EVENT_1', 60 * 24 * 10, function () {
@@ -96,7 +117,7 @@ class HomeController extends FrontendController
         $viewData = [
             'productsNew' => $productsNew,
             'productsHot' => $productsHot,
-            'productsPay' => $productsPay,
+            'topProductBuyNow' => $topProductBuyNow,
             'event1'      => $event1,
             'event2'      => $event2,
             'slides'      => $slides,

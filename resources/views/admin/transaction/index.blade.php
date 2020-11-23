@@ -86,6 +86,9 @@
                                                     </button>
                                                     <ul class="dropdown-menu" role="menu">
                                                         <li>
+                                                            <a href="{{  route('admin.transaction.view', $transaction->id) }}" class="js-view-confirm"><i class="fa fa-eye"></i> Xem chi tiết</a>
+                                                        </li>
+                                                        <li>
                                                             <a href="{{  route('admin.transaction.delete', $transaction->id) }}" class="js-delete-confirm"><i class="fa fa-trash"></i> Delete</a>
                                                         </li>
                                                         <li class="divider"></li>

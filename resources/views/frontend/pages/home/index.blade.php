@@ -135,7 +135,7 @@
             <div class="content-flash">
                 <div class="product-one">
                     <div class="flash-title">
-                        <div class="top"> <a href="#" title="" class="main-title main-title-2 text-flash">Flash sale</a> </div>
+                        <div class="top"> <a href="#" title="" class="main-title main-title-2 text-flash">{{$flashSale->fs_title}}</a> </div>
                         <div class="countdown countdown--style-1 countdown--style-1-v1" data-countdown-date="{{ date('m/d/Y', $flashSale->fs_end_date) }}" data-countdown-label="show">
                         </div>
                     </div>
@@ -165,7 +165,7 @@
         {{--show flash sale end--}}
         <div class="product-one">
             <div class="top">
-                <a href="#" title="" class="main-title main-title-2">Sản phẩm bán chạy</a>
+                <a href="#" title="" class="main-title main-title-2">Sản phẩm bán chạy trong ngày</a>
             </div>
             <div class="bot">
                 @if ($event1)
@@ -178,9 +178,9 @@
                     </div>
                 @endif
                 <div class="right js-product-one owl-carousel owl-theme owl-custom">
-                    @foreach($productsPay as $product)
+                    @foreach($topProductBuyNow as $product)
                         <div class="item">
-                            @include('frontend.components.product_item',[ 'product' => $product])
+                            @include('frontend.components.product_item',[ 'product' => $product->product])
                         </div>
                     @endforeach
                 </div>

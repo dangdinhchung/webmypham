@@ -173,4 +173,13 @@ class AdminTransactionController extends Controller
             }
         }
     }
+
+    /**
+     * @param $transactionID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author chungdd
+     */
+    public function showDeatailView($transactionID) {
+        return view('admin.transaction.view-detail');
+    }
 }

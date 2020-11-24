@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+use App\Models\Coupon;
 use App\Models\InvoiceEntered;
+use App\Models\Role;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Order;
@@ -180,6 +184,42 @@ class AdminTransactionController extends Controller
      * @author chungdd
      */
     public function showDeatailView($transactionID) {
-        return view('admin.transaction.view-detail');
+        $transactions = Transaction::findOrFail($transactionID);
+        $dateNow = Carbon::now();
+        if($transactions->tst_admin_id > 0) {
+            $admins = Admin::findOrFail($transactions->tst_admin_id);
+        } else {
+            $admins = [];
+        }
+        $orders = Order::with('product:id,pro_name,pro_slug,pro_avatar')->where('od_transaction_id', $transactionID)
+            ->get();
+        // status transactions
+        if($transactions->tst_status == 1) {
+            $statusOrder = 'Tiếp nhận';
+        } else if ($transactions->tst_status == 2) {
+            $statusOrder = 'Đang vận chuyển';
+        } else if($transactions->tst_status == 2) {
+            $statusOrder = 'Đã bàn giao';
+        } else {
+            $statusOrder = 'Hủy bỏ';
+        }
+        //type pay online hoặc offline
+        if($transactions->tst_type == 1) {
+            $orderPay = 'Thanh toán sau';
+        } else {
+            $orderPay = 'Thanh toán online';
+        }
+
+        //get coupon
+        if($transactions->tst_coupon_id) {
+            $couponDetail = Coupon::findOrFail($transactions->tst_coupon_id);
+        } else {
+            $couponDetail = [];
+        }
+
+        //get permission (nhân viên vận chuyển)
+        $listRoleOfAdmin = \DB::table('role_admin')->where('role_id',4)->pluck('admin_id')->toArray();
+        $adminRoles = Admin::whereIn('id', $listRoleOfAdmin)->where('status',1)->get();
+        return view('admin.transaction.view-detail',compact('orders','transactions','dateNow','admins','statusOrder','orderPay','couponDetail','adminRoles'));
     }
 }

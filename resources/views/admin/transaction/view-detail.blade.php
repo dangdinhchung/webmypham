@@ -3,27 +3,27 @@
     <section class="content-header">
         <h1>
             Invoice
-            <small>#007612</small>
+            <small>#{{$transactions->id}}</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Examples</a></li>
-            <li class="active">Invoice</li>
+            <li><a href="{{  route('admin.transaction.index') }}">Transaction</a></li>
+            <li class="active">Detail</li>
         </ol>
     </section>
-    <div class="pad margin no-print">
+  {{--  <div class="pad margin no-print">
         <div class="callout callout-info" style="margin-bottom: 0!important;">
             <h4><i class="fa fa-info"></i> Note:</h4>
             This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
         </div>
-    </div>
+    </div>--}}
     <section class="invoice">
         <!-- title row -->
         <div class="row">
             <div class="col-xs-12">
                 <h2 class="page-header">
-                    <i class="fa fa-globe"></i> AdminLTE, Inc.
-                    <small class="pull-right">Date: 2/10/2014</small>
+                    <i class="fa fa-globe"></i> Chi tiết đơn hàng
+                    <small class="pull-right">Thời gian: {{$dateNow}}</small>
                 </h2>
             </div>
             <!-- /.col -->
@@ -31,33 +31,37 @@
         <!-- info row -->
         <div class="row invoice-info">
             <div class="col-sm-4 invoice-col">
-                From
+                Khách hàng
                 <address>
-                    <strong>Admin, Inc.</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (804) 123-5432<br>
-                    Email: info@almasaeedstudio.com
+                    <strong>{{$transactions->tst_name}}</strong><br>
+                    {{$transactions->tst_address}} <br>
+                    Phone: {{$transactions->tst_phone}}<br>
+                    Email: {{$transactions->tst_email}}
                 </address>
             </div>
             <!-- /.col -->
-            <div class="col-sm-4 invoice-col">
-                To
-                <address>
-                    <strong>John Doe</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (555) 539-1037<br>
-                    Email: john.doe@example.com
-                </address>
-            </div>
+
+                <div class="col-sm-4 invoice-col">
+                    Nhân viên xử lý đơn hàng
+                    @if($admins)
+                    <address>
+                        <strong>{{$admins->name}}</strong><br>
+                        {{$admins->address}} <br>
+                        Phone: {{$admins->phone}}<br>
+                        Email: {{$admins->email}}
+                    </address>
+                    @else
+                        <br><strong>Đơn hàng chưa được nhân viên xử lý</strong>
+                    @endif
+                    @if($transactions->tst_status == -1 && $transactions->tst_admin_id <= 0)  <br><strong>(Khách hàng đã hủy đơn hàng)</strong> @endif
+                </div>
+
             <!-- /.col -->
             <div class="col-sm-4 invoice-col">
-                <b>Invoice #007612</b><br>
-                <br>
-                <b>Order ID:</b> 4F3S8J<br>
-                <b>Payment Due:</b> 2/22/2014<br>
-                <b>Account:</b> 968-34567
+                <b>Invoice #{{$transactions->id}}</b><br>
+                <b>Trạng thái đơn hàng:</b> {{$statusOrder}}<br>
+                <b>Kiểu thanh toán:</b> <span class="label label-info">{{$orderPay}}</span><br>
+                <b>Thời gian mua:</b> {{ $transactions->created_at }}
             </div>
             <!-- /.col -->
         </div>
@@ -69,42 +73,34 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Qty</th>
-                        <th>Product</th>
-                        <th>Serial #</th>
-                        <th>Description</th>
-                        <th>Subtotal</th>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
                     </tr>
                     </thead>
                     <tbody>
+                    @php
+                        $totalMoney = 0;
+                    @endphp
+                    @foreach($orders as $key => $item)
+                        @php
+                            $itemTotal = $item->od_price * $item->od_qty;
+                            $totalMoney += $itemTotal;
+                        @endphp
                     <tr>
-                        <td>1</td>
-                        <td>Call of Duty</td>
-                        <td>455-981-221</td>
-                        <td>El snort testosterone trophy driving gloves handsome</td>
-                        <td>$64.50</td>
+                        <td>#{{ $key + 1 }}.</td>
+                        <td><a href="">{{ $item->product->pro_name ?? "[N\A]" }}</a></td>
+                        <td>
+                            <img alt="" style="width: 60px;height: 80px" src="{{ pare_url_file($item->product->pro_avatar ?? "") }}" class="lazyload">
+                        </td>
+                        <td>{{ number_format($item->od_price,0,',','.') }} đ</td>
+                        <td>{{ $item->od_qty }}</td>
+                        <td>{{ number_format($item->od_price * $item->od_qty,0,',','.') }} đ</td>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Need for Speed IV</td>
-                        <td>247-925-726</td>
-                        <td>Wes Anderson umami biodiesel</td>
-                        <td>$50.00</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Monsters DVD</td>
-                        <td>735-845-642</td>
-                        <td>Terry Richardson helvetica tousled street art master</td>
-                        <td>$10.70</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Grown Ups Blue Ray</td>
-                        <td>422-568-642</td>
-                        <td>Tousled lomo letterpress</td>
-                        <td>$25.99</td>
-                    </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -115,38 +111,53 @@
         <div class="row">
             <!-- accepted payments column -->
             <div class="col-xs-6">
-                <p class="lead">Payment Methods:</p>
-                <img src="../../dist/img/credit/visa.png" alt="Visa">
+                <p class="lead">Nhân viên vận chuyển</p>
+               {{-- <img src="../../dist/img/credit/visa.png" alt="Visa">
                 <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
                 <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+                <img src="../../dist/img/credit/paypal2.png" alt="Paypal">--}}
 
-                <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+               {{-- <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
                     Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg
                     dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                </p>
+                </p>--}}
+
+                    <div class="form-group ">
+                        <select class="form-control" name="atb_type">
+                            <option disabled selected>Hãy chọn nhân viên vận chuyển</option>
+                            @foreach($adminRoles as $key => $item)
+                            <option value="1">{{$item->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
             </div>
             <!-- /.col -->
             <div class="col-xs-6">
-                <p class="lead">Amount Due 2/22/2014</p>
+                <p class="lead">Thanh toán</p>
 
                 <div class="table-responsive">
                     <table class="table">
                         <tbody><tr>
-                            <th style="width:50%">Subtotal:</th>
-                            <td>$250.30</td>
+                            <th style="width:50%">Tổng tiền hàng:</th>
+                            <td>{{ number_format($totalMoney,0,',','.') }} đ</td>
                         </tr>
                         <tr>
-                            <th>Tax (9.3%)</th>
-                            <td>$10.34</td>
+                            <th>Phí vận chuyển:</th>
+                            <td>{{ number_format(App\Models\Product::SHIPPING_COST,0,',','.') }} đ</td>
                         </tr>
+                        @if(isset($couponDetail) && $couponDetail)
+                            @php
+                                $totalDiscount = floor($totalMoney * $couponDetail->cp_discount / 100);
+                            @endphp
+                            <tr>
+                                <th>Giảm tối đa {{$couponDetail->cp_discount}} % (Code: {{$couponDetail->cp_code}})</th>
+                                <td>-{{ number_format($totalDiscount,0,',','.') }} đ</td>
+                            </tr>
+                        @endif
                         <tr>
-                            <th>Shipping:</th>
-                            <td>$5.80</td>
-                        </tr>
-                        <tr>
-                            <th>Total:</th>
-                            <td>$265.24</td>
+                            <th>Tổng tiền cần thanh toán:</th>
+                            <td>{{ number_format($transactions->tst_total_money,0,',','.') }} đ</td>
                         </tr>
                         </tbody></table>
                 </div>
@@ -158,12 +169,12 @@
         <!-- this row will not appear when printing -->
         <div class="row no-print">
             <div class="col-xs-12">
-                <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>
-                <button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment
-                </button>
-                <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
+                <a href="invoice-print.html" target="_blank" class="btn btn-success pull-right"><i class="fa fa-print"></i> Cập nhật</a>
+               {{-- <button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment
+                </button>--}}
+              {{--  <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
                     <i class="fa fa-download"></i> Generate PDF
-                </button>
+                </button>--}}
             </div>
         </div>
     </section>

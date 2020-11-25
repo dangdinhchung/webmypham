@@ -11,12 +11,15 @@
             <li class="active">Detail</li>
         </ol>
     </section>
-  {{--  <div class="pad margin no-print">
-        <div class="callout callout-info" style="margin-bottom: 0!important;">
-            <h4><i class="fa fa-info"></i> Note:</h4>
-            This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+    @if($transactions->tst_status == 1)
+        <div class="pad margin no-print">
+            <div class="callout callout-info" style="margin-bottom: 0!important;">
+                <h4><i class="fa fa-info"></i> Note:</h4>
+               Đơn hàng chưa được xử lý
+            </div>
         </div>
-    </div>--}}
+    @endif
+
     <section class="invoice">
         <!-- title row -->
         <div class="row">
@@ -109,29 +112,29 @@
         <!-- /.row -->
 
         <div class="row">
-            <!-- accepted payments column -->
+            @if($transactions->tst_status == 1)
             <div class="col-xs-6">
                 <p class="lead">Nhân viên vận chuyển</p>
-               {{-- <img src="../../dist/img/credit/visa.png" alt="Visa">
-                <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-                <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                <img src="../../dist/img/credit/paypal2.png" alt="Paypal">--}}
-
-               {{-- <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg
-                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-                </p>--}}
-
+                <form action="{{ route('admin.process-shipping') }}" id="form-wallet-1" name="shipping" method="POST">
+                    @csrf
+                    <input type="hidden" name="transaction_id" value="{{$transactions->id}}">
                     <div class="form-group ">
-                        <select class="form-control" name="atb_type">
+                        <select class="form-control" name="tst_shipping_id" id="shipping">
                             <option disabled selected>Hãy chọn nhân viên vận chuyển</option>
                             @foreach($adminRoles as $key => $item)
-                            <option value="1">{{$item->name}}</option>
+                            <option value="{{$item->id}}" {{ $transactions->tst_shipping_id == $item->id ? "selected='selected'" : "" }}>{{$item->name}}</option>
                             @endforeach
                         </select>
                     </div>
 
+                    <button type="submit" class="btn btn-success pull-right"><i class="fa fa-print"></i> Cập nhật</button>
+                    <a href="{{ route('admin.transaction.index')}}" class="btn btn-info pull-right" style="margin-right: 20px;"> Quay lại</a>
+                </form>
+
             </div>
+            @else
+              <div class="col-xs-6"></div>
+            @endif
             <!-- /.col -->
             <div class="col-xs-6">
                 <p class="lead">Thanh toán</p>
@@ -169,7 +172,8 @@
         <!-- this row will not appear when printing -->
         <div class="row no-print">
             <div class="col-xs-12">
-                <a href="invoice-print.html" target="_blank" class="btn btn-success pull-right"><i class="fa fa-print"></i> Cập nhật</a>
+               {{-- <a href="{{ route('admin.process-shipping',$transactions->id)}}" data-transaction="{{$transactions->id}}" class="btn btn-success pull-right shipping-update"><i class="fa fa-print"></i> Cập nhật</a>
+                <a href="{{ route('admin.transaction.index')}}" class="btn btn-info pull-right" style="margin-right: 20px;"> Quay lại</a>--}}
                {{-- <button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment
                 </button>--}}
               {{--  <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
@@ -180,3 +184,12 @@
     </section>
     <div class="clearfix"></div>
 @stop
+
+{{--
+@section('script')
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{{ asset('js/cart.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    </script>
+@stop--}}

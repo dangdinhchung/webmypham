@@ -130,6 +130,7 @@ class ShoppingCartController extends Controller
     public function postPay(AdminPostPayRequest $request)
     {
         Cache::forget('HOME.PRODUCT_PAY');
+        Cache::forget('HOME.PRODUCT_ORDER');
         $data = $request->except("_token");
         //kiểm tra user đăng nhập chưa
         if (!\Auth::user()->id) {
@@ -162,7 +163,7 @@ class ShoppingCartController extends Controller
             $transacionID = Transaction::insertGetId([
                 'tst_user_id'     => \Auth::user()->id,
                 'tst_total_money' => $totalMoney,
-                'tst_admin_id' => get_data_user('admins'),
+//                'tst_admin_id' => get_data_user('admins'),
                 'tst_name'        => $request->tst_name,
                 'tst_email'       => $request->tst_email,
                 'tst_phone'       => $request->tst_phone,

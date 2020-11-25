@@ -14,6 +14,7 @@ var Cart = {
         this.exportPdfTransaction();
         this.showCancelOrder();
         this.processCancelOrder();
+        /*this.processShipping();*/
     },
 
     exportPdfTransaction()
@@ -35,6 +36,33 @@ var Cart = {
             });
         })
     },
+
+    /*processShipping() {
+        $("body").on("click",".shipping-update", function (e) {
+            e.preventDefault();
+            let URL = $(this).attr('href');
+            let idTran = $(this).attr('data-transaction');
+            let idShipping = $( "#shipping" ).val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: URL,
+                dataType: 'json',
+                data: {
+                    idShipping: idShipping,
+                    idTran: idTran,
+                },
+                success: function (results) {
+                    if(results.success == "success") {
+                        toast.success("Hủy đơn hàng thành công");
+                    }
+                }
+            })
+        })
+    },*/
+
     showInvoiceTransaction()
     {
         $(".js-show-invoice_transaction").click( function(event){

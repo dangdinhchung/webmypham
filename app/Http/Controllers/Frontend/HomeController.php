@@ -49,16 +49,10 @@ class HomeController extends FrontendController
         //Sản phẩm mua nhiều trong ngày hôm nay
 //        $mondayLast = Carbon::now()->startOfWeek();
 //        $sundayFirst = Carbon::now()->endOfWeek();
+//        ->whereDate('created_at', Carbon::today())
 //        $totalMoneyWeed = Transaction::whereBetween('created_at',[$mondayLast,$sundayFirst])
-//        $productsPay = Cache::remember('HOME.PRODUCT_PAY', 60 * 24, function () {
-//            return Product::where([
-//                'pro_active' => 1,
-//            ])
-//                ->where('pro_pay', '>', 0)
-//                ->whereDate('created_at', Carbon::today())
-//                ->orderByDesc('pro_pay')
-//                ->limit(10)
-//                ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_number',
+//        $productsPay = Cache::remember('HOME.PRODUCT_ORDER', 60 * 24, function () {
+//            return Product::select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_number',
 //                    'pro_review_total', 'pro_review_star')
 //                ->get();
 //        });
@@ -115,16 +109,17 @@ class HomeController extends FrontendController
         $flashSale = FlashSale::where('fs_status', 1)->first();
 
         $viewData = [
-            'productsNew' => $productsNew,
-            'productsHot' => $productsHot,
+            'productsNew'      => $productsNew,
+            'productsHot'      => $productsHot,
             'topProductBuyNow' => $topProductBuyNow,
-            'event1'      => $event1,
-            'event2'      => $event2,
-            'slides'      => $slides,
-            'event3'      => $event3,
-            'title_page'  => "Trang chủ | Đồ án tốt nghiệp",
-            'articlesHot' => $articlesHot,
-            'flashSale'   => $flashSale
+//            'productsPay'      => $productsPay,
+            'event1'           => $event1,
+            'event2'           => $event2,
+            'slides'           => $slides,
+            'event3'           => $event3,
+            'title_page'       => "Trang chủ | Đồ án tốt nghiệp",
+            'articlesHot'      => $articlesHot,
+            'flashSale'        => $flashSale
         ];
 
         return view('frontend.pages.home.index', $viewData);

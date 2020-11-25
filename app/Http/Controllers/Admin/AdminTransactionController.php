@@ -24,7 +24,13 @@ class AdminTransactionController extends Controller
      */
     public function index(Request $request)
     {
+        $listRoleOfAdmin = \DB::table('role_admin')->where('role_id',4)->pluck('admin_id')->toArray();
+        $idAdminLogin = get_data_user('admins');
         $transactions = Transaction::whereRaw(1);
+
+        if (in_array($idAdminLogin, $listRoleOfAdmin)) {
+            $transactions->where('tst_shipping_id', $idAdminLogin);
+        }
 
         if ($request->id) {
             $transactions->where('id', $request->id);
@@ -129,7 +135,7 @@ class AdminTransactionController extends Controller
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      * @author chungdd
      */
-    public function getAction(Request $request, $action, $id)
+    /*public function getAction(Request $request, $action, $id)
     {
         $transaction = Transaction::find($id);
         if ($transaction) {
@@ -146,6 +152,51 @@ class AdminTransactionController extends Controller
                     # code...
                     break;
             }
+            $transaction->tst_admin_id = get_data_user('admins');
+            $transaction->save();
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['code' => 200]);
+        }
+
+        return redirect()->back();
+    }*/
+
+    public function checkProcess(Request $request, $id) {
+        $transaction = Transaction::find($id);
+        if ($transaction) {
+            $transaction->tst_status = 2;
+            $transaction->tst_admin_id = get_data_user('admins');
+            $transaction->save();
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['code' => 200]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function checkSuccess(Request $request, $id) {
+        $transaction = Transaction::find($id);
+        if ($transaction) {
+            $transaction->tst_status = 3;
+            $transaction->tst_admin_id = get_data_user('admins');
+            $transaction->save();
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['code' => 200]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function checkCancel(Request $request, $id) {
+        $transaction = Transaction::find($id);
+        if ($transaction) {
+            $transaction->tst_status = -1;
             $transaction->tst_admin_id = get_data_user('admins');
             $transaction->save();
         }
@@ -198,7 +249,7 @@ class AdminTransactionController extends Controller
             $statusOrder = 'Tiếp nhận';
         } else if ($transactions->tst_status == 2) {
             $statusOrder = 'Đang vận chuyển';
-        } else if($transactions->tst_status == 2) {
+        } else if($transactions->tst_status == 3) {
             $statusOrder = 'Đã bàn giao';
         } else {
             $statusOrder = 'Hủy bỏ';
@@ -221,5 +272,18 @@ class AdminTransactionController extends Controller
         $listRoleOfAdmin = \DB::table('role_admin')->where('role_id',4)->pluck('admin_id')->toArray();
         $adminRoles = Admin::whereIn('id', $listRoleOfAdmin)->where('status',1)->get();
         return view('admin.transaction.view-detail',compact('orders','transactions','dateNow','admins','statusOrder','orderPay','couponDetail','adminRoles'));
+    }
+
+    public function processShipping(Request $request) {
+        $idShipping = $request->tst_shipping_id;
+        $idTransaction = $request->transaction_id;
+        if($idTransaction && $idShipping) {
+            \DB::table('transactions')
+                ->where('id', $idTransaction)
+                ->update([
+                    'tst_shipping_id' => $idShipping
+                ]);
+            return redirect()->back()->with('msg','Cập nhật trạng thái thành công');
+        }
     }
 }

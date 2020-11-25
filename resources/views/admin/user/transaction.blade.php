@@ -21,7 +21,7 @@
 				<td>{{ number_format($transaction->tst_total_money,0,',','.') }} đ</td>
 				<td>{{ number_format($transaction->tst_total_money,0,',','.') }} đ</td>
 				<td>
-					<a href="{{ route('admin.action.transaction',['success', $transaction->id]) }}" class="btn btn-success btn-xs js-success-transaction"><i class="fa fa-calculator"></i> Thanh toán</a>
+					<a href="{{ route('admin.action.transaction.success',$transaction->id) }}" class="btn btn-success btn-xs js-success-transaction"><i class="fa fa-calculator"></i> Thanh toán</a>
 				</td>
 			</tr>
 		@endforeach

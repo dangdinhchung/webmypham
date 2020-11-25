@@ -122,9 +122,18 @@
             Route::get('delete/{id}','AdminTransactionController@delete')->name('admin.transaction.delete');
             Route::get('order-delete/{id}','AdminTransactionController@deleteOrderItem')->name('ajax_admin.transaction.order_item');
             Route::get('view-transaction/{id}','AdminTransactionController@getTransactionDetail')->name('ajax.admin.transaction.detail');
-            Route::get('action/{action}/{id}','AdminTransactionController@getAction')->name('admin.action.transaction')->middleware('check_permission_acl:transaction-edit');
+
+            /*Route::get('action/{action}/{id}','AdminTransactionController@getAction')->name('admin.action.transaction')->middleware('check_permission_acl:transaction-edit');*/
+
+            //admin.action.transaction
+            Route::get('action/process/{id}','AdminTransactionController@checkProcess')->name('admin.action.transaction.process')->middleware('check_permission_acl:transaction-process');
+            Route::get('action/success/{id}','AdminTransactionController@checkSuccess')->name('admin.action.transaction.success')->middleware('check_permission_acl:transaction-success');
+            Route::get('action/cancel/{id}','AdminTransactionController@checkCancel')->name('admin.action.transaction.cancel')->middleware('check_permission_acl:transaction-cancel');
 
             Route::get('detail-transaction/{id}','AdminTransactionController@showDeatailView')->name('admin.transaction.view');
+
+            Route::post('process-shipping','AdminTransactionController@processShipping')->name('admin.process-shipping')->middleware('check_permission_acl:transaction-shipping');
+
         });
 
 

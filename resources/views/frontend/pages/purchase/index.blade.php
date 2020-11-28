@@ -83,12 +83,21 @@
                         <div class="form-group">
                             <label for="name">Họ và tên <span class="cRed">(*)</span></label>
                             {{--{{ get_data_user('web','name') }}--}}
-                            <input name="tst_name" id="name" value="{{ old('tst_name') }}"
+                            <input name="tst_name" id="name" value="{{get_data_user('web','name')}}"
                                    type="text" class="form-control {{ $errors->first('tst_name') ? 'has-error' : '' }}">
                             @if ($errors->first('tst_name'))
                                 <span class="text-danger">{{ $errors->first('tst_name') }}</span>
                             @endif
                             {{--                            <span class="text-danger tst_name"></span>--}}
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="cRed">(*)</span></label>
+                            <input name="tst_email" id="email" type="text" value="{{get_data_user('web','email')}}"
+                                   class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
+                            @if ($errors->first('tst_email'))
+                                <span class="text-danger">{{ $errors->first('tst_email') }}</span>
+                            @endif
+                            {{--                            <span class="text-danger tst_email"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="phone">Điện thoại <span class="cRed">(*)</span></label>
@@ -109,15 +118,6 @@
                                 <span class="text-danger">{{ $errors->first('tst_address') }}</span>
                             @endif
                             {{--                            <span class="text-danger tst_address"></span>--}}
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email <span class="cRed">(*)</span></label>
-                            <input name="tst_email" id="email" type="text" value="{{ old('tst_email') }}"
-                                   class="form-control {{ $errors->first('tst_email') ? 'has-error' : '' }}">
-                            @if ($errors->first('tst_email'))
-                                <span class="text-danger">{{ $errors->first('tst_email') }}</span>
-                            @endif
-                            {{--                            <span class="text-danger tst_email"></span>--}}
                         </div>
                         <div class="form-group">
                             <label for="email">Hình thức thanh toán</label>

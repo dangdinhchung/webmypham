@@ -7,11 +7,11 @@
                 if ($product->pro_review_total)
                     $age = round($product->pro_review_star / $product->pro_review_total,2);
             @endphp
-            <span> {{ $age }} <i class="la la-star"></i></span>
+            <span class="sum-rating"> {{ $age }} <i class="la la-star"></i></span>
         </div>
         <div class="item dashboards_item">
             @foreach($ratingDefault as $key => $item)
-                <div class="item_review">
+                <div class="item_review rating_{{$key}}">
                     <span class="item_review-name">{{ $key }} <i class="la la-star"></i></span>
                     <div class="item_review-process">
                         <div>
@@ -20,10 +20,10 @@
                                 if ($product->pro_review_total)
                                     $ageItem = ($item['count_number'] / $product->pro_review_total) * 100 ;
                             @endphp
-                            <span style="width: {{ $ageItem }}%;"> </span>
+                            <span class="age-item-{{$key}}" style="width: {{ $ageItem }}%;"> </span>
                         </div>
                     </div>
-                    <span class="item_review-count"><b>{{ $item['count_number']  }}</b> đánh giá</span>
+                    <span class="item_review-count"><b class="count-number-{{$key}}">{{ $item['count_number']  }}</b> đánh giá</span>
                 </div>
             @endforeach
         </div>

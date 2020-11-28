@@ -173,8 +173,7 @@ class AdminFlashSaleController extends Controller
             ->whereMonth('created_at', Carbon::now()->month)
             ->groupBy('od_product_id')
             ->get()->pluck('od_product_id')->toArray();
-
-        $productSale = Product::select('*')->whereIn('id',$topProductBuyMonth)->get();
+        $productSale = Product::select('*')->whereNotIn('id',$topProductBuyMonth)->get();
         return $productSale;
     }
 }

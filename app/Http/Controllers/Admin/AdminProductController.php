@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\InvoiceEntered;
+use App\Models\Order;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Requests\AdminRequestProduct;
@@ -315,11 +316,19 @@ class AdminProductController extends Controller
     public function delete($id)
     {
         $product = Product::find($id);
-        if ($product) {
-            $product->delete();
+        //check order has product
+
+        $getIdProductOrder= Order::select('od_product_id')
+            ->groupBy('od_product_id')
+            ->get()->pluck('od_product_id')->toArray();
+        if(in_array($id,$getIdProductOrder)) {
+            return redirect()->route('admin.product.index')->with('error','Không xóa được, Sản phẩm đang hiện đang có trong đơn hàng!');
         }
 
-        return redirect()->route('admin.product.index')->with('msg','Xóa sản phẩm thành công');
+        return redirect()->route('admin.product.index')->with('error','Sản phẩm không thể xóa!');
+       /* if ($product) {
+            $product->delete();
+        }*/
     }
 
     /**
@@ -368,7 +377,7 @@ class AdminProductController extends Controller
             $key = $attribute->gettype($attribute->atb_type)['name'];
             $groupAttribute[$key][] = $attribute->toArray();
         }
-
+        
         return $groupAttribute;
     }
 

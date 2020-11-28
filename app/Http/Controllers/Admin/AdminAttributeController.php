@@ -98,8 +98,8 @@ class AdminAttributeController extends Controller
     public function delete($id)
     {
         $attribute          = Attribute::find($id);
-        if ($attribute) $attribute->delete();
-
-        return redirect()->route('admin.attribute.index')->with('msg','Xóa thuộc tính thành công');
+        return redirect()->route('admin.attribute.index')->with('error','Thuộc tính không thể xóa!');
+        //if ($attribute) $attribute->delete();
+        //return redirect()->route('admin.attribute.index')->with('msg','Xóa thuộc tính thành công');
     }
 }

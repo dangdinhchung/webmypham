@@ -134,6 +134,10 @@
                         <div class="btn btn-primary btn-lg btn-next-cart" style="float: right">
                             <a href="{{ route('purchase.index') }}" style="color: white">Mua hàng</a>
                         </div>
+                        <div class="btn btn-purple btn-lg btn-next-cart" style="float: right">
+                            <a href="{{ route('get.home') }}" style="color: white">Tiếp tục mua sắm</a>
+                        </div>
+
                     </div>
                 @else
                     <div class="list__content" style="width: 475px; margin: 0 auto;">

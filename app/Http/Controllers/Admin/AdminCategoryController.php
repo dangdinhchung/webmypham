@@ -129,9 +129,9 @@ class AdminCategoryController extends AdminController
     public function delete($id)
     {
         $category = Category::find($id);
-        if ($category) $category->delete();
-
-        return redirect()->route('admin.category.index')->with('msg','Xóa danh mục thành công');
+        return redirect()->route('admin.category.index')->with('error','Danh mục không thể xóa!');
+        //if ($category) $category->delete();
+        //return redirect()->route('admin.category.index')->with('msg','Xóa danh mục thành công');
     }
 
     /**

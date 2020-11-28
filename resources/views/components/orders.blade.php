@@ -2,7 +2,7 @@
     <tbody>
         <tr>
             <th style="width: 10px">#</th>
-            <th>Name</th>
+            <th style="width:400px">Name</th>
             <th>Avatar</th>
             <th>Price</th>
             <th>Qty</th>

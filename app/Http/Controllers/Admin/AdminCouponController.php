@@ -96,10 +96,12 @@ class AdminCouponController extends Controller
     public function delete($id)
     {
         $coupon = Coupon::find($id);
-        if ($coupon) {
+       /* if ($coupon) {
             $coupon->delete();
-        }
-        return redirect()->route('admin.coupon.index')->with('msg','Xóa mã giảm giá thành công');
+        }*/
+        //return redirect()->route('admin.coupon.index')->with('msg','Xóa mã giảm giá thành công');
+
+        return redirect()->route('admin.coupon.index')->with('error','Mã giảm giá không thể xóa!');
     }
 
     /**

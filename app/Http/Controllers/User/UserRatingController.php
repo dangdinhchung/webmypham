@@ -34,11 +34,15 @@ class UserRatingController extends Controller
 
             if ($rating->id) {
                 $html = view('frontend.pages.product_detail.include._inc_rating_item',compact('rating'))->render();
-                $this->staticRatingProduct($request->product_id, $request->review);
+                $age = $this->staticRatingProduct($request->product_id, $request->review);
             }
+            $product = Product::find($request->product_id);
             return response([
                 'html'     => $html ?? null,
-                'messages' => 'Đánh giá sản phẩm thành công'
+                'messages' => 'Đánh giá sản phẩm thành công',
+                'age' => $product->pro_age_review,
+                'r_number' => $request->review,
+                'age_review_total' => $product->pro_review_total
             ]);
         }
     }
@@ -78,10 +82,10 @@ class UserRatingController extends Controller
         $product->pro_review_star += $number;
         $product->save();
 
-       /* if ($product->pro_review_total)
+       if ($product->pro_review_total)
         {
-            $product->pro_age_review = round($product->pro_review_star / $product->pro_review_total,0);
+            $product->pro_age_review = round($product->pro_review_star / $product->pro_review_total,2);
             $product->save();
-        }*/
+        }
     }
 }

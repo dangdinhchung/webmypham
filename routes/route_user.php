@@ -21,7 +21,9 @@
         Route::get('rating/delete/{id}','UserRatingController@delete')->name('get.user.rating.delete'); // xoá đánh giá
 
         Route::get('comment','UserCommentController@index')->name('get.user.comment'); // commend 
-        Route::get('comment/delete/{id}','UserCommentController@delete')->name('get.user.comment.delete'); // xoá commend 
+        Route::get('comment/delete/{id}','UserCommentController@delete')->name('get.user.comment.delete'); // xoá commend
+
+        Route::get('coupon','UserInfoController@listCoupon')->name('get.list.coupon');
 
 		Route::get('management-transaction','UserManagementTransaction@index')->name('get.user.management_transaction'); // Biết động tài khoản
 

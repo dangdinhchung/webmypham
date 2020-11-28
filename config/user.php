@@ -50,6 +50,11 @@ return [
         'route' => 'get.update.password',
         'icon'  => 'fa fa-unlock-alt'
     ],
+    [
+        'name'  => 'Mã giảm giá',
+        'route' => 'get.list.coupon',
+        'icon'  => 'fa fa-gift'
+    ],
    /* [
         'name'  => 'Tạo shop',
         'route' => 'seller.index',

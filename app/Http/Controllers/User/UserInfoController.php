@@ -4,10 +4,13 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequestUpdatePassword;
+use App\Models\Coupon;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequestUpdateInfo;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -119,6 +122,11 @@ class UserInfoController extends Controller
         return view('user.update_password');
     }
 
+    /**
+     * @param UserRequestUpdatePassword $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @author chungdd
+     */
     public function saveUpdatePassword(UserRequestUpdatePassword $request) {
         if(Hash::check($request->password_old,get_data_user('web','password'))){
             $user = User::find(get_data_user('web'));
@@ -136,5 +144,22 @@ class UserInfoController extends Controller
             ]);
             return redirect()->back();
         }
+    }
+
+    public function listCoupon() {
+        $userId   = get_data_user('web');
+        $mytime =Carbon::now();
+        $convertDateNow =strtotime($mytime->toDateString());
+        $checkCouponUsed = DB::table('coupon_usages')->select('*')
+            ->where('cpu_user_id',$userId)
+            ->get();
+
+        $listCoupon = Coupon::where([
+            ['cp_active','=',1],
+            ['cp_start_date','<=',$convertDateNow]
+        ])
+            ->select('*')
+            ->get();
+        return view('user.view_coupon', compact('listCoupon','convertDateNow','checkCouponUsed'));
     }
 }

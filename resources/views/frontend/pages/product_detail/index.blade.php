@@ -36,6 +36,13 @@
         .tooltip:hover .tooltiptext {
             visibility: visible;
         }
+        .la-star {
+            font-size: 15px;
+            color: rgba(240,202,108,.31);
+        }
+        .rating i.active{
+            color: #f49a31 !important;
+        }
     </style>
 @stop
 @section('content')
@@ -104,7 +111,22 @@
                                             class="value price-new">{{  home_discounted_base_price($product->id) }} đ</span>
                                     <span class="sale">-{{  home_discounted_base_sale($product->id) }}%</span>
                                 </p>
-                                @if(isset($couponList))
+                                <p class="rating">
+                                    <span>
+                                        @php
+                                            $iactive = 0;
+                                            if ($product->pro_review_total){
+                                                $iactive = round($product->pro_review_star / $product->pro_review_total,2);
+                                            }
+
+                                        @endphp
+                                        @for($i = 1 ; $i <= 5 ; $i ++)
+                                            <i class="la la-star {{ $i <= $iactive ? 'active' : ''  }}"></i>
+                                        @endfor
+                                    </span>
+                                     <span class="text" style="margin-left: 6px;">{{ $product->pro_review_total }} đánh giá</span>
+                                </p>
+                                {{--@if(isset($couponList))
                                     <div class="coupon-list">
                                         <p>
                                             Mã giảm giá của shop:
@@ -117,13 +139,13 @@
                                         </div>
                                         </p>
                                     </div>
-                                @endif
-                                <p>
+                                @endif--}}
+                               {{-- <p>
                                     <span>View :&nbsp</span>
                                     <span>{{ $product->pro_view }}</span>
                                     <i class="fa fa-refresh compare" aria-hidden="true"
                                        onclick="addToCompare({{ $product->id }})"></i>
-                                </p>
+                                </p>--}}
                             </div>
                             <div class="btn-cart">
                                 <a href="{{ route('get.shopping.add', $product->id) }}" title="Thêm vào giỏ hàng"

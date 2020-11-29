@@ -20,7 +20,7 @@
                                 if ($product->pro_review_total)
                                     $ageItem = ($item['count_number'] / $product->pro_review_total) * 100 ;
                             @endphp
-                            <span class="age-item-{{$key}}" style="width: {{ $ageItem }}%;"> </span>
+                            <span class="age-item-{{$key}}" id="{{$item['count_number']}}" style="width: {{ $ageItem }}%;"> </span>
                         </div>
                     </div>
                     <span class="item_review-count"><b class="count-number-{{$key}}">{{ $item['count_number']  }}</b> đánh giá</span>

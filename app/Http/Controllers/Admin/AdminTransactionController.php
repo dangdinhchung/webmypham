@@ -284,13 +284,10 @@ class AdminTransactionController extends Controller
         $checkShippingDay = Admin::where('admins.status',1)
         ->whereIn('admins.id', $listRoleOfAdmin)
         ->join('transactions', 'admins.id', '=', 'transactions.tst_shipping_id')
-        ->groupBy('transactions.tst_shipping_id')
         ->select(\DB::raw('count(transactions.tst_shipping_id) as count_number'))
-        // ->addSelect(\DB::raw('count(transactions.created_at) as date'))
         ->addSelect('transactions.tst_shipping_id','admins.*')
         ->groupBy('transactions.tst_shipping_id')
         ->orderBy('count_number', 'ASC')
-        // ->orderBy('date', 'ASC')
         ->get();
 
         //get info login

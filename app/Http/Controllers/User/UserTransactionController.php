@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Exports\TransactionInvoiceExport;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
@@ -52,16 +54,33 @@ class UserTransactionController extends Controller
 
     public function viewOrder($id)
     {
+        $transactions = Transaction::findOrFail($id);
         $transaction = Transaction::with('user:id,name')->where([
             'id'          => $id,
             'tst_user_id' => \Auth::id()
         ])->first();
         if (!$transaction) return redirect()->to('/');
 
+         //get coupon
+         if($transactions->tst_coupon_id) {
+            $couponDetail = Coupon::findOrFail($transactions->tst_coupon_id);
+        } else {
+            $couponDetail = [];
+        }
+
+        //get user shipping
+        if($transactions->tst_shipping_id) {
+            $userShipping = Admin::findOrFail($transactions->tst_shipping_id);
+        } else {
+            $userShipping = [];
+        }
+
         $viewData = [
             'transaction' => $transaction,
             'title_page'  => "Chi tiết đơn hàng #". $transaction->id,
-            'orders'      => $this->getOrderByTransactionID($id)
+            'orders'      => $this->getOrderByTransactionID($id),
+            'userShipping' => $userShipping,
+            'couponDetail' => $couponDetail,
         ];
         return view('user.order', $viewData);
     }
@@ -114,13 +133,21 @@ class UserTransactionController extends Controller
 	 * export hoa don cho user
 	 */
     public function exportInvoiceTransaction($id)
-	{
+	{   
+        $transactions = Transaction::findOrFail($id);
 		$transaction = Transaction::with('admin:id,name')->where('id', $id)->first();
 		$orders = Order::with('product:id,pro_name,pro_slug,pro_avatar')
 			->where('od_transaction_id', $id)
-			->get();
+            ->get();
+            
+         //get coupon
+         if($transactions->tst_coupon_id) {
+            $couponDetail = Coupon::findOrFail($transactions->tst_coupon_id);
+        } else {
+            $couponDetail = [];
+        }     
 
-		$html =  view('user.include._inc_invoice_transaction',compact('transaction','orders'))->render();
+		$html =  view('user.include._inc_invoice_transaction',compact('transaction','orders','couponDetail'))->render();
 		return response()->json(['html' => $html]);
 
 //		return \Excel::download(new TransactionInvoiceExport($transaction), 'don-hang.xlsx');

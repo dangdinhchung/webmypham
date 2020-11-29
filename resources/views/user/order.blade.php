@@ -15,19 +15,33 @@
                 <div class="box">
                     <p><b>{{ $transaction->user->name ?? "[N\A]" }}</b></p>
                     <p>Địa chỉ: <span>{{ $transaction->tst_address }}</span></p>
+                    <p>Email: <span>{{ $transaction->tst_email }}</span></p>
+                    <p>SDT: <span>{{ $transaction->tst_phone }}</span></p>
                 </div>
             </div>
             <div class="col-4">
-                <h5>Hình thức giao hàng</h5>
+                <h5>Nhân viên vận chuyển</h5>
+               @if ($userShipping)
+                     <div class="box">
+                         <p><b>{{ $userShipping->name ?? "[N\A]" }}</b></p>
+                         <p>Địa chỉ: <span>{{ $userShipping->address }}</span></p>
+                         <p>Email: <span>{{ $userShipping->email }}</span></p>
+                         <p>SDT: <span>{{ $userShipping->phone }}</span></p>
+                    </div>
+                @else
                 <div class="box">
-                    <p>Phí vận chuyển : <span>0 đ</span></p>
+                 <p><b>Chưa bàn giao</b></p>
                 </div>
+               @endif
             </div>
             <div class="col-4">
                 <h5>Hình thức thanh toán</h5>
                 <div class="box">
                     <p>Hình thức: <b>Giao hàng nhận tiền</b></p>
-                    <p>Tổng tiền: <b>{{ number_format($transaction->tst_total_money,0,',','.') }} VNĐ</b></p> (Phí vận chuyển: {{ number_format(App\Models\Product::SHIPPING_COST,0,',','.') }} đ)
+                    <p>Tổng tiền cần thanh toán: <b>{{ number_format($transaction->tst_total_money,0,',','.') }} VNĐ</b></p> (Phí vận chuyển: {{ number_format(App\Models\Product::SHIPPING_COST,0,',','.') }} đ)
+                    @if ($couponDetail)
+                        <p>Mã giảm giá: <b>{{ $couponDetail->cp_code }} (-{{$couponDetail->cp_discount}}%)</b></p>
+                    @endif
                 </div>
             </div>
         </div>

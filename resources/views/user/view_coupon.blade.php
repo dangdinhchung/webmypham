@@ -53,12 +53,13 @@
                             <a href="#" style="text-transform: none;" class="main-title">Danh sách mã giảm giá</a>
                             <a href="{{route('get.home')}}" class="btn btn-primary">Quay lại</a>
                         </div>
+                        <img src="{{  asset('images/black.png') }}" alt="" style="margin: 15px 0px" class="lazyload lazy loaded">
                         <div class="bot">
                             @if (isset($listCoupon))
                                 @foreach($listCoupon as $item => $coupon)
                                     <div class="item">
                                 <div class="product-item coupon">
-                                    <a href="http://localhost:8000/san-pham/kem-chong-nang-some-by-mi-spf50pa-86"
+                                    <a href="#"
                                        title="" class="avatar image contain">
                                         <img alt="coupon"
                                              src="{{  asset('images/coupon.jpg') }}"

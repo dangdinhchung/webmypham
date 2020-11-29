@@ -182,8 +182,9 @@ class AdminTransactionController extends Controller
         $transaction = Transaction::find($id);
         if ($transaction) {
             $transaction->tst_status = 3;
-            $transaction->tst_admin_id = get_data_user('admins');
+            //$transaction->tst_admin_id = get_data_user('admins');
             $transaction->save();
+            $this->syncDecrementProduct($id);
         }
 
         if ($request->ajax()) {
@@ -268,12 +269,26 @@ class AdminTransactionController extends Controller
             $couponDetail = [];
         }
 
+        //get quyên nv van chuyen
+        if($transactions->tst_shipping_id) {
+            $userShipping = Admin::findOrFail($transactions->tst_shipping_id);
+        } else {
+            $userShipping = [];
+        }
+
         //get permission (nhân viên vận chuyển)
         $listRoleOfAdmin = \DB::table('role_admin')->where('role_id',4)->pluck('admin_id')->toArray();
         $adminRoles = Admin::whereIn('id', $listRoleOfAdmin)->where('status',1)->get();
-        return view('admin.transaction.view-detail',compact('orders','transactions','dateNow','admins','statusOrder','orderPay','couponDetail','adminRoles'));
-    }
 
+        //get info login
+        $shipping = false;
+       $adminId = get_data_user('admins');
+        if(in_array($adminId,$listRoleOfAdmin)) {
+         $shipping = true;   
+        }
+        return view('admin.transaction.view-detail',compact('orders','transactions','dateNow','admins','statusOrder','orderPay','couponDetail','adminRoles','userShipping','shipping'));
+    }
+    
     public function processShipping(Request $request) {
         $idShipping = $request->tst_shipping_id;
         $idTransaction = $request->transaction_id;
@@ -285,5 +300,23 @@ class AdminTransactionController extends Controller
                 ]);
             return redirect()->back()->with('msg','Cập nhật trạng thái thành công');
         }
+    }
+
+    public function getInvoiceDetail($id) {
+        $transactions = Transaction::findOrFail($id);
+		$transaction = Transaction::with('admin:id,name')->where('id', $id)->first();
+		$orders = Order::with('product:id,pro_name,pro_slug,pro_avatar')
+			->where('od_transaction_id', $id)
+            ->get();
+            
+         //get coupon
+         if($transactions->tst_coupon_id) {
+            $couponDetail = Coupon::findOrFail($transactions->tst_coupon_id);
+        } else {
+            $couponDetail = [];
+        }     
+
+		$html =  view('user.include._inc_invoice_transaction',compact('transaction','orders','couponDetail'))->render();
+		return response()->json(['html' => $html]);
     }
 }

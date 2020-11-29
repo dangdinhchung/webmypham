@@ -123,6 +123,8 @@
             Route::get('order-delete/{id}','AdminTransactionController@deleteOrderItem')->name('ajax_admin.transaction.order_item');
             Route::get('view-transaction/{id}','AdminTransactionController@getTransactionDetail')->name('ajax.admin.transaction.detail');
 
+            Route::get('view-invoice/{id}','AdminTransactionController@getInvoiceDetail')->name('ajax.admin.transaction.invoice');
+
             /*Route::get('action/{action}/{id}','AdminTransactionController@getAction')->name('admin.action.transaction')->middleware('check_permission_acl:transaction-edit');*/
 
             //admin.action.transaction

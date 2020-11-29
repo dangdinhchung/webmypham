@@ -312,6 +312,22 @@
                     });
                 });
 
+                $(".js-preview-invoice").click(function(event) {
+                    event.preventDefault();
+                    let $this = $(this);
+                    let URL   = $this.attr('href');
+                    let ID    = $this.attr('data-id');
+                    $("#idTransaction").html("#" + ID);
+                    $.ajax({
+                        url: URL
+                    }).done(function( results ) {
+                        $("#modal-preview-invoice .content").html(results.html)
+                        $("#modal-preview-invoice").modal({
+                            show : true
+                        })
+                    });
+                });
+
                 $('body').on("click",'.js-delete-order-item', function(event) {
                     event.preventDefault();
                     let URL = $(this).attr('href');

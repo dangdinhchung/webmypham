@@ -118,30 +118,47 @@ var ProductDetail = {
 
                     if(results.r_number == 1) {
                         sum_rating_1 = parseInt(sum_rating_1) + 1;
-                        let age_review = (sum_rating_1 / review_total) * 100;
+                        // let age_review = (sum_rating_1 / review_total) * 100;
                         $('.count-number-1').text(sum_rating_1)
-                        $(".age-item-1").css("width", age_review + '%');
+                        // $(".age-item-1").css("width", age_review + '%');
                     } else if(results.r_number == 2) {
                         sum_rating_2 = parseInt(sum_rating_2) + 1;
-                        let age_review = (sum_rating_2 / review_total) * 100;
+                        // let age_review = (sum_rating_2 / review_total) * 100;
                         $('.count-number-2').text(sum_rating_2);
-                        $(".age-item-2").css("width", age_review + '%');
+                        // $(".age-item-2").css("width", age_review + '%');
                     } else if(results.r_number == 3) {
                         sum_rating_3 = parseInt(sum_rating_3) + 1;
-                        let age_review = (sum_rating_3 / review_total) * 100;
+                        // let age_review = (sum_rating_3 / review_total) * 100;
                         $('.count-number-3').text(sum_rating_3);
-                        $(".age-item-3").css("width", age_review + '%');
+                        // $(".age-item-3").css("width", age_review + '%');
                     } else if(results.r_number == 4) {
                         sum_rating_4 = parseInt(sum_rating_4) + 1;
-                        let age_review = (sum_rating_4 / review_total) * 100;
+                        // let age_review = (sum_rating_4 / review_total) * 100;
                         $('.count-number-4').text(sum_rating_4);
-                        $(".age-item-4").css("width", age_review + '%');
+                        // $(".age-item-4").css("width", age_review + '%');
                     } else if(results.r_number == 5) {
                         sum_rating_5 = parseInt(sum_rating_5) + 1;
-                        let age_review = (sum_rating_5 / review_total) * 100;
+                        // let age_review = (sum_rating_5 / review_total) * 100;
                         $('.count-number-5').text(sum_rating_5)
-                        $(".age-item-5").css("width", age_review + '%');
+                        // $(".age-item-5").css("width", age_review + '%');
                     }
+                    
+                    //style with rating
+                    let age_review_1 = (sum_rating_1 / review_total) * 100;
+                    $(".age-item-1").css("width", age_review_1 + '%');
+
+                    let age_review_2 = (sum_rating_2 / review_total) * 100;
+                    $(".age-item-2").css("width", age_review_2 + '%');
+
+                    let age_review_3 = (sum_rating_3 / review_total) * 100;
+                    $(".age-item-3").css("width", age_review_3 + '%');
+
+                    let age_review_4 = (sum_rating_4 / review_total) * 100;
+                    $(".age-item-4").css("width", age_review_4 + '%');
+
+                    let age_review_5 = (sum_rating_5 / review_total) * 100;
+                    $(".age-item-5").css("width", age_review_5 + '%');
+
                 }
                 toast.success(results.messages);
             });

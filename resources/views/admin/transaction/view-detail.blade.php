@@ -33,40 +33,54 @@
         </div>
         <!-- info row -->
         <div class="row invoice-info">
-            <div class="col-sm-4 invoice-col">
+            <div class="col-sm-3 invoice-col">
                 Khách hàng
                 <address>
                     <strong>{{$transactions->tst_name}}</strong><br>
-                    {{$transactions->tst_address}} <br>
+                    Địa chỉ: {{$transactions->tst_address}} <br>
                     Phone: {{$transactions->tst_phone}}<br>
                     Email: {{$transactions->tst_email}}
                 </address>
             </div>
             <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+                Nhân viên xử lý đơn hàng
+                @if($admins)
+                <address>
+                    <strong>{{$admins->name}}</strong><br>
+                    Địa chỉ: {{$admins->address}} <br>
+                    Phone: {{$admins->phone}}<br>
+                    Email: {{$admins->email}}
+                </address>
+                @else
+                    <br><strong>Đơn hàng chưa được nhân viên xử lý</strong>
+                @endif
+                @if($transactions->tst_status == -1 && $transactions->tst_admin_id <= 0)  <br><strong>(Khách hàng đã hủy đơn hàng)</strong> @endif
+            </div>
 
-                <div class="col-sm-4 invoice-col">
-                    Nhân viên xử lý đơn hàng
-                    @if($admins)
-                    <address>
-                        <strong>{{$admins->name}}</strong><br>
-                        {{$admins->address}} <br>
-                        Phone: {{$admins->phone}}<br>
-                        Email: {{$admins->email}}
-                    </address>
-                    @else
-                        <br><strong>Đơn hàng chưa được nhân viên xử lý</strong>
-                    @endif
-                    @if($transactions->tst_status == -1 && $transactions->tst_admin_id <= 0)  <br><strong>(Khách hàng đã hủy đơn hàng)</strong> @endif
-                </div>
+            <div class="col-sm-3 invoice-col">
+                Nhân viên vận chuyển
+                @if($userShipping )
+                <address>
+                    <strong>{{$userShipping->name}}</strong><br>
+                    Địa chỉ: {{$userShipping->address}} <br>
+                    Phone: {{$userShipping->phone}}<br>
+                    Email: {{$userShipping->email}}
+                </address>
+                @else
+                    <br><strong>Không có</strong>
+                @endif
+            </div>
+
 
             <!-- /.col -->
-            <div class="col-sm-4 invoice-col">
+            <div class="col-sm-3 invoice-col">
                 <b>Invoice #{{$transactions->id}}</b><br>
-                <b>Trạng thái đơn hàng:</b> {{$statusOrder}}<br>
+                <b>Trạng thái đơn hàng:</b> <span class="label label-primary">{{$statusOrder}}</span><br>
                 <b>Kiểu thanh toán:</b> <span class="label label-info">{{$orderPay}}</span><br>
                 <b>Thời gian mua:</b> {{ $transactions->created_at }}
             </div>
-            <!-- /.col -->
+        <!-- /.col -->
         </div>
         <!-- /.row -->
 
@@ -112,7 +126,7 @@
         <!-- /.row -->
 
         <div class="row">
-            @if($transactions->tst_status == 1)
+            @if($transactions->tst_status == 2 && !$shipping)
             <div class="col-xs-6">
                 <p class="lead">Nhân viên vận chuyển</p>
                 <form action="{{ route('admin.process-shipping') }}" id="form-wallet-1" name="shipping" method="POST">
@@ -128,7 +142,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-success pull-right"><i class="fa fa-print"></i> Cập nhật</button>
-                    <a href="{{ route('admin.transaction.index')}}" class="btn btn-info pull-right" style="margin-right: 20px;"> Quay lại</a>
+                
                 </form>
 
             </div>
@@ -138,7 +152,6 @@
             <!-- /.col -->
             <div class="col-xs-6">
                 <p class="lead">Thanh toán</p>
-
                 <div class="table-responsive">
                     <table class="table">
                         <tbody><tr>
@@ -164,6 +177,9 @@
                         </tr>
                         </tbody></table>
                 </div>
+                <a href="{{ route('admin.transaction.index')}}" class="btn btn-info pull-right" style="margin-right: 20px;"> Quay lại</a>
+                {{-- {{ route('ajax.admin.transaction.invoice', $transactions->id) }} --}}
+                <a data-id="{{  $transactions->id }}" href="{{ route('ajax.admin.transaction.invoice', $transactions->id) }}" class="btn btn-info js-preview-invoice"><i class="fa fa-eye"></i> View</a>
             </div>
             <!-- /.col -->
         </div>
@@ -185,11 +201,36 @@
     <div class="clearfix"></div>
 @stop
 
-{{--
+
+<div class="modal fade fade" id="modal-preview-invoice">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title"> Hóa đơn bán hàng <b id="idTransaction">#1</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="content">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <a href="" class="btn btn-success js-export-pdf"> Export PDF</a>
+            </div>
+        </div>
+    <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
 @section('script')
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="{{ asset('js/cart.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/cart.js') }}" type="text/javascript"></script>
+    {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{{  asset('admin/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript">
 
-    </script>
-@stop--}}
+    </script> --}}
+@stop

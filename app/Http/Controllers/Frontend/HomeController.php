@@ -106,7 +106,7 @@ class HomeController extends FrontendController
         });
 
         //get sự kiện flash sale
-        $flashSale = FlashSale::where('fs_status', 1)->first();
+        $flashSale = FlashSale::where('fs_status', 1)->whereDay('created_at',date('d'))->first();
 
         $viewData = [
             'productsNew'      => $productsNew,
@@ -136,10 +136,9 @@ class HomeController extends FrontendController
     {
         if ($request->ajax()) {
             $listID = $request->id;
-            array_reverse($listID);
-            $products = Product::whereIn('id', $listID)
+            $idRevert = array_reverse($listID);
+            $products = Product::whereIn('id', $idRevert)
                 ->where('pro_active',1)
-                ->orderByDesc('id')
                 ->limit(5)
                 ->select('id', 'pro_name', 'pro_slug', 'pro_sale', 'pro_avatar', 'pro_price', 'pro_review_total',
                     'pro_number', 'pro_review_star')

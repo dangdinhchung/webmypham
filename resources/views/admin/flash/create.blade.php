@@ -57,6 +57,8 @@
                                         @endforeach
                                     </select>
                                     <i class="txt-note-sale" style="color: red;font-size: 12px;">Lưu ý: Bạn cần phải chọn ít nhất 4 sản phẩm cho sự kiện flash sale !</i>
+                                    <br>
+                                    <i class="txt-note-sale" style="color: red;font-size: 12px;">(Sản phẩm bán chậm được xếp lên trước !)</i>
                             </div>
                             @if ($errors->first('products'))
                                 <span class="text-danger">{{ $errors->first('products') }}</span>

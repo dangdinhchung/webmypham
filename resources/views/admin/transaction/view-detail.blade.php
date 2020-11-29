@@ -126,7 +126,7 @@
         <!-- /.row -->
 
         <div class="row">
-            @if($transactions->tst_status == 2 && !$shipping)
+            @if($transactions->tst_status == 2 && !$shipping && $checkShippingDay)
             <div class="col-xs-6">
                 <p class="lead">Nhân viên vận chuyển</p>
                 <form action="{{ route('admin.process-shipping') }}" id="form-wallet-1" name="shipping" method="POST">
@@ -135,8 +135,8 @@
                     <div class="form-group ">
                         <select class="form-control" name="tst_shipping_id" id="shipping">
                             <option disabled selected>Hãy chọn nhân viên vận chuyển</option>
-                            @foreach($adminRoles as $key => $item)
-                            <option value="{{$item->id}}" {{ $transactions->tst_shipping_id == $item->id ? "selected='selected'" : "" }}>{{$item->name}}</option>
+                            @foreach($checkShippingDay as $key => $item)
+                            <option value="{{$item->id}}" {{ $transactions->tst_shipping_id == $item->id ? "selected='selected'" : "" }}>{{$item->name}} ({{$item->count_number}} đơn)</option>
                             @endforeach
                         </select>
                     </div>

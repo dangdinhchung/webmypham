@@ -44,6 +44,7 @@ var ProductSearch = {
         {
             let products = localStorage.getItem('products');
             products = $.parseJSON(products)
+            console.log(products,'huhu');
 
             $.ajax({
                 url : LOADPRODUCTVIEW,

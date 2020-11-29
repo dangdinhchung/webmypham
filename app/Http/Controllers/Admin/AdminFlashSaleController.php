@@ -40,24 +40,28 @@ class AdminFlashSaleController extends Controller
      */
     public function store(AdminRequestFlashSale $request)
     {
-        $flash_sale = new FlashSale();
-        $flash_sale->fs_title = $request->fs_title;
-        $flash_sale->fs_start_date = strtotime($request->fs_start_date);
-        $flash_sale->fs_end_date = strtotime($request->fs_end_date);
-        if ($flash_sale->save()) {
-            foreach ($request->products as $key => $product) {
-                $flash_sale_product = new FlashSaleProduct();
-                $flash_sale_product->fsp_flash_deal_id = $flash_sale->id;
-                $flash_sale_product->fsp_product_id = $product;
-                $flash_sale_product->fsp_discount = $request['discount_' . $product];
-                $flash_sale_product->fsp_discount_type = $request['discount_type_' . $product];
-                $flash_sale_product->save();
-            }
-            return redirect()->route('admin.flash.index')->with('msg','Thêm sự kiện thành công');
+        $flashSale = FlashSale::select('*')->where('fs_status',1)->whereDay('created_at',date('d'))->get();
+        if($flashSale) {
+            return redirect()->route('admin.flash.index')->with('error','Thêm thất bại, đã có sự kiện diễn ra trong ngày hôm nay');
         } else {
-            return redirect()->route('admin.flash.index')->with('error','Thêm sự kiện thất bại');
+            $flash_sale = new FlashSale();
+            $flash_sale->fs_title = $request->fs_title;
+            $flash_sale->fs_start_date = strtotime($request->fs_start_date);
+            $flash_sale->fs_end_date = strtotime($request->fs_end_date);
+            if ($flash_sale->save()) {
+                foreach ($request->products as $key => $product) {
+                    $flash_sale_product = new FlashSaleProduct();
+                    $flash_sale_product->fsp_flash_deal_id = $flash_sale->id;
+                    $flash_sale_product->fsp_product_id = $product;
+                    $flash_sale_product->fsp_discount = $request['discount_' . $product];
+                    $flash_sale_product->fsp_discount_type = $request['discount_type_' . $product];
+                    $flash_sale_product->save();
+                }
+                return redirect()->route('admin.flash.index')->with('msg','Thêm sự kiện thành công');
+            } else {
+                return redirect()->route('admin.flash.index')->with('error','Thêm sự kiện thất bại');
+            }
         }
-
     }
 
     /**
@@ -169,11 +173,12 @@ class AdminFlashSaleController extends Controller
      * @author chungdd
      */
     public function getProductSale() {
-        $topProductBuyMonth = Order::select('od_product_id')
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->groupBy('od_product_id')
-            ->get()->pluck('od_product_id')->toArray();
-        $productSale = Product::select('*')->whereNotIn('id',$topProductBuyMonth)->get();
+        // $topProductBuyMonth = Order::select('od_product_id')
+        //     ->whereMonth('created_at', Carbon::now()->month)
+        //     ->groupBy('od_product_id')
+        //     ->get()->pluck('od_product_id')->toArray();
+
+        $productSale = Product::select('*')->where('pro_active',1)->orderBy('pro_pay', 'ASC')->get();
         return $productSale;
     }
 }
